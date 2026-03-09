@@ -1,26 +1,41 @@
 {
     "_meta": {
-        "description": "Error Book index. QA appends entries when failureMemoryCandidate=true. Each entry also gets a detailed md file in entries/.",
-        "version": "2.0",
+        "description": "全局 Error Book 索引。Agent 错误记录，跨项目共享。用户手动添加，关键词召回。",
+        "version": "3.0",
+        "lastUpdated": "2026-03-09",
         "entryTemplate": "KI/Templates/error_book_entry.tmpl.md",
-        "detailDir": "KI/Error_Book/entries/"
+        "detailDir": "KI/Error_Book/entries/",
+        "contract": "KI/Error_Book/contract.md"
     },
-    "entries": [],
+    "entries": [
+        {
+            "id": "ERR-001",
+            "errorCode": "BHV-001",
+            "pattern": "Agent 在 async 函数中忘记 try-catch 导致 unhandled rejection",
+            "keywords": ["async", "await", "try-catch", "unhandled", "rejection", "promise"],
+            "prevention": "使用 Result 类型模式包裹所有 async 返回值",
+            "severity": "high",
+            "status": "resolved",
+            "recurrence": 3,
+            "relatedTasks": [],
+            "file": "entries/ERR-001__unhandled-rejection.md",
+            "firstSeen": "2026-03-09"
+        }
+    ],
     "entrySchema": {
-        "required": ["id", "errorCode", "pattern", "prevention", "firstSeen", "recurrence", "relatedTasks", "status"],
+        "required": ["id", "errorCode", "pattern", "keywords", "prevention", "firstSeen", "recurrence", "status"],
         "properties": {
             "id": "ERR-{NNN} 格式唯一编号",
             "errorCode": "BUILD-001 | REQ-001 | BHV-001 | ISO-001 | EVD-001 等",
             "pattern": "错误模式描述",
+            "keywords": "触发召回的关键词数组",
             "prevention": "预防措施",
             "firstSeen": "YYYY-MM-DD 首次发现日期",
             "recurrence": "复发次数（整数）",
             "relatedTasks": "关联的任务编号数组",
-            "relatedKI": "关联的 KI 条目 ID（可选）",
-            "relatedArchive": "关联的归档 run ID（可选）",
             "severity": "critical | high | medium | low",
             "status": "open | resolved | recurring",
-            "detailFile": "entries/ERR-{NNN}.md 详细分析文件路径"
+            "file": "entries/ERR-{NNN}__{slug}.md 详细分析文件路径"
         }
     },
     "errorCodeReference": {
