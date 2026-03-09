@@ -1,0 +1,148 @@
+{
+  "name": "rollup",
+  "description": "Complete Rollup knowledge from official documentation. Use when bundling JavaScript libraries with ES modules. Covers configuration, plugins, tree-shaking, and output formats.",
+  "version": "1.1.0",
+  "base_url": "https://rollupjs.org/",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://rollupjs.org/",
+      "start_urls": [
+        "https://rollupjs.org/introduction/",
+        "https://rollupjs.org/tutorial/",
+        "https://rollupjs.org/configuration-options/",
+        "https://rollupjs.org/javascript-api/",
+        "https://rollupjs.org/command-line-interface/",
+        "https://rollupjs.org/plugin-development/",
+        "https://rollupjs.org/faqs/"
+      ],
+      "selectors": {
+        "main_content": "article, main",
+        "title": "h1",
+        "code_blocks": "pre code, pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/introduction/",
+          "/tutorial/",
+          "/configuration-options/",
+          "/plugin-development/",
+          "/javascript-api/",
+          "/command-line-interface/",
+          "/faqs/"
+        ],
+        "exclude": [
+          "/repl/"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "introduction",
+          "installation",
+          "quick-start",
+          "faqs"
+        ],
+        "tutorial": [
+          "tutorial",
+          "creating-first-bundle",
+          "using-config-files",
+          "adding-plugins"
+        ],
+        "configuration": [
+          "configuration-options",
+          "input",
+          "output",
+          "plugins",
+          "external",
+          "watch"
+        ],
+        "input_options": [
+          "configuration-options/#input",
+          "input",
+          "external",
+          "inlineDynamicImports",
+          "preserveModules"
+        ],
+        "output_options": [
+          "configuration-options/#output",
+          "format",
+          "dir",
+          "file",
+          "name",
+          "sourcemap",
+          "compact",
+          "generatedCode"
+        ],
+        "plugins": [
+          "plugin-development",
+          "hooks",
+          "build-hooks",
+          "output-generation-hooks",
+          "context"
+        ],
+        "javascript_api": [
+          "javascript-api",
+          "rollup.rollup",
+          "rollup.watch",
+          "programmatic"
+        ],
+        "command_line": [
+          "command-line-interface",
+          "cli",
+          "stdin",
+          "config-file"
+        ],
+        "es_modules": [
+          "es-module-syntax",
+          "import",
+          "export",
+          "dynamic-import",
+          "import-meta"
+        ],
+        "tree_shaking": [
+          "tree-shaking",
+          "side-effects",
+          "pure-modules",
+          "module-side-effects",
+          "annotations"
+        ],
+        "code_splitting": [
+          "code-splitting",
+          "dynamic-imports",
+          "manual-chunks",
+          "inline-dynamic-imports"
+        ],
+        "formats": [
+          "configuration-options/#output-format",
+          "es",
+          "cjs",
+          "umd",
+          "iife",
+          "amd",
+          "system"
+        ]
+      },
+      "rate_limit": 0.3
+    }
+  ],
+  "metadata": {
+    "author": "Rollup Team",
+    "language": "JavaScript",
+    "framework_type": "Module Bundler",
+    "use_cases": [
+      "Library bundling",
+      "ES modules",
+      "Tree shaking",
+      "JavaScript libraries",
+      "Tree-shakeable packages",
+      "Code splitting"
+    ],
+    "related_skills": [
+      "javascript",
+      "typescript",
+      "npm",
+      "vite",
+      "esbuild"
+    ]
+  }
+}

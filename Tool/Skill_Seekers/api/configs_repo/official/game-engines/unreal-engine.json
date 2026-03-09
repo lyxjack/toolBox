@@ -1,0 +1,136 @@
+{
+  "name": "unreal-engine",
+  "description": "Complete Unreal Engine 5 knowledge from official documentation. Use when building high-fidelity 3D games, architectural visualizations, and virtual productions. Covers Blueprints, C++, Niagara, Lumen, and MetaHuman.",
+  "version": "1.1.0",
+  "base_url": "https://dev.epicgames.com/documentation/en-us/unreal-engine/",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://dev.epicgames.com/documentation/en-us/unreal-engine/",
+      "start_urls": [
+        "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-5-5-documentation",
+        "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprints-visual-scripting-in-unreal-engine",
+        "https://dev.epicgames.com/documentation/en-us/unreal-engine/programming-and-scripting-in-unreal-engine",
+        "https://dev.epicgames.com/documentation/en-us/unreal-engine/rendering-and-graphics-in-unreal-engine"
+      ],
+      "selectors": {
+        "main_content": "article, main, .doc-content",
+        "title": "h1",
+        "code_blocks": "pre code, pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/documentation/en-us/unreal-engine/"
+        ],
+        "exclude": [
+          "/documentation/en-us/unreal-engine/release-notes-for-unreal-engine"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "quick-start",
+          "installation",
+          "project-setup",
+          "editor-basics",
+          "unreal-engine-5"
+        ],
+        "blueprints": [
+          "blueprints",
+          "blueprint-basics",
+          "variables",
+          "functions",
+          "events",
+          "casting"
+        ],
+        "cpp": [
+          "programming",
+          "cpp",
+          "classes",
+          "unreal-header-tool",
+          "macros"
+        ],
+        "rendering": [
+          "rendering",
+          "lumen",
+          "nanite",
+          "materials",
+          "shaders",
+          "virtual-shadow-maps"
+        ],
+        "niagara": [
+          "niagara",
+          "particle-systems",
+          "emitters",
+          "modules"
+        ],
+        "animation": [
+          "animation",
+          "skeleton",
+          "animation-blueprint",
+          "state-machine",
+          "control-rig",
+          "metahuman"
+        ],
+        "audio": [
+          "audio",
+          "sound-cues",
+          "meta-sounds",
+          "spatial-audio"
+        ],
+        "physics": [
+          "physics",
+          "collision",
+          "rigid-bodies",
+          "constraints",
+          "chaos"
+        ],
+        "ui": [
+          "ui",
+          "umg",
+          "widgets",
+          "hud",
+          "menus"
+        ],
+        "ai": [
+          "ai",
+          "behavior-trees",
+          "blackboard",
+          "navigation",
+          "perception"
+        ],
+        "multiplayer": [
+          "multiplayer",
+          "networking",
+          "replication",
+          "dedicated-server"
+        ],
+        "optimization": [
+          "optimization",
+          "profiling",
+          "streaming",
+          "occlusion"
+        ]
+      },
+      "rate_limit": 0.5
+    }
+  ],
+  "metadata": {
+    "author": "Epic Games",
+    "language": "C++/Blueprints",
+    "framework_type": "Game Engine",
+    "use_cases": [
+      "AAA games",
+      "Virtual production",
+      "Architectural visualization",
+      "Cinematic rendering",
+      "High-fidelity VR"
+    ],
+    "related_skills": [
+      "cpp",
+      "blender",
+      "maya",
+      "substance-painter",
+      "quixel"
+    ]
+  }
+}

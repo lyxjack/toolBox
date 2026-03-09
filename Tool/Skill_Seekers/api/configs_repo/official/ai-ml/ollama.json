@@ -1,0 +1,156 @@
+{
+  "name": "ollama",
+  "description": "Complete Ollama knowledge from official documentation. Use when running LLMs locally. Covers model pulling, chatting, custom models, Modelfile, REST API, OpenAI-compatible API, and GPU setup.",
+  "version": "1.1.0",
+  "base_url": "https://github.com/ollama/ollama",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://github.com/ollama/ollama/blob/main/",
+      "start_urls": [
+        "https://github.com/ollama/ollama/blob/main/README.md",
+        "https://github.com/ollama/ollama/blob/main/docs/api.md",
+        "https://github.com/ollama/ollama/blob/main/docs/modelfile.md",
+        "https://github.com/ollama/ollama/blob/main/docs/linux.md",
+        "https://github.com/ollama/ollama/blob/main/docs/gpu.md",
+        "https://github.com/ollama/ollama/blob/main/docs/faq.md",
+        "https://github.com/ollama/ollama/blob/main/docs/import.md",
+        "https://github.com/ollama/ollama/blob/main/docs/openai.md",
+        "https://github.com/ollama/ollama/blob/main/docs/tutorials/"
+      ],
+      "selectors": {
+        "main_content": "article, main, .readme, [data-target='readme-toc.content']",
+        "title": "h1",
+        "code_blocks": "pre code, pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/ollama/ollama/blob/main/",
+          "/ollama/ollama/blob/main/docs/"
+        ],
+        "exclude": [
+          "/ollama/ollama/blob/main/CHANGELOG.md",
+          "/ollama/ollama/blob/main/.github/"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "README",
+          "installation",
+          "quickstart",
+          "docker"
+        ],
+        "cli": [
+          "ollama",
+          "run",
+          "pull",
+          "list",
+          "rm",
+          "cp",
+          "push",
+          "serve"
+        ],
+        "modelfile": [
+          "modelfile",
+          "FROM",
+          "PARAMETER",
+          "TEMPLATE",
+          "SYSTEM",
+          "ADAPTER",
+          "LICENSE"
+        ],
+        "api": [
+          "api",
+          "generate",
+          "chat",
+          "embeddings",
+          "create",
+          "tags",
+          "show",
+          "copy",
+          "delete",
+          "pull",
+          "push"
+        ],
+        "openai_compat": [
+          "openai",
+          "openai-compatible",
+          "v1/chat/completions",
+          "v1/models"
+        ],
+        "models": [
+          "library",
+          "llama3",
+          "mistral",
+          "codellama",
+          "phi",
+          "gemma",
+          "qwen",
+          "deepseek"
+        ],
+        "parameters": [
+          "PARAMETER",
+          "temperature",
+          "top_p",
+          "top_k",
+          "num_ctx",
+          "seed",
+          "stop",
+          "repeat_penalty"
+        ],
+        "importing": [
+          "import",
+          "gguf",
+          "safetensors",
+          "pytorch",
+          "lora"
+        ],
+        "gpu": [
+          "gpu",
+          "linux",
+          "cuda",
+          "rocm",
+          "metal",
+          "nvidia",
+          "amd"
+        ],
+        "faq": [
+          "faq",
+          "troubleshooting",
+          "common-issues",
+          "proxy",
+          "environment-variables"
+        ],
+        "integrations": [
+          "integrations",
+          "langchain",
+          "llamaindex",
+          "open-webui",
+          "python",
+          "javascript"
+        ]
+      },
+      "rate_limit": 0.3
+    }
+  ],
+  "metadata": {
+    "author": "Ollama",
+    "language": "Go",
+    "framework_type": "Local LLM Runtime",
+    "use_cases": [
+      "Local LLM deployment",
+      "Private AI",
+      "Model experimentation",
+      "Edge AI",
+      "Offline inference",
+      "OpenAI-compatible local API"
+    ],
+    "related_skills": [
+      "docker",
+      "python",
+      "langchain",
+      "llamacpp",
+      "openai-api"
+    ]
+  }
+}

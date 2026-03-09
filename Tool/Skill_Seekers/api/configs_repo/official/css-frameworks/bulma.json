@@ -1,0 +1,128 @@
+{
+  "name": "bulma",
+  "description": "Complete Bulma knowledge from official documentation. Use when building responsive web interfaces with a modern CSS-only framework. Covers the grid system, layout, elements, components, form controls, helpers, and Bulma v1 CSS variables with dark mode support.",
+  "version": "1.1.0",
+  "base_url": "https://bulma.io/documentation/",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://bulma.io/documentation/",
+      "start_urls": [
+        "https://bulma.io/documentation/",
+        "https://bulma.io/documentation/overview/",
+        "https://bulma.io/documentation/columns/",
+        "https://bulma.io/documentation/layout/",
+        "https://bulma.io/documentation/form/",
+        "https://bulma.io/documentation/elements/",
+        "https://bulma.io/documentation/components/",
+        "https://bulma.io/documentation/helpers/"
+      ],
+      "selectors": {
+        "main_content": "article, main",
+        "title": "h1",
+        "code_blocks": "pre code, pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/documentation/"
+        ],
+        "exclude": [
+          "/blog/"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "overview/start",
+          "overview/installation",
+          "overview/classes",
+          "overview/colors",
+          "overview/typography"
+        ],
+        "customize": [
+          "overview/customize",
+          "sass",
+          "variables",
+          "modifiers",
+          "dark-mode"
+        ],
+        "columns": [
+          "columns/basics",
+          "columns/sizes",
+          "columns/responsiveness",
+          "columns/gap",
+          "columns/options"
+        ],
+        "layout": [
+          "layout/container",
+          "layout/level",
+          "layout/media-object",
+          "layout/hero",
+          "layout/section",
+          "layout/footer",
+          "layout/tiles"
+        ],
+        "form": [
+          "form/general",
+          "form/input",
+          "form/textarea",
+          "form/select",
+          "form/checkbox",
+          "form/radio",
+          "form/file"
+        ],
+        "elements": [
+          "elements/box",
+          "elements/button",
+          "elements/content",
+          "elements/delete",
+          "elements/icon",
+          "elements/image",
+          "elements/notification",
+          "elements/progress",
+          "elements/table",
+          "elements/tag",
+          "elements/title"
+        ],
+        "components": [
+          "components/breadcrumb",
+          "components/card",
+          "components/dropdown",
+          "components/menu",
+          "components/message",
+          "components/modal",
+          "components/navbar",
+          "components/pagination",
+          "components/panel",
+          "components/tabs"
+        ],
+        "helpers": [
+          "helpers/color-helpers",
+          "helpers/spacing-helpers",
+          "helpers/typography-helpers",
+          "helpers/visibility-helpers",
+          "helpers/flexbox-helpers"
+        ]
+      },
+      "rate_limit": 0.3
+    }
+  ],
+  "metadata": {
+    "author": "Jeremy Thomas",
+    "language": "CSS/Sass",
+    "framework_type": "CSS Framework",
+    "use_cases": [
+      "Responsive design",
+      "Rapid prototyping",
+      "Modern interfaces",
+      "CSS-only (no JavaScript)",
+      "Dark mode support"
+    ],
+    "related_skills": [
+      "html",
+      "css",
+      "sass",
+      "responsive-design",
+      "javascript"
+    ]
+  }
+}

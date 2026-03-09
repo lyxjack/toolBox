@@ -1,0 +1,125 @@
+{
+  "name": "graphql",
+  "description": "Complete GraphQL knowledge from official documentation. Use when designing APIs, querying data, or implementing type-safe data fetching. Covers schema, queries, mutations, subscriptions, variables, directives, introspection, and best practices.",
+  "version": "1.1.0",
+  "base_url": "https://graphql.org/learn/",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://graphql.org/learn/",
+      "start_urls": [
+        "https://graphql.org/learn/",
+        "https://graphql.org/learn/queries/",
+        "https://graphql.org/learn/mutations/",
+        "https://graphql.org/learn/subscriptions/",
+        "https://graphql.org/learn/schema/",
+        "https://graphql.org/learn/execution/",
+        "https://graphql.org/learn/introspection/",
+        "https://graphql.org/learn/best-practices/",
+        "https://graphql.org/learn/thinking-in-graphs/",
+        "https://graphql.org/learn/global-object-identification/"
+      ],
+      "selectors": {
+        "main_content": "article, main",
+        "title": "h1",
+        "code_blocks": "pre code, pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/learn/"
+        ],
+        "exclude": [
+          "/foundation/",
+          "/community/",
+          "/blog/"
+        ]
+      },
+      "categories": {
+        "introduction": [
+          "introduction",
+          "thinking-in-graphs",
+          "overview"
+        ],
+        "queries": [
+          "queries",
+          "fields",
+          "arguments",
+          "aliases",
+          "fragments",
+          "operation-name"
+        ],
+        "variables_directives": [
+          "variables",
+          "directives",
+          "skip",
+          "include",
+          "deprecated"
+        ],
+        "mutations": [
+          "mutations",
+          "inline-fragments",
+          "multiple-fields"
+        ],
+        "subscriptions": [
+          "subscriptions",
+          "real-time",
+          "events"
+        ],
+        "schema": [
+          "schema",
+          "types",
+          "object",
+          "scalar",
+          "enum",
+          "interface",
+          "union",
+          "input"
+        ],
+        "execution": [
+          "execution",
+          "root-fields",
+          "resolvers",
+          "scalar-coercion",
+          "list-resolvers"
+        ],
+        "introspection": [
+          "introspection",
+          "schema-exploration",
+          "__type",
+          "__schema"
+        ],
+        "best_practices": [
+          "best-practices",
+          "pagination",
+          "caching",
+          "authorization",
+          "global-object-identification",
+          "serving-over-http",
+          "json-with-get"
+        ]
+      },
+      "rate_limit": 0.3
+    }
+  ],
+  "metadata": {
+    "author": "GraphQL Foundation",
+    "language": "Specification",
+    "framework_type": "API Technology",
+    "use_cases": [
+      "API design",
+      "Data fetching",
+      "Type-safe queries",
+      "Mobile APIs",
+      "Real-time subscriptions",
+      "Schema-first development"
+    ],
+    "related_skills": [
+      "apollo",
+      "nodejs",
+      "python",
+      "prisma",
+      "trpc",
+      "typescript"
+    ]
+  }
+}

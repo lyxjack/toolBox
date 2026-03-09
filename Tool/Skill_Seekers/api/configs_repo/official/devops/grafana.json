@@ -1,0 +1,114 @@
+{
+  "name": "grafana",
+  "description": "Complete Grafana knowledge from official documentation. Use when visualizing metrics, logs, traces, and creating dashboards. Covers data sources, panels, alerting, Grafana Cloud, and the Grafana plugin ecosystem.",
+  "version": "1.1.0",
+  "base_url": "https://grafana.com/docs/grafana/latest/",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://grafana.com/docs/grafana/latest/",
+      "start_urls": [
+        "https://grafana.com/docs/grafana/latest/getting-started/",
+        "https://grafana.com/docs/grafana/latest/dashboards/",
+        "https://grafana.com/docs/grafana/latest/datasources/",
+        "https://grafana.com/docs/grafana/latest/panels-visualizations/",
+        "https://grafana.com/docs/grafana/latest/alerting/",
+        "https://grafana.com/docs/grafana/latest/explore/",
+        "https://grafana.com/docs/grafana/latest/administration/"
+      ],
+      "selectors": {
+        "main_content": "article, main",
+        "title": "h1",
+        "code_blocks": "pre code, pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/docs/grafana/latest/"
+        ],
+        "exclude": [
+          "/docs/grafana/latest/release-notes/",
+          "/docs/grafana/latest/whatsnew/"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "getting-started",
+          "installation",
+          "docker",
+          "configuration"
+        ],
+        "datasources": [
+          "datasources",
+          "prometheus",
+          "influxdb",
+          "elasticsearch",
+          "mysql",
+          "postgres",
+          "loki",
+          "tempo"
+        ],
+        "dashboards": [
+          "dashboards",
+          "create",
+          "manage",
+          "json-model",
+          "variables"
+        ],
+        "panels": [
+          "panels",
+          "panels-visualizations",
+          "visualizations",
+          "queries",
+          "transformations",
+          "overrides"
+        ],
+        "alerting": [
+          "alerting",
+          "alert-rules",
+          "notification-channels",
+          "silences",
+          "contact-points"
+        ],
+        "explore": [
+          "explore",
+          "logs",
+          "traces",
+          "correlation"
+        ],
+        "administration": [
+          "administration",
+          "users",
+          "teams",
+          "auth",
+          "provisioning"
+        ],
+        "plugins": [
+          "plugins",
+          "panel-plugins",
+          "datasource-plugins",
+          "app-plugins"
+        ]
+      },
+      "rate_limit": 0.3
+    }
+  ],
+  "metadata": {
+    "author": "Grafana Labs",
+    "language": "Go/TypeScript",
+    "framework_type": "Visualization",
+    "use_cases": [
+      "Metrics visualization",
+      "Dashboard creation",
+      "Log analysis",
+      "Alerting",
+      "Observability"
+    ],
+    "related_skills": [
+      "prometheus",
+      "elasticsearch",
+      "influxdb",
+      "loki",
+      "tempo"
+    ]
+  }
+}

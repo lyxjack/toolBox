@@ -1,0 +1,130 @@
+{
+  "name": "ansible",
+  "description": "Complete Ansible automation knowledge combining official documentation and Ansible Core codebase. Use when writing playbooks, roles, and modules for automating infrastructure management, configuration management, and application deployment.",
+  "version": "1.1.0",
+  "merge_mode": "rule-based",
+  "base_url": "https://docs.ansible.com/ansible/latest/",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://docs.ansible.com/ansible/latest/",
+      "extract_api": true,
+      "start_urls": [
+        "https://docs.ansible.com/ansible/latest/getting_started/",
+        "https://docs.ansible.com/ansible/latest/playbook_guide/",
+        "https://docs.ansible.com/ansible/latest/inventory_guide/",
+        "https://docs.ansible.com/ansible/latest/collections/ansible/builtin/",
+        "https://docs.ansible.com/ansible/latest/user_guide/",
+        "https://docs.ansible.com/ansible/latest/reference_appendices/"
+      ],
+      "selectors": {
+        "main_content": "div[role='main']",
+        "title": "h1",
+        "code_blocks": "pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/ansible/latest/getting_started/",
+          "/ansible/latest/user_guide/",
+          "/ansible/latest/playbook_guide/",
+          "/ansible/latest/inventory_guide/",
+          "/ansible/latest/reference_appendices/",
+          "/ansible/latest/collections/"
+        ],
+        "exclude": [
+          "/ansible/latest/community/",
+          "/ansible/latest/roadmap/"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "getting_started",
+          "intro",
+          "quickstart",
+          "installation"
+        ],
+        "playbooks": [
+          "playbooks",
+          "plays",
+          "tasks"
+        ],
+        "inventory": [
+          "inventory",
+          "hosts",
+          "groups"
+        ],
+        "modules": [
+          "modules",
+          "plugins",
+          "collections"
+        ],
+        "roles": [
+          "roles",
+          "ansible-galaxy",
+          "galaxy"
+        ],
+        "variables": [
+          "variables",
+          "facts",
+          "vars"
+        ],
+        "conditionals": [
+          "conditionals",
+          "when",
+          "loops"
+        ],
+        "handlers": [
+          "handlers",
+          "notify"
+        ],
+        "vault": [
+          "vault",
+          "encryption",
+          "security"
+        ],
+        "api": [
+          "api",
+          "reference",
+          "module_index"
+        ]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "ansible/ansible",
+      "enable_codebase_analysis": true,
+      "code_analysis_depth": "deep",
+      "fetch_issues": true,
+      "max_issues": 100,
+      "fetch_changelog": true,
+      "fetch_releases": true,
+      "file_patterns": [
+        "lib/ansible/playbook/**/*.py",
+        "lib/ansible/executor/**/*.py",
+        "lib/ansible/parsing/**/*.py",
+        "lib/ansible/plugins/**/*.py",
+        "lib/ansible/module_utils/**/*.py"
+      ]
+    }
+  ],
+  "metadata": {
+    "author": "Red Hat / Ansible Community",
+    "language": "Python",
+    "framework_type": "Configuration Management",
+    "use_cases": [
+      "Configuration management",
+      "Application deployment",
+      "Infrastructure provisioning",
+      "Orchestration",
+      "Security automation"
+    ],
+    "related_skills": [
+      "terraform",
+      "kubernetes",
+      "docker",
+      "linux",
+      "python"
+    ]
+  }
+}

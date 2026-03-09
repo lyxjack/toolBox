@@ -1,0 +1,138 @@
+{
+  "name": "vite",
+  "description": "Complete Vite knowledge from official documentation. Use when building modern web applications with fast HMR and optimized builds. Covers configuration, plugins, SSR, and library mode.",
+  "version": "1.1.0",
+  "base_url": "https://vitejs.dev/",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://vitejs.dev/",
+      "start_urls": [
+        "https://vitejs.dev/guide/",
+        "https://vitejs.dev/guide/features",
+        "https://vitejs.dev/guide/env-and-mode",
+        "https://vitejs.dev/guide/build",
+        "https://vitejs.dev/guide/ssr",
+        "https://vitejs.dev/guide/backend-integration",
+        "https://vitejs.dev/guide/static-deploy",
+        "https://vitejs.dev/config/",
+        "https://vitejs.dev/plugins/",
+        "https://vitejs.dev/api/"
+      ],
+      "selectors": {
+        "main_content": "article, main",
+        "title": "h1",
+        "code_blocks": "pre code, pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/guide/",
+          "/config/",
+          "/plugins/",
+          "/api/"
+        ],
+        "exclude": [
+          "/blog/"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "getting-started",
+          "why-vite",
+          "features"
+        ],
+        "configuration": [
+          "config",
+          "shared-options",
+          "server-options",
+          "build-options",
+          "preview-options",
+          "optimizeDeps",
+          "ssr-options",
+          "worker-options"
+        ],
+        "features": [
+          "features",
+          "static-assets",
+          "json",
+          "wasm",
+          "web-workers",
+          "glob-import"
+        ],
+        "env_mode": [
+          "env-and-mode",
+          "envprefix",
+          "modes",
+          "dotenv"
+        ],
+        "hmr": [
+          "hot-module-replacement",
+          "hmr-api",
+          "hot.accept",
+          "hot.dispose"
+        ],
+        "cli": [
+          "cli",
+          "vite",
+          "vite build",
+          "vite preview",
+          "vite optimize"
+        ],
+        "plugins": [
+          "plugins",
+          "using-plugins",
+          "api-plugin",
+          "rollup-plugins"
+        ],
+        "ssr": [
+          "ssr",
+          "ssr-external",
+          "ssr-target",
+          "server-side-rendering"
+        ],
+        "api": [
+          "javascript-api",
+          "createServer",
+          "build",
+          "preview",
+          "plugin-api",
+          "hmr-api"
+        ],
+        "library_mode": [
+          "build-lib",
+          "library-mode",
+          "library-entry"
+        ],
+        "deployment": [
+          "static-deploy",
+          "github-pages",
+          "netlify",
+          "vercel",
+          "cloudflare"
+        ]
+      },
+      "rate_limit": 0.3
+    }
+  ],
+  "metadata": {
+    "author": "Evan You",
+    "language": "TypeScript",
+    "framework_type": "Build Tool",
+    "use_cases": [
+      "Modern web apps",
+      "Library development",
+      "Fast HMR development",
+      "Production builds",
+      "SSR applications",
+      "Static site generation"
+    ],
+    "related_skills": [
+      "vue",
+      "react",
+      "typescript",
+      "rollup",
+      "esbuild",
+      "vitest"
+    ]
+  }
+}

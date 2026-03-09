@@ -1,0 +1,127 @@
+{
+  "name": "tensorflow",
+  "description": "Complete TensorFlow 2.x knowledge from official documentation. Use when building production ML models, deep learning applications, or deploying AI solutions. Covers Keras, tf.data, tf.function, TFLite, TF.js, and TensorBoard.",
+  "version": "1.1.0",
+  "base_url": "https://www.tensorflow.org/",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://www.tensorflow.org/",
+      "start_urls": [
+        "https://www.tensorflow.org/tutorials/quickstart/beginner",
+        "https://www.tensorflow.org/tutorials/quickstart/advanced",
+        "https://www.tensorflow.org/guide/tensor",
+        "https://www.tensorflow.org/guide/variable",
+        "https://www.tensorflow.org/guide/keras",
+        "https://www.tensorflow.org/guide/function",
+        "https://www.tensorflow.org/guide/data",
+        "https://www.tensorflow.org/guide/data_performance",
+        "https://www.tensorflow.org/guide/saved_model",
+        "https://www.tensorflow.org/guide/gpu",
+        "https://www.tensorflow.org/guide/distributed_training",
+        "https://www.tensorflow.org/lite/guide"
+      ],
+      "selectors": {
+        "main_content": "article, main, .devsite-article",
+        "title": "h1",
+        "code_blocks": "pre code, pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/tutorials/",
+          "/guide/",
+          "/api_docs/",
+          "/lite/guide"
+        ],
+        "exclude": [
+          "/blog/",
+          "/community/"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "quickstart",
+          "beginner",
+          "installation",
+          "overview"
+        ],
+        "tensors": [
+          "tensor",
+          "shape",
+          "dtype",
+          "variable",
+          "constant"
+        ],
+        "keras": [
+          "keras",
+          "sequential",
+          "functional",
+          "model",
+          "layers"
+        ],
+        "training": [
+          "training",
+          "compile",
+          "fit",
+          "evaluate",
+          "predict",
+          "callbacks"
+        ],
+        "data": [
+          "data",
+          "tfdata",
+          "pipeline",
+          "preprocessing",
+          "data_performance"
+        ],
+        "save_load": [
+          "savedmodel",
+          "checkpoint",
+          "hdf5",
+          "export"
+        ],
+        "distributed": [
+          "distributed",
+          "strategy",
+          "multi-gpu",
+          "tpu"
+        ],
+        "deployment": [
+          "serving",
+          "lite",
+          "tflite",
+          "js",
+          "tensorboard",
+          "quantization"
+        ],
+        "advanced": [
+          "custom",
+          "gradienttape",
+          "function",
+          "autograph",
+          "xla"
+        ]
+      },
+      "rate_limit": 0.5
+    }
+  ],
+  "metadata": {
+    "author": "Google / TensorFlow Team",
+    "language": "Python/C++",
+    "framework_type": "Machine Learning",
+    "use_cases": [
+      "Production ML models",
+      "Deep learning",
+      "Mobile deployment",
+      "Edge computing",
+      "Web ML"
+    ],
+    "related_skills": [
+      "keras",
+      "python",
+      "numpy",
+      "pandas",
+      "pytorch"
+    ]
+  }
+}

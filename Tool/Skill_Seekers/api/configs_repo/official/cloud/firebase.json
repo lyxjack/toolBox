@@ -1,0 +1,149 @@
+{
+  "name": "firebase",
+  "description": "Complete Firebase knowledge from official documentation. Use when building mobile and web applications with Google's backend platform. Covers Firestore, Realtime Database, Auth, Cloud Functions, Hosting, Storage, Cloud Messaging, and Analytics.",
+  "version": "1.1.0",
+  "base_url": "https://firebase.google.com/docs/",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://firebase.google.com/docs/",
+      "start_urls": [
+        "https://firebase.google.com/docs/web/setup",
+        "https://firebase.google.com/docs/firestore",
+        "https://firebase.google.com/docs/database",
+        "https://firebase.google.com/docs/auth",
+        "https://firebase.google.com/docs/functions",
+        "https://firebase.google.com/docs/hosting",
+        "https://firebase.google.com/docs/storage",
+        "https://firebase.google.com/docs/cloud-messaging",
+        "https://firebase.google.com/docs/analytics",
+        "https://firebase.google.com/docs/app-check",
+        "https://firebase.google.com/docs/remote-config"
+      ],
+      "selectors": {
+        "main_content": "article, main, .devsite-article",
+        "title": "h1",
+        "code_blocks": "pre code, pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/docs/web/",
+          "/docs/firestore/",
+          "/docs/database/",
+          "/docs/auth/",
+          "/docs/functions/",
+          "/docs/hosting/",
+          "/docs/storage/",
+          "/docs/cloud-messaging/",
+          "/docs/analytics/",
+          "/docs/crashlytics/",
+          "/docs/performance/",
+          "/docs/remote-config/",
+          "/docs/app-check/",
+          "/docs/ab-testing/"
+        ],
+        "exclude": [
+          "/docs/release-notes/"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "setup",
+          "web",
+          "ios",
+          "android",
+          "flutter"
+        ],
+        "firestore": [
+          "firestore",
+          "database",
+          "documents",
+          "queries",
+          "security-rules",
+          "transactions"
+        ],
+        "realtime_database": [
+          "database",
+          "rtdb",
+          "realtime-database",
+          "read-and-write",
+          "offline"
+        ],
+        "authentication": [
+          "auth",
+          "email",
+          "google",
+          "oauth",
+          "custom",
+          "anonymous",
+          "phone"
+        ],
+        "functions": [
+          "functions",
+          "cloud-functions",
+          "triggers",
+          "https",
+          "callable",
+          "schedules"
+        ],
+        "storage": [
+          "storage",
+          "upload",
+          "download",
+          "security-rules"
+        ],
+        "hosting": [
+          "hosting",
+          "deploy",
+          "preview",
+          "rewrites",
+          "headers"
+        ],
+        "messaging": [
+          "cloud-messaging",
+          "fcm",
+          "notifications",
+          "topics"
+        ],
+        "analytics": [
+          "analytics",
+          "events",
+          "audiences",
+          "conversions"
+        ],
+        "app_check": [
+          "app-check",
+          "play-integrity",
+          "device-check",
+          "recaptcha"
+        ],
+        "remote_config": [
+          "remote-config",
+          "ab-testing",
+          "experiments"
+        ]
+      },
+      "rate_limit": 0.5
+    }
+  ],
+  "metadata": {
+    "author": "Google",
+    "language": "Multi-language",
+    "framework_type": "Backend Platform",
+    "use_cases": [
+      "Mobile app backends",
+      "Real-time databases",
+      "User authentication",
+      "File storage",
+      "Push notifications",
+      "App analytics"
+    ],
+    "related_skills": [
+      "react-native",
+      "flutter",
+      "android",
+      "ios",
+      "cloud-functions"
+    ]
+  }
+}

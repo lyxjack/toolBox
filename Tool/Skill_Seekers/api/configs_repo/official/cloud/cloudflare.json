@@ -1,0 +1,162 @@
+{
+  "name": "cloudflare",
+  "description": "Complete Cloudflare knowledge from official documentation. Use when securing, accelerating, and building on the edge. Covers CDN, DNS, Workers, Pages, R2, D1, Queues, Workers AI, and Zero Trust.",
+  "version": "1.1.0",
+  "base_url": "https://developers.cloudflare.com/",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://developers.cloudflare.com/",
+      "start_urls": [
+        "https://developers.cloudflare.com/fundamentals/",
+        "https://developers.cloudflare.com/workers/",
+        "https://developers.cloudflare.com/pages/",
+        "https://developers.cloudflare.com/r2/",
+        "https://developers.cloudflare.com/d1/",
+        "https://developers.cloudflare.com/queues/",
+        "https://developers.cloudflare.com/workers-ai/",
+        "https://developers.cloudflare.com/ai-gateway/",
+        "https://developers.cloudflare.com/vectorize/",
+        "https://developers.cloudflare.com/zero-trust/",
+        "https://developers.cloudflare.com/api/"
+      ],
+      "selectors": {
+        "main_content": "article, main",
+        "title": "h1",
+        "code_blocks": "pre code, pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/fundamentals/",
+          "/workers/",
+          "/pages/",
+          "/r2/",
+          "/d1/",
+          "/queues/",
+          "/workers-ai/",
+          "/ai-gateway/",
+          "/vectorize/",
+          "/zero-trust/",
+          "/api/"
+        ],
+        "exclude": [
+          "/changelog/"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "fundamentals",
+          "get-started",
+          "concepts"
+        ],
+        "dns": [
+          "dns",
+          "manage-dns-records",
+          "dnssec",
+          "cname-flattening"
+        ],
+        "cdn": [
+          "cache",
+          "caching",
+          "cache-rules",
+          "tiered-caching"
+        ],
+        "ssl_tls": [
+          "ssl",
+          "origin-ca",
+          "client-certificates",
+          "https"
+        ],
+        "workers": [
+          "workers",
+          "get-started",
+          "runtime-apis",
+          "kv",
+          "durable-objects",
+          "service-bindings"
+        ],
+        "pages": [
+          "pages",
+          "framework-guides",
+          "functions",
+          "build-configuration"
+        ],
+        "r2": [
+          "r2",
+          "buckets",
+          "objects",
+          "api",
+          "public-buckets"
+        ],
+        "d1": [
+          "d1",
+          "get-started",
+          "query-databases",
+          "bindings"
+        ],
+        "queues": [
+          "queues",
+          "get-started",
+          "producers",
+          "consumers"
+        ],
+        "workers_ai": [
+          "workers-ai",
+          "models",
+          "inference",
+          "text-generation",
+          "embeddings"
+        ],
+        "vectorize": [
+          "vectorize",
+          "vector-database",
+          "indexes",
+          "similarity-search"
+        ],
+        "zero_trust": [
+          "zero-trust",
+          "access",
+          "gateway",
+          "tunnel"
+        ],
+        "security": [
+          "waf",
+          "bots",
+          "ddos-protection",
+          "rate-limiting"
+        ],
+        "analytics": [
+          "analytics",
+          "web-analytics",
+          "account-analytics"
+        ],
+        "api": [
+          "api",
+          "authentication",
+          "tokens",
+          "limits"
+        ]
+      },
+      "rate_limit": 0.3
+    }
+  ],
+  "metadata": {
+    "author": "Cloudflare",
+    "language": "JavaScript/TypeScript",
+    "framework_type": "Edge Platform",
+    "use_cases": [
+      "CDN and DDoS protection",
+      "Serverless edge computing",
+      "Edge AI inference",
+      "Zero Trust security",
+      "Static site hosting"
+    ],
+    "related_skills": [
+      "javascript",
+      "typescript",
+      "dns",
+      "workers",
+      "wasm"
+    ]
+  }
+}

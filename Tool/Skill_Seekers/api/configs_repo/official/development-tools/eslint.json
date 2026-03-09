@@ -1,0 +1,109 @@
+{
+  "name": "eslint",
+  "description": "Complete ESLint knowledge from official documentation. Use when configuring JavaScript and TypeScript linting. Covers flat config (ESLint 9+), rules, plugins, custom rules, TypeScript integration, and editor integrations.",
+  "version": "1.1.0",
+  "base_url": "https://eslint.org/docs/latest/",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://eslint.org/docs/latest/",
+      "start_urls": [
+        "https://eslint.org/docs/latest/",
+        "https://eslint.org/docs/latest/use/",
+        "https://eslint.org/docs/latest/use/configure/",
+        "https://eslint.org/docs/latest/rules/",
+        "https://eslint.org/docs/latest/extend/"
+      ],
+      "selectors": {
+        "main_content": "article, main",
+        "title": "h1",
+        "code_blocks": "pre code, pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/docs/latest/use/",
+          "/docs/latest/rules/",
+          "/docs/latest/extend/",
+          "/docs/latest/integrate/"
+        ],
+        "exclude": [
+          "/docs/latest/maintain/",
+          "/docs/latest/contribute/"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "getting-started",
+          "configuration-files",
+          "command-line-interface"
+        ],
+        "configuration": [
+          "configure",
+          "configuring-language-options",
+          "configuring-rules",
+          "ignoring-code",
+          "flat-config"
+        ],
+        "rules": [
+          "rules",
+          "possible-problems",
+          "suggestions",
+          "layout-formatting"
+        ],
+        "typescript": [
+          "typescript",
+          "parser-options",
+          "typescript-eslint",
+          "type-checking"
+        ],
+        "formatters": [
+          "formatters",
+          "json",
+          "html",
+          "stylish"
+        ],
+        "extending": [
+          "plugins",
+          "shareable-configs",
+          "custom-rules",
+          "custom-parsers"
+        ],
+        "integrations": [
+          "integrations",
+          "editor-integrations",
+          "prettier"
+        ],
+        "api": [
+          "nodejs-api",
+          "rule-tester",
+          "source-code"
+        ],
+        "migration": [
+          "migrate-to-9.0.0",
+          "configure-migration"
+        ]
+      },
+      "rate_limit": 0.3
+    }
+  ],
+  "metadata": {
+    "author": "OpenJS Foundation",
+    "language": "JavaScript",
+    "framework_type": "Linter",
+    "use_cases": [
+      "Code quality",
+      "Style consistency",
+      "Bug detection",
+      "TypeScript support",
+      "CI/CD integration"
+    ],
+    "related_skills": [
+      "typescript",
+      "prettier",
+      "nodejs",
+      "react",
+      "vite",
+      "webpack"
+    ]
+  }
+}

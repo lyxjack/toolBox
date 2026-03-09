@@ -1,0 +1,164 @@
+{
+  "name": "claude-code",
+  "description": "Complete Claude Code CLI knowledge combining official documentation and source code. Use for Claude Code features, tools, MCP integration, hooks, settings, IDE integrations, agent workflows, and AI-assisted development.",
+  "version": "1.1.0",
+  "merge_mode": "rule-based",
+  "base_url": "https://docs.anthropic.com/en/docs/claude-code/",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://docs.anthropic.com/en/docs/claude-code/",
+      "extract_api": true,
+      "start_urls": [
+        "https://docs.anthropic.com/en/docs/claude-code/overview",
+        "https://docs.anthropic.com/en/docs/claude-code/quickstart",
+        "https://docs.anthropic.com/en/docs/claude-code/common-workflows",
+        "https://docs.anthropic.com/en/docs/claude-code/mcp",
+        "https://docs.anthropic.com/en/docs/claude-code/settings",
+        "https://docs.anthropic.com/en/docs/claude-code/hooks",
+        "https://docs.anthropic.com/en/docs/claude-code/ide-integrations",
+        "https://docs.anthropic.com/en/docs/claude-code/troubleshooting",
+        "https://docs.anthropic.com/en/docs/claude-code/iam"
+      ],
+      "selectors": {
+        "main_content": "article, main, div[role='main'], #content-container",
+        "title": "h1, title",
+        "code_blocks": "pre code, pre"
+      },
+      "url_patterns": {
+        "include": [
+          "/en/docs/claude-code/"
+        ],
+        "exclude": [
+          "/en/api/",
+          "/en/docs/claude-ai/",
+          "/en/prompt-engineering/",
+          "/en/changelog/"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "overview",
+          "quickstart",
+          "installation",
+          "setup",
+          "terminal-config"
+        ],
+        "workflows": [
+          "workflow",
+          "common-workflows",
+          "git",
+          "testing",
+          "debugging",
+          "interactive"
+        ],
+        "mcp": [
+          "mcp",
+          "model-context-protocol",
+          "mcp-server",
+          "tools"
+        ],
+        "hooks": [
+          "hooks",
+          "pre-tool",
+          "post-tool",
+          "event",
+          "automation"
+        ],
+        "configuration": [
+          "config",
+          "settings",
+          "preferences",
+          "customize",
+          "statusline",
+          "model-config",
+          "memory",
+          "output-styles"
+        ],
+        "agents": [
+          "agent",
+          "task",
+          "subagent",
+          "sub-agent",
+          "specialized"
+        ],
+        "skills": [
+          "skill",
+          "agent-skill",
+          "slash-command"
+        ],
+        "integrations": [
+          "ide-integrations",
+          "vs-code",
+          "jetbrains",
+          "plugin",
+          "marketplace"
+        ],
+        "deployment": [
+          "bedrock",
+          "vertex",
+          "deployment",
+          "network",
+          "gateway",
+          "devcontainer",
+          "sandboxing",
+          "third-party"
+        ],
+        "reference": [
+          "reference",
+          "command",
+          "cli-reference",
+          "slash",
+          "checkpointing",
+          "headless",
+          "sdk"
+        ],
+        "enterprise": [
+          "iam",
+          "security",
+          "monitoring",
+          "analytics",
+          "costs",
+          "legal",
+          "data-usage"
+        ]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "anthropics/claude-code",
+      "enable_codebase_analysis": true,
+      "code_analysis_depth": "deep",
+      "fetch_issues": true,
+      "max_issues": 100,
+      "fetch_changelog": true,
+      "fetch_releases": true,
+      "file_patterns": [
+        "src/**/*.ts",
+        "src/**/*.js",
+        "cli/**/*.ts",
+        "cli/**/*.js"
+      ]
+    }
+  ],
+  "metadata": {
+    "author": "Anthropic",
+    "language": "TypeScript",
+    "framework_type": "AI Development Tool",
+    "use_cases": [
+      "AI-assisted coding",
+      "Automated workflows",
+      "MCP tool integration",
+      "IDE AI assistance",
+      "Enterprise AI deployment"
+    ],
+    "related_skills": [
+      "anthropic",
+      "mcp",
+      "typescript",
+      "bash",
+      "devops"
+    ]
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "name": "tailwind",
+  "description": "Complete Tailwind CSS knowledge combining official documentation and Tailwind codebase. Use when styling with Tailwind utility classes or customizing configuration. Covers v4 CSS-first configuration with @theme and @utility directives, responsive design, dark mode, plugins, and all utility classes.",
+  "version": "1.1.0",
+  "merge_mode": "rule-based",
+  "base_url": "https://tailwindcss.com/docs",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://tailwindcss.com/docs",
+      "extract_api": true,
+      "start_urls": [
+        "https://tailwindcss.com/docs/installation",
+        "https://tailwindcss.com/docs/upgrade-guide",
+        "https://tailwindcss.com/docs/utility-first",
+        "https://tailwindcss.com/docs/responsive-design",
+        "https://tailwindcss.com/docs/configuration",
+        "https://tailwindcss.com/docs/theme",
+        "https://tailwindcss.com/docs/dark-mode",
+        "https://tailwindcss.com/docs/adding-custom-styles",
+        "https://tailwindcss.com/docs/plugins"
+      ],
+      "selectors": {
+        "main_content": "article",
+        "title": "h1",
+        "code_blocks": "pre code"
+      },
+      "url_patterns": {
+        "include": [
+          "/docs/"
+        ],
+        "exclude": [
+          "/blog/",
+          "/resources/",
+          "/showcase/"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "installation",
+          "upgrade-guide",
+          "editor-setup",
+          "using-with-preprocessors",
+          "optimizing-for-production"
+        ],
+        "core_concepts": [
+          "utility-first",
+          "responsive-design",
+          "hover-focus-and-other-states",
+          "dark-mode",
+          "reusing-styles",
+          "adding-custom-styles"
+        ],
+        "configuration": [
+          "configuration",
+          "theme",
+          "plugins",
+          "presets",
+          "content",
+          "important-modifier"
+        ],
+        "layout": [
+          "container",
+          "box-sizing",
+          "display",
+          "float",
+          "clear",
+          "object-fit",
+          "overflow",
+          "position",
+          "top-right-bottom-left",
+          "visibility",
+          "z-index"
+        ],
+        "flexbox_grid": [
+          "flex-direction",
+          "flex-wrap",
+          "flex",
+          "flex-grow",
+          "flex-shrink",
+          "order",
+          "grid-template-columns",
+          "grid-column",
+          "grid-template-rows",
+          "grid-row",
+          "gap"
+        ],
+        "spacing": [
+          "padding",
+          "margin",
+          "space-between"
+        ],
+        "sizing": [
+          "width",
+          "height",
+          "min-width",
+          "max-width",
+          "min-height",
+          "max-height",
+          "size"
+        ],
+        "typography": [
+          "font-family",
+          "font-size",
+          "font-weight",
+          "text-align",
+          "text-color",
+          "line-height",
+          "letter-spacing",
+          "text-transform",
+          "text-decoration"
+        ],
+        "backgrounds": [
+          "background-color",
+          "background-image",
+          "background-size",
+          "background-position",
+          "gradient"
+        ],
+        "borders": [
+          "border-width",
+          "border-color",
+          "border-style",
+          "border-radius",
+          "divide",
+          "outline",
+          "ring"
+        ],
+        "effects": [
+          "box-shadow",
+          "opacity",
+          "mix-blend-mode",
+          "drop-shadow"
+        ],
+        "filters": [
+          "blur",
+          "brightness",
+          "contrast",
+          "grayscale",
+          "hue-rotate",
+          "invert",
+          "saturate",
+          "sepia",
+          "backdrop-blur"
+        ],
+        "transitions": [
+          "transition-property",
+          "transition-duration",
+          "transition-timing-function",
+          "animation",
+          "transform"
+        ],
+        "interactivity": [
+          "cursor",
+          "pointer-events",
+          "resize",
+          "scroll-behavior",
+          "user-select",
+          "accent-color"
+        ],
+        "accessibility": [
+          "screen-readers",
+          "forced-color-adjust"
+        ]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "tailwindlabs/tailwindcss",
+      "enable_codebase_analysis": true,
+      "code_analysis_depth": "deep",
+      "fetch_issues": true,
+      "max_issues": 100,
+      "fetch_changelog": true,
+      "fetch_releases": true,
+      "file_patterns": [
+        "src/**/*.js",
+        "src/corePlugins.js",
+        "src/util/**/*.js"
+      ]
+    }
+  ],
+  "metadata": {
+    "author": "Tailwind Labs",
+    "language": "JavaScript",
+    "framework_type": "CSS Framework",
+    "use_cases": [
+      "Utility-first CSS",
+      "Rapid UI development",
+      "Responsive design",
+      "Custom design systems",
+      "Component styling"
+    ],
+    "related_skills": [
+      "react",
+      "vue",
+      "nextjs",
+      "postcss",
+      "vite"
+    ]
+  }
+}
