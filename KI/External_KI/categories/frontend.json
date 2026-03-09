@@ -1,0 +1,201 @@
+﻿{
+    "_meta":  {
+                  "category":  "frontend",
+                  "label":  "å‰ç«¯å¼€å‘ / Frontend",
+                  "totalTokenEstimate":  4200,
+                  "skillCount":  8
+              },
+    "skills":  [
+                   {
+                       "name":  "frontend-patterns",
+                       "description":  "Frontend development patterns for React, Next.js, state management, performance optimization, and UI best practices.",
+                       "path":  "everything-claude-code/.agents/skills/frontend-patterns/SKILL.md",
+                       "sizeBytes":  15401,
+                       "tokenEstimate":  4500,
+                       "confidence":  0.52,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Component composition (Card, Tabs, compound components)",
+                                            "Custom hooks (useToggle, useQuery, useDebounce)",
+                                            "Context + Reducer state management pattern",
+                                            "Performance: useMemo, useCallback, React.memo, code splitting",
+                                            "Virtualization for long lists (@tanstack/react-virtual)",
+                                            "Form handling with controlled inputs + validation",
+                                            "ErrorBoundary pattern",
+                                            "Framer Motion animations (list, modal)",
+                                            "Accessibility: keyboard nav, focus management, ARIA"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "coding-standards",
+                                                         "ui-ux-pro-max",
+                                                         "frontend-design"
+                                                     ],
+                                        "note":  "coding-standards includes React basics (subset); frontend-patterns is the comprehensive React reference"
+                                    }
+                   },
+                   {
+                       "name":  "frontend-design",
+                       "description":  "Create distinctive, production-grade frontend interfaces with high design quality.",
+                       "path":  "frontend-design/SKILL.md",
+                       "sizeBytes":  4482,
+                       "tokenEstimate":  1300,
+                       "confidence":  0.16,
+                       "origin":  "independent",
+                       "bulletPoints":  [
+                                            "Design philosophy for avoiding generic AI aesthetics",
+                                            "Creative, polished UI code generation",
+                                            "Covers websites, dashboards, React components, HTML/CSS"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "ui-ux-pro-max",
+                                                         "canvas-design"
+                                                     ],
+                                        "note":  "ui-ux-pro-max is far more comprehensive; frontend-design is higher-level philosophy"
+                                    }
+                   },
+                   {
+                       "name":  "ui-ux-pro-max",
+                       "description":  "UI/UX design intelligence. 50 styles, 21 palettes, 50 font pairings, 20 charts, 9 stacks.",
+                       "path":  "ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/SKILL.md",
+                       "sizeBytes":  14784,
+                       "tokenEstimate":  4300,
+                       "confidence":  0.7,
+                       "origin":  "independent",
+                       "bulletPoints":  [
+                                            "50 design styles (glassmorphism, brutalism, neumorphism, etc.)",
+                                            "21 curated color palettes",
+                                            "50 font pairings",
+                                            "20 chart types",
+                                            "9 tech stacks (React, Next.js, Vue, Svelte, SwiftUI, Flutter, etc.)",
+                                            "shadcn/ui MCP integration",
+                                            "Dark mode, responsive, accessibility patterns",
+                                            "Comprehensive template system with data/ and templates/ directories"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "frontend-design",
+                                                         "canvas-design",
+                                                         "frontend-patterns"
+                                                     ],
+                                        "note":  "BEST for UI/UX design decisions. Most comprehensive design resource in toolbox"
+                                    }
+                   },
+                   {
+                       "name":  "canvas-design",
+                       "description":  "Create visual art in .png and .pdf using design philosophy.",
+                       "path":  "canvas-design/SKILL.md",
+                       "sizeBytes":  12068,
+                       "tokenEstimate":  3500,
+                       "confidence":  0.39,
+                       "origin":  "independent",
+                       "bulletPoints":  [
+                                            "Static visual design (posters, art, documents)",
+                                            "Design philosophy and principles",
+                                            "81 canvas fonts bundled",
+                                            "PNG and PDF output focus"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "frontend-design",
+                                                         "ui-ux-pro-max"
+                                                     ],
+                                        "note":  "Unique niche: static visual design. No code generation overlap"
+                                    }
+                   },
+                   {
+                       "name":  "coding-standards",
+                       "description":  "Universal coding standards for TypeScript, JavaScript, React, and Node.js.",
+                       "path":  "everything-claude-code/.agents/skills/coding-standards/SKILL.md",
+                       "sizeBytes":  12263,
+                       "tokenEstimate":  3600,
+                       "confidence":  0.63,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "KISS, DRY, YAGNI principles",
+                                            "TypeScript naming conventions (variables, functions)",
+                                            "Immutability patterns (spread operator)",
+                                            "Error handling and async/await best practices",
+                                            "React component structure, hooks, state management basics",
+                                            "REST API conventions (subset of api-design)",
+                                            "File organization and naming",
+                                            "JSDoc documentation standards",
+                                            "Performance: memoization, lazy loading",
+                                            "Testing standards (AAA pattern, naming)",
+                                            "Code smell detection (long functions, deep nesting, magic numbers)"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "frontend-patterns",
+                                                         "backend-patterns",
+                                                         "api-design"
+                                                     ],
+                                        "note":  "Cross-cutting skill. Frontend-patterns and backend-patterns go deeper in their domains"
+                                    }
+                   },
+                   {
+                       "name":  "liquid-glass-design",
+                       "description":  "iOS 26 Liquid Glass design system â€“ dynamic glass material for SwiftUI, UIKit, WidgetKit.",
+                       "path":  "everything-claude-code/skills/liquid-glass-design/SKILL.md",
+                       "sizeBytes":  9324,
+                       "tokenEstimate":  2700,
+                       "confidence":  0.52,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Dynamic glass material with blur/reflection",
+                                            "Interactive morphing effects",
+                                            "SwiftUI, UIKit, and WidgetKit implementations",
+                                            "iOS 26+ specific"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "swiftui-patterns"
+                                                     ],
+                                        "note":  "Unique Apple design system. Complements swiftui-patterns"
+                                    }
+                   },
+                   {
+                       "name":  "vercel-composition-patterns",
+                       "description":  "Vercel composition patterns for React component architecture.",
+                       "path":  "composition-patterns/SKILL.md",
+                       "sizeBytes":  2975,
+                       "tokenEstimate":  900,
+                       "confidence":  0.46,
+                       "origin":  "Vercel",
+                       "bulletPoints":  [
+                                            "AGENTS.md with 23KB of detailed rules",
+                                            "10 composition rule files",
+                                            "Vercel-specific React patterns"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "frontend-patterns",
+                                                         "coding-standards"
+                                                     ],
+                                        "note":  "Vercel-specific lens on composition. frontend-patterns covers this more broadly"
+                                    }
+                   },
+                   {
+                       "name":  "frontend-slides",
+                       "description":  "Create animation-rich HTML presentations from scratch or converting PPT/PPTX.",
+                       "path":  "everything-claude-code/.agents/skills/frontend-slides/SKILL.md",
+                       "sizeBytes":  6742,
+                       "tokenEstimate":  2000,
+                       "confidence":  0.48,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "HTML/CSS/JS presentation creation",
+                                            "PPT/PPTX to web conversion",
+                                            "Animation-rich slide design",
+                                            "Visual aesthetic exploration workflow"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+
+                                                     ],
+                                        "note":  "Unique niche: presentations. Also listed in content category"
+                                    }
+                   }
+               ]
+}

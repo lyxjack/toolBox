@@ -1,0 +1,119 @@
+﻿{
+    "_meta":  {
+                  "category":  "devops",
+                  "label":  "DevOps / éƒ¨ç½²è¿ç»´",
+                  "skillCount":  5
+              },
+    "skills":  [
+                   {
+                       "name":  "deployment-patterns",
+                       "description":  "Deployment workflows, CI/CD pipelines, Docker, health checks, rollback, production readiness.",
+                       "path":  "everything-claude-code/skills/deployment-patterns/SKILL.md",
+                       "sizeBytes":  11427,
+                       "tokenEstimate":  3300,
+                       "confidence":  0.63,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "CI/CD pipeline design",
+                                            "Docker containerization",
+                                            "Health check endpoints",
+                                            "Rollback strategies",
+                                            "Production readiness checklists",
+                                            "Blue-green and canary deployments"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "docker-patterns"
+                                                     ],
+                                        "note":  "BEST for deployment workflow. docker-patterns goes deeper on container specifics"
+                                    }
+                   },
+                   {
+                       "name":  "docker-patterns",
+                       "description":  "Docker and Docker Compose: local dev, security, networking, volumes, multi-service.",
+                       "path":  "everything-claude-code/skills/docker-patterns/SKILL.md",
+                       "sizeBytes":  8615,
+                       "tokenEstimate":  2500,
+                       "confidence":  0.64,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Multi-stage Dockerfile patterns",
+                                            "Docker Compose for dev",
+                                            "Container security",
+                                            "Network and volume strategies"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "deployment-patterns"
+                                                     ],
+                                        "note":  "Container-focused subset of DevOps"
+                                    }
+                   },
+                   {
+                       "name":  "verification-loop",
+                       "description":  "Comprehensive verification system for Claude Code sessions.",
+                       "path":  "everything-claude-code/.agents/skills/verification-loop/SKILL.md",
+                       "sizeBytes":  2617,
+                       "tokenEstimate":  800,
+                       "confidence":  0.5,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Pre-commit verification steps",
+                                            "Build/lint/test verification",
+                                            "Session completion checklist"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "verification-before-completion",
+                                                         "django-verification",
+                                                         "springboot-verification"
+                                                     ],
+                                        "note":  "Generic version. Framework-specific ones (Django/Spring) are more detailed"
+                                    }
+                   },
+                   {
+                       "name":  "django-verification",
+                       "description":  "Django verification loop: migrations, linting, tests, security scans, deployment readiness.",
+                       "path":  "everything-claude-code/skills/django-verification/SKILL.md",
+                       "sizeBytes":  11946,
+                       "tokenEstimate":  3500,
+                       "confidence":  0.67,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Migration verification",
+                                            "Linting (flake8/ruff)",
+                                            "Test suite with coverage",
+                                            "Django security check",
+                                            "Deployment readiness"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "verification-loop"
+                                                     ],
+                                        "note":  "BEST for Django projects. Extends verification-loop"
+                                    }
+                   },
+                   {
+                       "name":  "springboot-verification",
+                       "description":  "Spring Boot verification: build, static analysis, tests, security scans, diff review.",
+                       "path":  "everything-claude-code/skills/springboot-verification/SKILL.md",
+                       "sizeBytes":  6052,
+                       "tokenEstimate":  1800,
+                       "confidence":  0.54,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Maven/Gradle build verification",
+                                            "Static analysis (SpotBugs/PMD)",
+                                            "Test + coverage (JaCoCo)",
+                                            "Dependency security scan",
+                                            "Diff review before PR"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "verification-loop"
+                                                     ],
+                                        "note":  "BEST for Spring Boot projects. Extends verification-loop"
+                                    }
+                   }
+               ]
+}

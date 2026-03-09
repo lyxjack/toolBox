@@ -1,0 +1,19 @@
+{
+    "_meta": {
+        "description": "Project-level skill registry. Lists skills enabled for this project with governance metadata.",
+        "version": "1.0",
+        "lastUpdated": null,
+        "updatedBy": null
+    },
+    "enabledSkills": [],
+    "schema": {
+        "name": "string — skill name from _rag_index",
+        "path": "string — SKILL.md path relative to toolBox",
+        "category": "string — category from master_index",
+        "confidence": "number — from quality audit",
+        "enabledReason": "string — why this skill is enabled for this project",
+        "usageNotes": "string — project-specific usage notes",
+        "lastUsed": "string|null — ISO timestamp of last use",
+        "effectiveness": "string|null — actual effectiveness assessment after use"
+    }
+}

@@ -1,0 +1,251 @@
+﻿{
+    "_meta":  {
+                  "category":  "backend",
+                  "label":  "åŽç«¯å¼€å‘ / Backend",
+                  "skillCount":  10
+              },
+    "skills":  [
+                   {
+                       "name":  "api-design",
+                       "description":  "REST API design patterns including resource naming, status codes, pagination, filtering, error responses, versioning, and rate limiting.",
+                       "path":  "everything-claude-code/.agents/skills/api-design/SKILL.md",
+                       "sizeBytes":  13633,
+                       "tokenEstimate":  4000,
+                       "confidence":  0.77,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "URL structure: nouns, plural, kebab-case",
+                                            "HTTP methods semantics (idempotent/safe matrix)",
+                                            "Status codes reference (200/201/204/400/401/403/404/409/422/429/500)",
+                                            "Response envelope patterns (data wrapper vs flat)",
+                                            "Pagination: offset-based vs cursor-based with decision matrix",
+                                            "Filtering, sorting, search, sparse fieldsets",
+                                            "Auth patterns (Bearer token, API key, RBAC)",
+                                            "Rate limiting tiers and headers",
+                                            "Versioning strategies (URL path recommended)",
+                                            "Implementation examples: TypeScript/Next.js, Python/Django, Go",
+                                            "Pre-ship checklist"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "backend-patterns",
+                                                         "coding-standards"
+                                                     ],
+                                        "note":  "BEST for API design. backend-patterns has API basics as subset; api-design is comprehensive"
+                                    }
+                   },
+                   {
+                       "name":  "backend-patterns",
+                       "description":  "Backend architecture: API design, database optimization, server-side best practices for Node.js/Express/Next.js.",
+                       "path":  "everything-claude-code/.agents/skills/backend-patterns/SKILL.md",
+                       "sizeBytes":  14423,
+                       "tokenEstimate":  4200,
+                       "confidence":  0.52,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Repository pattern (abstract data access)",
+                                            "Service layer pattern (business logic separation)",
+                                            "Middleware pattern (auth, logging, rate limiting)",
+                                            "Query optimization (select needed columns, N+1 prevention)",
+                                            "Transaction pattern (Supabase RPC)",
+                                            "Redis caching layer and cache-aside pattern",
+                                            "Centralized error handler (ApiError + ZodError)",
+                                            "Retry with exponential backoff",
+                                            "JWT validation and RBAC",
+                                            "Rate limiter (in-memory)",
+                                            "Background job queue pattern",
+                                            "Structured logging"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "api-design",
+                                                         "coding-standards",
+                                                         "django-patterns",
+                                                         "springboot-patterns"
+                                                     ],
+                                        "note":  "Node.js/TS focused. For Django use django-patterns; for Java use springboot-patterns"
+                                    }
+                   },
+                   {
+                       "name":  "django-patterns",
+                       "description":  "Django architecture: REST API with DRF, ORM, caching, signals, middleware.",
+                       "path":  "everything-claude-code/skills/django-patterns/SKILL.md",
+                       "sizeBytes":  21759,
+                       "tokenEstimate":  6300,
+                       "confidence":  0.62,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "DRF viewsets, serializers, permissions",
+                                            "Django ORM best practices",
+                                            "Caching strategies",
+                                            "Signal patterns",
+                                            "Custom middleware",
+                                            "Production-grade configuration"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "backend-patterns",
+                                                         "python-patterns"
+                                                     ],
+                                        "note":  "BEST for Django. Complements python-patterns (general Python) and backend-patterns (general backend)"
+                                    }
+                   },
+                   {
+                       "name":  "springboot-patterns",
+                       "description":  "Spring Boot architecture: REST API, layered services, data access, caching, async, logging.",
+                       "path":  "everything-claude-code/skills/springboot-patterns/SKILL.md",
+                       "sizeBytes":  10233,
+                       "tokenEstimate":  3000,
+                       "confidence":  0.48,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Controller/Service/Repository layered architecture",
+                                            "REST API design with Spring MVC",
+                                            "Data access with JPA",
+                                            "Caching with @Cacheable",
+                                            "Async processing with @Async",
+                                            "Structured logging with SLF4J"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "backend-patterns",
+                                                         "java-coding-standards",
+                                                         "jpa-patterns"
+                                                     ],
+                                        "note":  "BEST for Spring Boot. Use jpa-patterns for deeper ORM guidance"
+                                    }
+                   },
+                   {
+                       "name":  "postgres-patterns",
+                       "description":  "PostgreSQL patterns: query optimization, schema design, indexing, security (Supabase-based).",
+                       "path":  "everything-claude-code/skills/postgres-patterns/SKILL.md",
+                       "sizeBytes":  3955,
+                       "tokenEstimate":  1200,
+                       "confidence":  0.51,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Query optimization techniques",
+                                            "Schema design patterns",
+                                            "Indexing strategies",
+                                            "Security best practices",
+                                            "Supabase-specific patterns"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "database-migrations",
+                                                         "clickhouse-io"
+                                                     ],
+                                        "note":  "PostgreSQL focused. Use database-migrations for schema change workflow"
+                                    }
+                   },
+                   {
+                       "name":  "clickhouse-io",
+                       "description":  "ClickHouse patterns: query optimization, analytics, data engineering for high-performance analytical workloads.",
+                       "path":  "everything-claude-code/skills/clickhouse-io/SKILL.md",
+                       "sizeBytes":  10856,
+                       "tokenEstimate":  3200,
+                       "confidence":  0.58,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "ClickHouse-specific query patterns",
+                                            "Analytics and data engineering",
+                                            "High-performance analytical workloads",
+                                            "Data ingestion and MergeTree patterns"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "postgres-patterns"
+                                                     ],
+                                        "note":  "Unique: OLAP database. No direct alternative in toolbox"
+                                    }
+                   },
+                   {
+                       "name":  "database-migrations",
+                       "description":  "Migration best practices across PostgreSQL, MySQL, and ORMs (Prisma, Drizzle, Django, TypeORM, golang-migrate).",
+                       "path":  "everything-claude-code/skills/database-migrations/SKILL.md",
+                       "sizeBytes":  9816,
+                       "tokenEstimate":  2900,
+                       "confidence":  0.75,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Schema change workflows",
+                                            "Data migration strategies",
+                                            "Rollback patterns",
+                                            "Zero-downtime deployments",
+                                            "Multi-ORM coverage (Prisma/Drizzle/Django/TypeORM/golang-migrate)"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "postgres-patterns"
+                                                     ],
+                                        "note":  "Cross-cutting migration skill. Use with specific DB patterns"
+                                    }
+                   },
+                   {
+                       "name":  "docker-patterns",
+                       "description":  "Docker and Docker Compose: local dev, container security, networking, volumes, multi-service.",
+                       "path":  "everything-claude-code/skills/docker-patterns/SKILL.md",
+                       "sizeBytes":  8615,
+                       "tokenEstimate":  2500,
+                       "confidence":  0.64,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Dockerfile best practices (multi-stage builds)",
+                                            "Docker Compose patterns",
+                                            "Container security hardening",
+                                            "Networking and volume strategies",
+                                            "Multi-service orchestration"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "deployment-patterns"
+                                                     ],
+                                        "note":  "Container-focused. deployment-patterns covers broader CI/CD"
+                                    }
+                   },
+                   {
+                       "name":  "content-hash-cache-pattern",
+                       "description":  "Cache expensive file processing with SHA-256 content hashes â€“ path-independent, auto-invalidating.",
+                       "path":  "everything-claude-code/skills/content-hash-cache-pattern/SKILL.md",
+                       "sizeBytes":  5765,
+                       "tokenEstimate":  1700,
+                       "confidence":  0.47,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "SHA-256 content-based cache keys",
+                                            "Path-independent caching",
+                                            "Auto-invalidation on content change",
+                                            "Service layer separation"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "backend-patterns"
+                                                     ],
+                                        "note":  "Niche caching pattern. backend-patterns covers caching more broadly"
+                                    }
+                   },
+                   {
+                       "name":  "golang-patterns",
+                       "description":  "Idiomatic Go patterns, best practices for robust Go applications.",
+                       "path":  "everything-claude-code/skills/golang-patterns/SKILL.md",
+                       "sizeBytes":  14703,
+                       "tokenEstimate":  4300,
+                       "confidence":  0.7,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Idiomatic Go conventions",
+                                            "Error handling patterns",
+                                            "Concurrency (goroutines, channels)",
+                                            "Interface design",
+                                            "Project layout",
+                                            "Performance optimization"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "golang-testing"
+                                                     ],
+                                        "note":  "BEST for Go development. Use golang-testing for testing focus"
+                                    }
+                   }
+               ]
+}

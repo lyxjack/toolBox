@@ -1,0 +1,168 @@
+﻿{
+    "_meta":  {
+                  "category":  "language_specific",
+                  "label":  "è¯­è¨€ä¸“é¡¹ / Language-Specific",
+                  "skillCount":  7
+              },
+    "skills":  [
+                   {
+                       "name":  "python-patterns",
+                       "description":  "Pythonic idioms, PEP 8, type hints for robust Python applications.",
+                       "path":  "everything-claude-code/skills/python-patterns/SKILL.md",
+                       "sizeBytes":  17498,
+                       "tokenEstimate":  5100,
+                       "confidence":  0.68,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "PEP 8 standards",
+                                            "Type hints (typing module)",
+                                            "Pythonic idioms",
+                                            "Error handling patterns",
+                                            "Dataclasses and Pydantic",
+                                            "Async Python patterns"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "django-patterns",
+                                                         "python-testing"
+                                                     ],
+                                        "note":  "BEST for general Python. Django-specific â†’ django-patterns"
+                                    }
+                   },
+                   {
+                       "name":  "golang-patterns",
+                       "description":  "Idiomatic Go patterns for robust, efficient Go applications.",
+                       "path":  "everything-claude-code/skills/golang-patterns/SKILL.md",
+                       "sizeBytes":  14703,
+                       "tokenEstimate":  4300,
+                       "confidence":  0.7,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Error handling (errors.Is/As, wrapping)",
+                                            "Concurrency (goroutines, channels, sync)",
+                                            "Interface design (small, composable)",
+                                            "Project layout (cmd/, internal/, pkg/)",
+                                            "Performance (allocation, profiling)"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "golang-testing"
+                                                     ],
+                                        "note":  "Pair with golang-testing for full Go development"
+                                    }
+                   },
+                   {
+                       "name":  "cpp-coding-standards",
+                       "description":  "C++ Core Guidelines-based standards for modern, safe C++ code.",
+                       "path":  "everything-claude-code/skills/cpp-coding-standards/SKILL.md",
+                       "sizeBytes":  23002,
+                       "tokenEstimate":  6700,
+                       "confidence":  0.68,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "C++ Core Guidelines compliance",
+                                            "RAII and resource management",
+                                            "Smart pointers",
+                                            "Move semantics",
+                                            "Template best practices",
+                                            "Modern C++ (17/20/23) features"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "cpp-testing"
+                                                     ],
+                                        "note":  "Largest single skill file. Pair with cpp-testing"
+                                    }
+                   },
+                   {
+                       "name":  "java-coding-standards",
+                       "description":  "Java standards for Spring Boot: naming, immutability, Optional, streams, exceptions.",
+                       "path":  "everything-claude-code/skills/java-coding-standards/SKILL.md",
+                       "sizeBytes":  4003,
+                       "tokenEstimate":  1200,
+                       "confidence":  0.43,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Naming conventions",
+                                            "Immutability patterns",
+                                            "Optional usage",
+                                            "Stream API patterns",
+                                            "Exception handling",
+                                            "Project layout"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "springboot-patterns",
+                                                         "jpa-patterns"
+                                                     ],
+                                        "note":  "Foundation for Java. Use springboot-patterns for framework specifics"
+                                    }
+                   },
+                   {
+                       "name":  "jpa-patterns",
+                       "description":  "JPA/Hibernate: entity design, relationships, queries, transactions, auditing.",
+                       "path":  "everything-claude-code/skills/jpa-patterns/SKILL.md",
+                       "sizeBytes":  4699,
+                       "tokenEstimate":  1400,
+                       "confidence":  0.4,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Entity design patterns",
+                                            "Relationship mapping (1:N, N:M)",
+                                            "Query optimization (N+1, projections)",
+                                            "Transaction management",
+                                            "Auditing (@CreatedDate, @LastModifiedDate)",
+                                            "Connection pooling (HikariCP)"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "springboot-patterns",
+                                                         "database-migrations"
+                                                     ],
+                                        "note":  "Deep JPA focus. Complements springboot-patterns"
+                                    }
+                   },
+                   {
+                       "name":  "swift-concurrency-6-2",
+                       "description":  "Swift 6.2 Approachable Concurrency â€“ single-threaded default, @concurrent.",
+                       "path":  "everything-claude-code/skills/swift-concurrency-6-2/SKILL.md",
+                       "sizeBytes":  8226,
+                       "tokenEstimate":  2400,
+                       "confidence":  0.49,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Single-threaded by default model",
+                                            "@concurrent for background offloading",
+                                            "Isolated conformances for main actor types",
+                                            "Swift 6.2 specific"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "swift-actor-persistence",
+                                                         "swiftui-patterns"
+                                                     ],
+                                        "note":  "Swift 6.2 specific. Use swiftui-patterns for UI layer"
+                                    }
+                   },
+                   {
+                       "name":  "swift-actor-persistence",
+                       "description":  "Thread-safe data persistence in Swift using actors.",
+                       "path":  "everything-claude-code/skills/swift-actor-persistence/SKILL.md",
+                       "sizeBytes":  4941,
+                       "tokenEstimate":  1450,
+                       "confidence":  0.41,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Actor-based thread safety",
+                                            "In-memory cache with file backing",
+                                            "Data race elimination by design"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "swift-concurrency-6-2"
+                                                     ],
+                                        "note":  "Specialized persistence pattern using actors"
+                                    }
+                   }
+               ]
+}

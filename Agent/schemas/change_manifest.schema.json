@@ -1,0 +1,79 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "ChangeManifest",
+    "type": "object",
+    "required": [
+        "taskRef",
+        "timestamp",
+        "filesCreated",
+        "filesModified",
+        "filesDeleted",
+        "scopeNotes"
+    ],
+    "properties": {
+        "taskRef": {
+            "type": "string",
+            "pattern": "^T\\d+"
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "filesCreated": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "filesModified": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "filesDeleted": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "linesAdded": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "linesRemoved": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "skillsUsed": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "testResults": {
+            "type": "object",
+            "properties": {
+                "passed": {
+                    "type": "integer"
+                },
+                "failed": {
+                    "type": "integer"
+                },
+                "skipped": {
+                    "type": "integer"
+                }
+            }
+        },
+        "blockers": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "scopeNotes": {
+            "type": "string",
+            "description": "Must state 'No scope changes from plan' or explain deviation"
+        }
+    }
+}

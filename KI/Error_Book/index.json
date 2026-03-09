@@ -1,0 +1,47 @@
+{
+    "_meta": {
+        "description": "Error Book index. QA appends entries when failureMemoryCandidate=true. Each entry also gets a detailed md file in entries/.",
+        "version": "2.0",
+        "entryTemplate": "KI/Templates/error_book_entry.tmpl.md",
+        "detailDir": "KI/Error_Book/entries/"
+    },
+    "entries": [],
+    "entrySchema": {
+        "required": ["id", "errorCode", "pattern", "prevention", "firstSeen", "recurrence", "relatedTasks", "status"],
+        "properties": {
+            "id": "ERR-{NNN} 格式唯一编号",
+            "errorCode": "BUILD-001 | REQ-001 | BHV-001 | ISO-001 | EVD-001 等",
+            "pattern": "错误模式描述",
+            "prevention": "预防措施",
+            "firstSeen": "YYYY-MM-DD 首次发现日期",
+            "recurrence": "复发次数（整数）",
+            "relatedTasks": "关联的任务编号数组",
+            "relatedKI": "关联的 KI 条目 ID（可选）",
+            "relatedArchive": "关联的归档 run ID（可选）",
+            "severity": "critical | high | medium | low",
+            "status": "open | resolved | recurring",
+            "detailFile": "entries/ERR-{NNN}.md 详细分析文件路径"
+        }
+    },
+    "errorCodeReference": {
+        "BUILD-001": { "label": "CompileFailure", "route": "EXECUTION" },
+        "BUILD-002": { "label": "TestRegression", "route": "EXECUTION" },
+        "BUILD-003": { "label": "TypeCheckFailure", "route": "EXECUTION" },
+        "BUILD-004": { "label": "RuntimeException", "route": "EXECUTION" },
+        "REQ-001": { "label": "ScopeCreep", "route": "PM" },
+        "REQ-002": { "label": "ACNotMet", "route": "PM|EXECUTION" },
+        "REQ-003": { "label": "ScopeMissing", "route": "PM" },
+        "REQ-004": { "label": "ConstraintViolation", "route": "CTO" },
+        "BHV-001": { "label": "FunctionalDefect", "route": "CTO|EXECUTION" },
+        "BHV-002": { "label": "EdgeCaseFailure", "route": "EXECUTION" },
+        "BHV-003": { "label": "IntegrationBreak", "route": "CTO" },
+        "BHV-004": { "label": "PerformanceIssue", "route": "CTO" },
+        "ISO-001": { "label": "UnauthorizedChange", "route": "CTO" },
+        "ISO-002": { "label": "SourceFileViolation", "route": "CTO" },
+        "ISO-003": { "label": "GlobalStateCorruption", "route": "CTO" },
+        "EVD-001": { "label": "ManifestMissing", "route": "EXECUTION" },
+        "EVD-002": { "label": "PlanMissing", "route": "CTO" },
+        "EVD-003": { "label": "TestEvidenceMissing", "route": "EXECUTION" },
+        "EVD-004": { "label": "MinimalChangeNotJustified", "route": "CTO" }
+    }
+}

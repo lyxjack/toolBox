@@ -1,0 +1,186 @@
+﻿{
+    "_meta": {
+        "description": "Duplicate skill governance for toolBox. Pre-populated from cross_references.json + quality audit.",
+        "version": "1.0",
+        "lastUpdated": "2026-03-07",
+        "totalReviewedGroups": 5
+    },
+    "reviews": [
+        {
+            "topic": "TDD / Test-Driven Development",
+            "primarySkill": {
+                "name": "test-driven-development",
+                "path": "Tool/superpowers/skills/test-driven-development/SKILL.md",
+                "confidence": 0.81,
+                "selectionReason": "Highest confidence (0.81). 13 code blocks, good/bad comparisons, anti-patterns companion file, checklist, tables."
+            },
+            "alternateSkills": [
+                {
+                    "name": "tdd-workflow",
+                    "path": "Tool/everything-claude-code/.agents/skills/tdd-workflow/SKILL.md",
+                    "confidence": 0.63,
+                    "relationship": "overlap",
+                    "useWhen": "Need TypeScript/bash-specific TDD examples (24 code blocks in TS)"
+                },
+                {
+                    "name": "django-tdd",
+                    "path": "Tool/everything-claude-code/skills/django-tdd/SKILL.md",
+                    "confidence": 0.70,
+                    "relationship": "subset",
+                    "useWhen": "Django projects specifically (pytest-django, factory_boy)"
+                },
+                {
+                    "name": "springboot-tdd",
+                    "path": "Tool/everything-claude-code/skills/springboot-tdd/SKILL.md",
+                    "confidence": 0.37,
+                    "relationship": "subset",
+                    "useWhen": "Spring Boot projects (JUnit 5, Mockito, MockMvc)"
+                }
+            ],
+            "rejectedSkills": [],
+            "crossReferences": [
+                "python-testing",
+                "golang-testing",
+                "cpp-testing"
+            ],
+            "fitScore": 0.85,
+            "riskNotes": "tdd-workflow and test-driven-development have different perspectives; both valuable",
+            "workflowCompleteness": "complete",
+            "testability": "high"
+        },
+        {
+            "topic": "Agent Loops / Autonomous Execution",
+            "primarySkill": {
+                "name": "autonomous-loops",
+                "path": "Tool/everything-claude-code/skills/autonomous-loops/SKILL.md",
+                "confidence": 0.72,
+                "selectionReason": "Most comprehensive: 612 lines, 6 loop patterns, decision matrix, 23 code blocks."
+            },
+            "alternateSkills": [],
+            "rejectedSkills": [
+                {
+                    "name": "continuous-agent-loop",
+                    "path": "Tool/everything-claude-code/skills/continuous-agent-loop/SKILL.md",
+                    "confidence": 0.14,
+                    "rejectionReason": "45 lines, 1 code block. Superseded by autonomous-loops.",
+                    "rejectionCode": "superseded"
+                },
+                {
+                    "name": "ralphinho-rfc-pipeline",
+                    "path": "Tool/everything-claude-code/skills/ralphinho-rfc-pipeline/SKILL.md",
+                    "confidence": 0.18,
+                    "rejectionReason": "67 lines, 0 code blocks. A stub pointing to autonomous-loops section 6.",
+                    "rejectionCode": "superseded"
+                }
+            ],
+            "crossReferences": [
+                "agentic-engineering",
+                "ai-first-engineering"
+            ],
+            "fitScore": 0.90,
+            "riskNotes": "None. autonomous-loops clearly supersedes both alternatives.",
+            "workflowCompleteness": "complete",
+            "testability": "medium"
+        },
+        {
+            "topic": "Continuous Learning",
+            "primarySkill": {
+                "name": "continuous-learning-v2",
+                "path": "Tool/everything-claude-code/skills/continuous-learning-v2/SKILL.md",
+                "confidence": 0.72,
+                "selectionReason": "v2 adds project-scoped instincts and confidence scoring. 364 lines, 3 companion dirs."
+            },
+            "alternateSkills": [],
+            "rejectedSkills": [
+                {
+                    "name": "continuous-learning",
+                    "path": "Tool/everything-claude-code/skills/continuous-learning/SKILL.md",
+                    "confidence": 0.41,
+                    "rejectionReason": "v1 superseded by v2. Less structured, no project scoping.",
+                    "rejectionCode": "superseded"
+                }
+            ],
+            "crossReferences": [],
+            "fitScore": 0.80,
+            "riskNotes": "None.",
+            "workflowCompleteness": "complete",
+            "testability": "medium"
+        },
+        {
+            "topic": "Verification / QA Loops",
+            "primarySkill": {
+                "name": "verification-before-completion",
+                "path": "Tool/superpowers/skills/verification-before-completion/SKILL.md",
+                "confidence": 0.41,
+                "selectionReason": "Workflow discipline focus. Best for general verification mindset."
+            },
+            "alternateSkills": [
+                {
+                    "name": "django-verification",
+                    "path": "Tool/everything-claude-code/skills/django-verification/SKILL.md",
+                    "confidence": 0.67,
+                    "relationship": "superset",
+                    "useWhen": "Django projects (has higher score due to concrete bash commands)"
+                },
+                {
+                    "name": "springboot-verification",
+                    "path": "Tool/everything-claude-code/skills/springboot-verification/SKILL.md",
+                    "confidence": 0.54,
+                    "relationship": "superset",
+                    "useWhen": "Spring Boot projects"
+                },
+                {
+                    "name": "verification-loop",
+                    "path": "Tool/everything-claude-code/.agents/skills/verification-loop/SKILL.md",
+                    "confidence": 0.50,
+                    "relationship": "overlap",
+                    "useWhen": "Need Claude Code session-specific verification"
+                }
+            ],
+            "rejectedSkills": [],
+            "crossReferences": [
+                "e2e-testing",
+                "tdd-workflow"
+            ],
+            "fitScore": 0.75,
+            "riskNotes": "All verification skills are relatively thin. Framework-specific ones score higher.",
+            "workflowCompleteness": "partial",
+            "testability": "high"
+        },
+        {
+            "topic": "Skill Creation & Management",
+            "primarySkill": {
+                "name": "writing-skills",
+                "path": "Tool/superpowers/skills/writing-skills/SKILL.md",
+                "confidence": 0.85,
+                "selectionReason": "Highest score in toolBox. 655 lines, 21 code blocks, 5 companions, rich structure."
+            },
+            "alternateSkills": [
+                {
+                    "name": "skill-creator",
+                    "path": "Tool/skill-creator/SKILL.md",
+                    "confidence": 0.68,
+                    "relationship": "overlap",
+                    "useWhen": "Need eval/benchmark capabilities for skills. Broader than writing-skills."
+                },
+                {
+                    "name": "skill-stocktake",
+                    "path": "Tool/everything-claude-code/skills/skill-stocktake/SKILL.md",
+                    "confidence": 0.53,
+                    "relationship": "independent",
+                    "useWhen": "Auditing existing skills quality (Quick Scan or Full Stocktake)"
+                }
+            ],
+            "rejectedSkills": [],
+            "crossReferences": [
+                "find-skills",
+                "using-superpowers",
+                "configure-ecc"
+            ],
+            "fitScore": 0.90,
+            "riskNotes": "writing-skills and skill-creator have different angles; both useful.",
+            "workflowCompleteness": "complete",
+            "testability": "high"
+        }
+    ]
+}

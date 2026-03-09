@@ -1,0 +1,21 @@
+﻿{
+    "requirementRef": "REQ-20260307-061500",
+    "createdAt": "2026-03-07T06:15:20Z",
+    "tasks": [
+        {
+            "id": "T1",
+            "description": "åœ¨ AI/_rag_index/README.md æœ«å°¾è¿½åŠ  Quick Start ç« èŠ‚",
+            "skillRef": null,
+            "skillPath": null,
+            "dependencies": [],
+            "estimatedTokens": 500,
+            "verificationCriteria": [
+                "README.md contains '## Quick Start'",
+                "Quick Start has 3-step loading flow",
+                "Contains at least 1 query example",
+                "No existing lines deleted"
+            ],
+            "status": "done"
+        }
+    ]
+}

@@ -1,0 +1,53 @@
+{
+  "description": "任务类型路由映射 -- PM 根据任务类型决定下游处理方式",
+  "routes": {
+    "feature": {
+      "targetRole": "CTO",
+      "planningRequired": true,
+      "defaultMode": "serial",
+      "description": "新功能开发，CTO 规划后执行"
+    },
+    "bugfix": {
+      "targetRole": "CTO",
+      "planningRequired": false,
+      "defaultMode": "serial",
+      "description": "缺陷修复，简单修复可直接执行"
+    },
+    "refactor": {
+      "targetRole": "CTO",
+      "planningRequired": true,
+      "defaultMode": "serial",
+      "description": "重构类任务，需 CTO 评估影响范围"
+    },
+    "audit": {
+      "targetRole": "CTO",
+      "planningRequired": true,
+      "defaultMode": "parallel",
+      "description": "审计类任务，可多维度并行审计"
+    },
+    "integration": {
+      "targetRole": "CTO",
+      "planningRequired": true,
+      "defaultMode": "serial",
+      "description": "集成类任务，强依赖上下游"
+    },
+    "design": {
+      "targetRole": "CTO",
+      "planningRequired": true,
+      "defaultMode": "serial",
+      "description": "设计类任务，CTO 主导"
+    },
+    "documentation": {
+      "targetRole": "Execution",
+      "planningRequired": false,
+      "defaultMode": "parallel",
+      "description": "文档类任务，可并行处理"
+    },
+    "ki-maintenance": {
+      "targetRole": "CTO",
+      "planningRequired": false,
+      "defaultMode": "swarm",
+      "description": "KI 维护任务，适合蜂群式探索"
+    }
+  }
+}

@@ -1,0 +1,310 @@
+﻿{
+    "_meta":  {
+                  "category":  "ai_agent",
+                  "label":  "AIå·¥ç¨‹ / Agent \u0026 AI",
+                  "skillCount":  14
+              },
+    "skills":  [
+                   {
+                       "name":  "agentic-engineering",
+                       "description":  "Eval-first execution, decomposition, cost-aware model routing.",
+                       "path":  "everything-claude-code/skills/agentic-engineering/SKILL.md",
+                       "sizeBytes":  1794,
+                       "tokenEstimate":  500,
+                       "confidence":  0.16,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Eval-first loop (define â†’ baseline â†’ implement â†’ compare)",
+                                            "15-minute unit decomposition rule",
+                                            "Model routing (Haiku/Sonnet/Opus by complexity)",
+                                            "Session strategy",
+                                            "Review focus for AI-generated code"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "ai-first-engineering",
+                                                         "autonomous-loops"
+                                                     ],
+                                        "note":  "Concise. ai-first-engineering covers team process; autonomous-loops covers loop patterns"
+                                    }
+                   },
+                   {
+                       "name":  "ai-first-engineering",
+                       "description":  "Engineering operating model for AI-agent-heavy teams.",
+                       "path":  "everything-claude-code/skills/ai-first-engineering/SKILL.md",
+                       "sizeBytes":  1387,
+                       "tokenEstimate":  400,
+                       "confidence":  0.19,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Process shifts for AI teams",
+                                            "Agent-friendly architecture requirements",
+                                            "Code review priorities for AI code",
+                                            "Hiring signals for AI-first engineers"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "agentic-engineering"
+                                                     ],
+                                        "note":  "Team/process focused vs agentic-engineering\u0027s execution focus"
+                                    }
+                   },
+                   {
+                       "name":  "agent-harness-construction",
+                       "description":  "Design AI agent action spaces, tool definitions, observation formatting.",
+                       "path":  "everything-claude-code/skills/agent-harness-construction/SKILL.md",
+                       "sizeBytes":  2073,
+                       "tokenEstimate":  600,
+                       "confidence":  0.25,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Action space design (stable tool names, narrow schemas)",
+                                            "Granularity rules (micro/medium/macro tools)",
+                                            "Observation design (status/summary/next_actions/artifacts)",
+                                            "Error recovery contract",
+                                            "Context budgeting",
+                                            "Architecture patterns (ReAct vs function-calling vs hybrid)"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+
+                                                     ],
+                                        "note":  "Unique: agent tool/harness design. No alternative"
+                                    }
+                   },
+                   {
+                       "name":  "autonomous-loops",
+                       "description":  "Patterns from simple pipelines to RFC-driven multi-agent DAG systems.",
+                       "path":  "everything-claude-code/skills/autonomous-loops/SKILL.md",
+                       "sizeBytes":  25317,
+                       "tokenEstimate":  7400,
+                       "confidence":  0.72,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "6 loop patterns: Sequential, NanoClaw REPL, Infinite Agentic, Continuous PR, De-Sloppify, Ralphinho DAG",
+                                            "Decision matrix for pattern selection",
+                                            "Worktree isolation",
+                                            "Cross-iteration context (SHARED_TASK_NOTES.md)",
+                                            "CI failure recovery",
+                                            "Anti-patterns"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "continuous-agent-loop",
+                                                         "ralphinho-rfc-pipeline"
+                                                     ],
+                                        "note":  "MOST COMPREHENSIVE. continuous-agent-loop is a stub; ralphinho is a subset. Load autonomous-loops for full coverage"
+                                    }
+                   },
+                   {
+                       "name":  "continuous-agent-loop",
+                       "description":  "Patterns for continuous autonomous loops with quality gates.",
+                       "path":  "everything-claude-code/skills/continuous-agent-loop/SKILL.md",
+                       "sizeBytes":  1164,
+                       "tokenEstimate":  350,
+                       "confidence":  0.14,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Quality gate patterns",
+                                            "Eval-based loop control",
+                                            "Recovery controls"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "autonomous-loops"
+                                                     ],
+                                        "note":  "SUPERSEDED by autonomous-loops which is far more comprehensive"
+                                    }
+                   },
+                   {
+                       "name":  "ralphinho-rfc-pipeline",
+                       "description":  "RFC-driven multi-agent DAG with quality gates, merge queues.",
+                       "path":  "everything-claude-code/skills/ralphinho-rfc-pipeline/SKILL.md",
+                       "sizeBytes":  1589,
+                       "tokenEstimate":  470,
+                       "confidence":  0.18,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "RFC decomposition into work units",
+                                            "DAG execution order",
+                                            "Quality pipeline stages",
+                                            "Merge queue with eviction"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "autonomous-loops"
+                                                     ],
+                                        "note":  "Stub pointing to autonomous-loops section 6 which is the full reference"
+                                    }
+                   },
+                   {
+                       "name":  "continuous-learning",
+                       "description":  "Auto-extract reusable patterns from sessions and save as skills.",
+                       "path":  "everything-claude-code/skills/continuous-learning/SKILL.md",
+                       "sizeBytes":  3763,
+                       "tokenEstimate":  1100,
+                       "confidence":  0.41,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Session pattern extraction",
+                                            "Skill file generation",
+                                            "Reusable pattern detection"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "continuous-learning-v2"
+                                                     ],
+                                        "note":  "v1 - superseded by v2. Use v2 for new projects"
+                                    }
+                   },
+                   {
+                       "name":  "continuous-learning-v2",
+                       "description":  "Instinct-based learning system with confidence scoring, evolving into skills/commands/agents.",
+                       "path":  "everything-claude-code/skills/continuous-learning-v2/SKILL.md",
+                       "sizeBytes":  12817,
+                       "tokenEstimate":  3700,
+                       "confidence":  0.72,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Instinct-based observation system",
+                                            "Confidence scoring",
+                                            "Evolution: instincts â†’ skills â†’ commands â†’ agents",
+                                            "Project-scoped instincts (v2.1)",
+                                            "Hook-based session observation"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "continuous-learning"
+                                                     ],
+                                        "note":  "BEST version. Supersedes v1 with project scoping and confidence scoring"
+                                    }
+                   },
+                   {
+                       "name":  "cost-aware-llm-pipeline",
+                       "description":  "Cost optimization for LLM API: model routing, budget tracking, retry logic, prompt caching.",
+                       "path":  "everything-claude-code/skills/cost-aware-llm-pipeline/SKILL.md",
+                       "sizeBytes":  5901,
+                       "tokenEstimate":  1700,
+                       "confidence":  0.54,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Model routing by task complexity",
+                                            "Budget tracking per task",
+                                            "Retry logic with backoff",
+                                            "Prompt caching strategies",
+                                            "Cost per successful task metrics"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "agentic-engineering"
+                                                     ],
+                                        "note":  "Specialized cost focus. agentic-engineering touches cost briefly"
+                                    }
+                   },
+                   {
+                       "name":  "eval-harness",
+                       "description":  "Formal evaluation framework for eval-driven development (EDD).",
+                       "path":  "everything-claude-code/skills/eval-harness/SKILL.md",
+                       "sizeBytes":  6764,
+                       "tokenEstimate":  2000,
+                       "confidence":  0.63,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Eval definition framework",
+                                            "Capability and regression evals",
+                                            "Baseline capture",
+                                            "Delta comparison",
+                                            "Eval-driven development principles"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "agentic-engineering"
+                                                     ],
+                                        "note":  "Deep eval focus. agentic-engineering references eval-first briefly"
+                                    }
+                   },
+                   {
+                       "name":  "enterprise-agent-ops",
+                       "description":  "Long-lived agent workloads with observability, security, lifecycle management.",
+                       "path":  "everything-claude-code/skills/enterprise-agent-ops/SKILL.md",
+                       "sizeBytes":  1254,
+                       "tokenEstimate":  370,
+                       "confidence":  0.16,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Agent lifecycle management",
+                                            "Observability for agent workloads",
+                                            "Security boundaries"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "agentic-engineering"
+                                                     ],
+                                        "note":  "Concise/stub-like. Enterprise operations perspective"
+                                    }
+                   },
+                   {
+                       "name":  "iterative-retrieval",
+                       "description":  "Progressively refine context retrieval to solve subagent context problem.",
+                       "path":  "everything-claude-code/skills/iterative-retrieval/SKILL.md",
+                       "sizeBytes":  6871,
+                       "tokenEstimate":  2000,
+                       "confidence":  0.57,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Progressive context refinement",
+                                            "Subagent context problem solution",
+                                            "Retrieval strategy patterns"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+
+                                                     ],
+                                        "note":  "Unique: RAG/retrieval optimization for agents"
+                                    }
+                   },
+                   {
+                       "name":  "regex-vs-llm-structured-text",
+                       "description":  "Decision framework: regex vs LLM for parsing structured text.",
+                       "path":  "everything-claude-code/skills/regex-vs-llm-structured-text/SKILL.md",
+                       "sizeBytes":  6701,
+                       "tokenEstimate":  2000,
+                       "confidence":  0.44,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "Decision framework for parser selection",
+                                            "Regex-first approach",
+                                            "LLM for low-confidence edge cases",
+                                            "Hybrid strategies"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+
+                                                     ],
+                                        "note":  "Unique decision framework"
+                                    }
+                   },
+                   {
+                       "name":  "foundation-models-on-device",
+                       "description":  "Apple FoundationModels framework for on-device LLM in iOS 26+.",
+                       "path":  "everything-claude-code/skills/foundation-models-on-device/SKILL.md",
+                       "sizeBytes":  8419,
+                       "tokenEstimate":  2500,
+                       "confidence":  0.57,
+                       "origin":  "ECC",
+                       "bulletPoints":  [
+                                            "On-device text generation",
+                                            "@Generable guided generation",
+                                            "Tool calling on-device",
+                                            "Snapshot streaming",
+                                            "iOS 26+ specific"
+                                        ],
+                       "crossRef":  {
+                                        "overlaps":  [
+                                                         "swiftui-patterns"
+                                                     ],
+                                        "note":  "Unique: on-device LLM. Apple-specific"
+                                    }
+                   }
+               ]
+}

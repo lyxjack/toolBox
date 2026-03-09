@@ -1,0 +1,42 @@
+﻿{
+    "_meta": {
+        "description": "Duplicate skill governance registry. Records cross-references, primary/alternate selections, and rejection reasons.",
+        "version": "1.0",
+        "dataSource": "AI/_rag_index/cross_references.json + AI/_quality_audit_corrected.json"
+    },
+    "reviews": [],
+    "reviewSchema": {
+        "topic": "string â€” skill group/topic name",
+        "primarySkill": {
+            "name": "string",
+            "path": "string",
+            "confidence": "number",
+            "selectionReason": "string â€” why this is the primary choice"
+        },
+        "alternateSkills": [
+            {
+                "name": "string",
+                "path": "string",
+                "confidence": "number",
+                "relationship": "enum: subset | superset | overlap | independent",
+                "useWhen": "string â€” when to use this instead of primary"
+            }
+        ],
+        "rejectedSkills": [
+            {
+                "name": "string",
+                "path": "string",
+                "confidence": "number",
+                "rejectionReason": "string â€” why not recommended",
+                "rejectionCode": "enum: superseded | low_quality | duplicate | incompatible | too_narrow"
+            }
+        ],
+        "crossReferences": [
+            "string â€” related skill names"
+        ],
+        "fitScore": "number 0-1 â€” overall fitness for project needs",
+        "riskNotes": "string â€” risks of using this skill group",
+        "workflowCompleteness": "enum: complete | partial | stub",
+        "testability": "enum: high | medium | low | untestable"
+    }
+}

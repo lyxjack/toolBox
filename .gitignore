@@ -1,0 +1,12 @@
+# Local settings
+.claude/settings.local.json
+
+# Tool layer: ignore nested .git dirs from cloned repos
+Tool/**/.git/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TaskBrief",
+  "description": "PM 层统一任务母规范 -- 所有任务类型的通用 schema",
+  "type": "object",
+  "required": ["taskId", "source", "type", "description", "businessGoal", "scope", "acceptanceCriteria"],
+  "properties": {
+    "taskId": {
+      "type": "string",
+      "description": "唯一任务编号，格式: TASK-{NNN}",
+      "pattern": "^TASK-\\d{3,}$"
+    },
+    "source": {
+      "type": "string",
+      "description": "任务来源（用户/系统/归档反哺）"
+    },
+    "type": {
+      "type": "string",
+      "description": "任务类型",
+      "enum": ["feature", "bugfix", "refactor", "audit", "integration", "design", "documentation", "ki-maintenance"]
+    },
+    "description": {
+      "type": "string",
+      "description": "需求标准化描述"
+    },
+    "businessGoal": {
+      "type": "string",
+      "description": "业务目标"
+    },
+    "technicalGoal": {
+      "type": "string",
+      "description": "技术目标"
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "inScope": { "type": "array", "items": { "type": "string" } },
+        "outOfScope": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["inScope", "outOfScope"]
+    },
+    "impactAnalysis": {
+      "type": "object",
+      "properties": {
+        "affectedLayers": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["PM", "Agent", "KI", "Tool", "In-Process"] }
+        },
+        "affectedFiles": { "type": "array", "items": { "type": "string" } },
+        "riskLevel": { "type": "string", "enum": ["low", "medium", "high", "critical"] }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "acceptanceCriteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^AC-\\d{3}$" },
+          "criterion": { "type": "string" },
+          "verificationMethod": { "type": "string" }
+        },
+        "required": ["id", "criterion", "verificationMethod"]
+      }
+    },
+    "traceability": {
+      "type": "object",
+      "description": "追溯字段",
+      "properties": {
+        "requirementRef": { "type": "string", "description": "需求对照" },
+        "changeRef": { "type": "string", "description": "修改对照" },
+        "testCoverage": { "type": "string", "description": "测试覆盖" },
+        "ciRef": { "type": "string", "description": "CI/集成测试对照" }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "description": "任务路由信息",
+      "properties": {
+        "targetRole": { "type": "string", "enum": ["CTO", "Execution", "QA"] },
+        "executionMode": { "type": "string", "enum": ["serial", "parallel", "swarm"] },
+        "planningRequired": { "type": "boolean" }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "description": "任务类型特定扩展字段（按需填写）",
+      "additionalProperties": true
+    }
+  }
+}

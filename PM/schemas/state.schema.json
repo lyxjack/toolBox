@@ -1,0 +1,64 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "SessionState",
+    "type": "object",
+    "required": [
+        "sessionId",
+        "requirementRef",
+        "currentState",
+        "history"
+    ],
+    "properties": {
+        "sessionId": {
+            "type": "string"
+        },
+        "requirementRef": {
+            "type": "string"
+        },
+        "currentState": {
+            "enum": [
+                "INTAKE",
+                "PM_ANALYSIS",
+                "CTO_PLANNING",
+                "EXECUTION",
+                "QA_VERIFICATION",
+                "REWORK",
+                "JOINT_APPROVAL",
+                "DELIVERED"
+            ]
+        },
+        "reworkCount": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "history": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "from",
+                    "to",
+                    "timestamp"
+                ],
+                "properties": {
+                    "from": {
+                        "type": "string"
+                    },
+                    "to": {
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "gate": {
+                        "type": "string"
+                    },
+                    "notes": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,160 @@
+﻿{
+    "_meta": {
+        "description": "toolBox project skill registry. Top 30 skills by confidence, pre-populated from quality audit.",
+        "version": "1.0",
+        "lastUpdated": "2026-03-07",
+        "dataSource": "AI/_quality_audit_corrected.json"
+    },
+    "enabledSkills": [
+        {
+            "name": "writing-skills",
+            "path": "Tool/superpowers/skills/writing-skills/SKILL.md",
+            "category": "meta_tooling",
+            "confidence": 0.85,
+            "enabledReason": "Highest quality skill. Essential for skill creation workflow.",
+            "usageNotes": "Has 5 companion files + 1 subdirectory. Load SKILL.md first.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "test-driven-development",
+            "path": "Tool/superpowers/skills/test-driven-development/SKILL.md",
+            "category": "testing",
+            "confidence": 0.81,
+            "enabledReason": "Comprehensive TDD with anti-patterns companion file.",
+            "usageNotes": "Prefer over tdd-workflow (0.63) for general TDD guidance.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "api-design",
+            "path": "Tool/everything-claude-code/.agents/skills/api-design/SKILL.md",
+            "category": "backend",
+            "confidence": 0.77,
+            "enabledReason": "Best API design reference. 4 languages, 24 code blocks.",
+            "usageNotes": "Has companion directory. Covers REST patterns comprehensively.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "database-migrations",
+            "path": "Tool/everything-claude-code/skills/database-migrations/SKILL.md",
+            "category": "backend",
+            "confidence": 0.75,
+            "enabledReason": "Multi-ORM migration coverage. 5 languages.",
+            "usageNotes": "Use for any schema change workflow.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "python-testing",
+            "path": "Tool/everything-claude-code/skills/python-testing/SKILL.md",
+            "category": "testing",
+            "confidence": 0.72,
+            "enabledReason": "816 lines, 41 code blocks. Most comprehensive Python testing.",
+            "usageNotes": "Use for general Python. For Django-specific, use django-tdd.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "autonomous-loops",
+            "path": "Tool/everything-claude-code/skills/autonomous-loops/SKILL.md",
+            "category": "ai_agent",
+            "confidence": 0.72,
+            "enabledReason": "Most comprehensive agent loop reference. 6 patterns, 612 lines.",
+            "usageNotes": "Supersedes continuous-agent-loop and ralphinho-rfc-pipeline.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "continuous-learning-v2",
+            "path": "Tool/everything-claude-code/skills/continuous-learning-v2/SKILL.md",
+            "category": "ai_agent",
+            "confidence": 0.72,
+            "enabledReason": "v2 supersedes v1. Project-scoped instincts.",
+            "usageNotes": "Has 1 companion file + 3 subdirectories.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "golang-patterns",
+            "path": "Tool/everything-claude-code/skills/golang-patterns/SKILL.md",
+            "category": "language_specific",
+            "confidence": 0.70,
+            "enabledReason": "Idiomatic Go. 26 code blocks, good/bad comparisons.",
+            "usageNotes": "Pair with golang-testing for full Go development.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "ui-ux-pro-max",
+            "path": "Tool/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/SKILL.md",
+            "category": "frontend",
+            "confidence": 0.70,
+            "enabledReason": "Best UI/UX design reference. 50 styles, 21 palettes.",
+            "usageNotes": "Has 2 companion files. Large data/ and templates/ directories.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "django-tdd",
+            "path": "Tool/everything-claude-code/skills/django-tdd/SKILL.md",
+            "category": "testing",
+            "confidence": 0.70,
+            "enabledReason": "Deep Django testing. 729 lines.",
+            "usageNotes": "Use for Django projects. python-testing for general Python.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "skill-creator",
+            "path": "Tool/skill-creator/SKILL.md",
+            "category": "meta_tooling",
+            "confidence": 0.68,
+            "enabledReason": "Most comprehensive skill creation tool. 485 lines.",
+            "usageNotes": "writing-skills is more opinionated; skill-creator is broader.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "python-patterns",
+            "path": "Tool/everything-claude-code/skills/python-patterns/SKILL.md",
+            "category": "language_specific",
+            "confidence": 0.68,
+            "enabledReason": "750 lines, 34 code blocks for pythonic patterns.",
+            "usageNotes": "General Python. For Django â†’ django-patterns.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "cpp-coding-standards",
+            "path": "Tool/everything-claude-code/skills/cpp-coding-standards/SKILL.md",
+            "category": "language_specific",
+            "confidence": 0.68,
+            "enabledReason": "Largest skill file. C++ Core Guidelines based.",
+            "usageNotes": "Pair with cpp-testing.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "security-review",
+            "path": "Tool/everything-claude-code/.agents/skills/security-review/SKILL.md",
+            "category": "security",
+            "confidence": 0.68,
+            "enabledReason": "Best general security skill. OWASP-aligned.",
+            "usageNotes": "For Django â†’ django-security. For Spring â†’ springboot-security.",
+            "lastUsed": null,
+            "effectiveness": null
+        },
+        {
+            "name": "systematic-debugging",
+            "path": "Tool/superpowers/skills/systematic-debugging/SKILL.md",
+            "category": "testing",
+            "confidence": 0.56,
+            "enabledReason": "Unique debugging methodology. 10 companion files.",
+            "usageNotes": "Low code blocks in SKILL.md but rich companion resources.",
+            "lastUsed": null,
+            "effectiveness": null
+        }
+    ]
+}
