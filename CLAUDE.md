@@ -64,8 +64,8 @@
 
 ### KI Layer
 - External_KI: `KI/External_KI/` — 88 skill 主索引 + 12 类别索引 + 质量审计 + 交叉引用
-- Internal_KI: `KI/Internal_KI/` — 项目决策、经验教训、方式复用模式
-- Error_Book: `KI/Error_Book/` — 错题本（20 个错误码 + 条目）
+- Internal_KI: `KI/Internal_KI/` — 项目级知识库接口契约（实际数据在各项目中）
+- Error_Book: `KI/Error_Book/` — 全局级错题本（跨项目共享，含 entries/）
 - Templates: `KI/Templates/` — ki_entry, error_book_entry 模板
 
 ### Tool Layer
@@ -95,6 +95,7 @@
 - File Governance: `Agent/rules/file_governance.md`
 - Internal_KI Contract: `KI/Internal_KI/contract.md`
 - Error_Book Contract: `KI/Error_Book/contract.md`
+- Project-Level Setup Guide: `Agent/guides/project-level-skills-setup.md`
 
 ## Execution Modes
 

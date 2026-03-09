@@ -10,9 +10,9 @@
 
 | 位置 | 内容 | 治理要求 |
 |------|------|---------|
-| `${USER_HOME}/.claude/skills/` | 全局 Agent Skills | SKILL.md frontmatter 规范 |
+| `C:/Users/{user}/.claude/skills/` | 全局 Agent Skills | SKILL.md frontmatter 规范 |
 | `${TOOLBOX_ROOT}/KI/Internal_KI/` | Internal_KI 接口定义 | 仅存 `contract.md`，不存项目数据 |
-| `${TOOLBOX_ROOT}/KI/Error_Book/` | Error_Book 接口定义 | 仅存 `contract.md` + `errorCodeReference` |
+| `${TOOLBOX_ROOT}/KI/Error_Book/` | 全局 Error_Book（数据+规范） | `contract.md` + `index.json` + `entries/` |
 | `${TOOLBOX_ROOT}/Agent/templates/project_scaffold/` | 项目脚手架模板 | 定义项目初始结构 |
 | `${TOOLBOX_ROOT}/Agent/index/` | 全局 Skill Registry | 全局技能索引 |
 
@@ -21,7 +21,6 @@
 | 位置 | 内容 | 接口契约 |
 |------|------|---------|
 | `{project}/.claude/internal_ki/` | 项目知识库 | `KI/Internal_KI/contract.md` |
-| `{project}/.claude/error_book/` | 项目错题本 | `KI/Error_Book/contract.md` |
 | `{project}/.claude/skills/` | 项目级技能 | SKILL.md frontmatter 规范 |
 | `{project}/CLAUDE.md` | 项目规则声明 | 必须声明所有项目级内容路径 |
 
@@ -39,9 +38,7 @@
 │   │   ├── backend/
 │   │   ├── data-logic/
 │   │   └── code-design/
-│   ├── error_book/                    ← 项目错题本（按需）
-│   │   ├── index.json                 ← 错题索引
-│   │   └── entries/                   ← 错题详情
+│   │                                  （Error_Book 为全局级，见 KI/Error_Book/）
 │   └── skills/                        ← 项目级技能（按需）
 │       └── {skill-name}/
 │           └── SKILL.md
