@@ -1,17 +1,9 @@
 {
     "_meta": {
-        "description": "Project-level Internal KI. Cross-session learnings, decisions, and patterns.",
-        "version": "2.0",
-        "recordingPolicy": {
-            "decisions": "每次 plan 关闭或重大技术选择时，必须记录 1-2 条 decision",
-            "lessons": "每次 QA 通过或返工修复后，必须评估是否有可沉淀经验",
-            "patterns": "当某个操作方式/架构模式被证明在项目内高频复用时，沉淀为 pattern"
-        },
-        "relatedDirs": {
-            "decisions": "KI/Internal_KI/decisions/",
-            "lessons": "KI/Internal_KI/lessons/",
-            "patterns": "KI/Internal_KI/patterns/"
-        }
+        "description": "Internal_KI 接口注册表。定义 Internal_KI 的用途和结构规范。实际项目数据存放在各项目的 .claude/internal_ki/ 中。",
+        "version": "3.0",
+        "contract": "KI/Internal_KI/contract.md",
+        "note": "本文件保留 toolBox 自身的知识条目。各项目的 KI 条目在项目目录内管理。"
     },
     "decisions": [
         {
@@ -37,18 +29,27 @@
             "date": "2026-03-09",
             "topic": "Five-Layer Architecture Migration",
             "decision": "Migrate from role-based 3-layer (Global/Project/Session) to 5-layer (PM/Agent/KI/Tool/In-Process)",
-            "rationale": "Aligns with industry consensus (Anthropic orchestrator-workers, LangGraph layered state, MemGPT tiered memory). Provides clearer separation of concerns. Supported by OpenAI Agents SDK, Google ADK, CrewAI patterns.",
-            "alternatives": ["Keep existing 3-layer", "4-layer (merge PM into Agent)", "6-layer (split Agent into Orchestrator+Executor)"],
-            "outcome": "Migration completed. Old AI/ and external_KI/ retained as backup."
+            "rationale": "Aligns with industry consensus.",
+            "alternatives": ["Keep existing 3-layer", "4-layer", "6-layer"],
+            "outcome": "Migration completed."
         },
         {
             "id": "DEC-004",
             "date": "2026-03-09",
             "topic": "Execution Mode Upgrade",
             "decision": "Upgrade execution.md from v1 (serial-only) to v2 (serial/parallel/swarm)",
-            "rationale": "v1 serial-only was a known limitation. task_dag.schema already supported dependencies field for parallel. Industry frameworks (Google ADK ParallelAgent, Anthropic Sectioning, CrewAI) all support multi-mode.",
+            "rationale": "v1 serial-only was a known limitation.",
             "alternatives": ["Keep serial-only", "Parallel-only (no swarm)"],
             "outcome": "execution.md and strategy.md updated."
+        },
+        {
+            "id": "DEC-005",
+            "date": "2026-03-09",
+            "topic": "File Governance Architecture",
+            "decision": "公有级定义接口契约(contract.md)，项目级在 .claude/ 中存放实际数据",
+            "rationale": "公有级=做饭的能力定义，项目级=具体菜谱。数据跟项目走，接口跟公有走。",
+            "alternatives": ["所有数据集中在 ${TOOLBOX_ROOT}/KI/", "projectScope 字段区分"],
+            "outcome": null
         }
     ],
     "lessons": [
@@ -56,17 +57,17 @@
             "id": "LES-001",
             "date": "2026-03-07",
             "context": "Skill quality audit",
-            "lesson": "File size is NOT a reliable proxy for quality. A 25KB file can be mostly boilerplate while a 10KB file can be dense and actionable.",
-            "evidence": "agentic-engineering: 63 lines but initially scored 0.82. Writing-skills: 655 lines legitimately scored 0.85.",
-            "prevention": "Always use multi-signal structural audit, not single-dimension proxy."
+            "lesson": "File size is NOT a reliable proxy for quality.",
+            "evidence": "agentic-engineering: 63 lines but initially scored 0.82.",
+            "prevention": "Always use multi-signal structural audit."
         },
         {
             "id": "LES-002",
             "date": "2026-03-09",
             "context": "Architecture migration",
-            "lesson": "Background agents may fail due to tool permissions. Always verify agent output and have fallback to main process execution.",
-            "evidence": "3 of 4 layer-creation agents failed due to bash permission denial. Main process had to complete their work.",
-            "prevention": "For critical file operations, prefer main process execution or verify agent results immediately."
+            "lesson": "Background agents may fail due to tool permissions.",
+            "evidence": "3 of 4 layer-creation agents failed due to bash permission denial.",
+            "prevention": "Prefer main process execution or verify agent results immediately."
         }
     ]
 }

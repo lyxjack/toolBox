@@ -92,6 +92,9 @@
 - Audit Ledger Mode: `Agent/rules/audit_ledger_mode.md`
 - Project Rules: `Agent/rules/project_rules.md`
 - Orchestration Strategy: `Agent/orchestrator/strategy.md`
+- File Governance: `Agent/rules/file_governance.md`
+- Internal_KI Contract: `KI/Internal_KI/contract.md`
+- Error_Book Contract: `KI/Error_Book/contract.md`
 
 ## Execution Modes
 
