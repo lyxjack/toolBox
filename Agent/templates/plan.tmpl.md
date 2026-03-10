@@ -1,7 +1,7 @@
 ﻿# Execution Plan
 <!-- 
   å‘½å: {date}__{project}__plan__{id}__{slug}.md
-  ä½ç½®: In-Process/active/{run_id}/
+  ä½ç½®: .in-process/active/{run_id}/
   çŠ¶æ€: active | superseded | closed | archived
 -->
 

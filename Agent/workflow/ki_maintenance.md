@@ -47,5 +47,5 @@ KI 维护流程，负责 KI 资产的增删改操作。
 - KI/Error_Book/index.json（如涉及错误模式）
 
 ### Step 6: 变更记录
-在 In-Process/active/{run_id}/ 中记录 change_manifest，
+在 .in-process/active/{run_id}/ 中记录 change_manifest，
 记录 KI 操作类型、受影响文件、变更前后对照。

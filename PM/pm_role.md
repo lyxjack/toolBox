@@ -21,7 +21,7 @@
 ## è¾“å‡º
 | å·¥ä»¶ | ä½ç½® | æ¨¡æ¿ |
 |------|------|------|
-| `requirement_package.md` | `In-Process/active/{id}/` | `PM/templates/requirement_package.tmpl.md` |
+| `requirement_package.md` | `.in-process/active/{id}/` | `PM/templates/requirement_package.tmpl.md` |
 
 ## è´¨é‡æ ‡å‡†
 - [ ] Clarified Intent ä¸ç­‰äºŽåŽŸå§‹è¯·æ±‚çš„å¤åˆ¶ç²˜è´´

@@ -108,7 +108,7 @@ output(summary_manifest)
   - 对比分析
   - 最终选择及理由
   - 被弃用方案的归档位置
-- 被弃用方案归入 `In-Process/scratch/`
+- 被弃用方案归入 `.in-process/scratch/`
 
 ### 适用场景
 - 大规模知识提炼（如 Tool → KI 批量提取）

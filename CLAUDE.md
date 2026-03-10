@@ -10,7 +10,7 @@
 | **Agent** | `Agent/` | 治理与编排层：角色、规则、工作流、调度策略 |
 | **KI** | `KI/` | 核心知识资产层：External_KI、Internal_KI、Error_Book |
 | **Tool** | `Tool/` | 外部原始资源层：git clone 的 skill 仓库（只读） |
-| **In-Process** | `In-Process/` | 运行期过程文件层：执行、审计、草稿、归档 |
+| **In-Process** | `In-Process/` | 运行期过程文件层：仅存接口契约（`contract.md`），实际数据在各项目的 `.in-process/` 中 |
 
 ## Hard Constraint — 五层架构文件治理
 
@@ -20,7 +20,7 @@
 |------|------|
 | **根目录纯净** | toolBox 根目录只允许存在 `Agent/`、`In-Process/`、`KI/`、`PM/`、`Tool/` 五个业务目录和 `CLAUDE.md` 配置文件。禁止在根目录创建任何其他业务文件夹或散落文件。 |
 | **层间不越界** | 每层只存放属于该层职责的文件。PM 层不存代码，Agent 层不存原始 skill，Tool 层不存治理文档，KI 层不存过程文件，In-Process 层不存永久知识。 |
-| **写入路径白名单** | Skill 源仓库 → `Tool/`；索引与知识 → `KI/`；治理规则/模板/编排 → `Agent/`；需求入口 → `PM/`；运行期工件 → `In-Process/`。不在白名单内的路径禁止写入。 |
+| **写入路径白名单** | Skill 源仓库 → `Tool/`；索引与知识 → `KI/`；治理规则/模板/编排 → `Agent/`；需求入口 → `PM/`；接口契约 → `In-Process/contract.md`；运行期工件 → 各项目的 `.in-process/`。不在白名单内的路径禁止写入。 |
 | **无冗余副本** | 同一文件不得在多个层中存在副本。如需引用，使用路径引用而非复制。 |
 | **遗留目录已清除** | `AI/` 和 `external_KI/` 已于 2026-03-09 完成迁移并删除。禁止重新创建这些目录。 |
 
@@ -36,7 +36,7 @@
 6. **NO CI-ONLY APPROVAL** — 不得仅凭编译通过放行
 7. **REJECTION REQUIRES REASON CODE** — 驳回必须带原因码
 8. **ARTIFACTS STAY CURRENT** — 工件必须与实际一致
-9. **TEMP FILES ARE MANAGED** — 临时文件纳入 `In-Process/scratch/` 管理
+9. **TEMP FILES ARE MANAGED** — 临时文件纳入项目 `.in-process/scratch/` 管理
 10. **PLAN-DRIVEN MODE FOR LARGE CHANGES** — 大变更必须先有 plan 工件
 11. **SKILL FILE GOVERNANCE** — Skill 增删必须同步更新索引、注册、去重审查，详见 `Agent/rules/iron_laws.md` §11
 
@@ -75,12 +75,14 @@
 - Skill Registry: `Agent/index/skill_registry.json`
 - Duplicate Review: `Agent/index/duplicate_review.json`
 
-### In-Process Layer
-- Active Runs: `In-Process/active/{run_id}/`
-- Audit Records: `In-Process/audit/` (永不删除)
-- Scratch: `In-Process/scratch/` (session 结束清理)
-- Archive: `In-Process/archive/` (90 天保留)
-- Archive Index: `In-Process/index/archive_manifest.json`
+### In-Process Layer（项目级）
+- **接口契约**: `In-Process/contract.md`（全局定义，不存项目数据）
+- **项目实例**: `{project}/.in-process/`（各项目独立管理）
+  - Active Runs: `.in-process/active/{run_id}/`
+  - Audit Records: `.in-process/audit/` (永不删除)
+  - Scratch: `.in-process/scratch/` (session 结束清理)
+  - Archive: `.in-process/archive/` (90 天保留)
+  - Archive Index: `.in-process/index/archive_manifest.json`
 
 ## Key Governance Docs
 
@@ -94,6 +96,7 @@
 - Orchestration Strategy: `Agent/orchestrator/strategy.md`
 - File Governance: `Agent/rules/file_governance.md`
 - Internal_KI Contract: `KI/Internal_KI/contract.md`
+- In-Process Contract: `In-Process/contract.md`
 - Error_Book Contract: `KI/Error_Book/contract.md`
 - Project-Level Setup Guide: `Agent/guides/project-level-skills-setup.md`
 

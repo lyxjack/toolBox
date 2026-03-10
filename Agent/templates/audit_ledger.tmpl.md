@@ -1,7 +1,7 @@
 ﻿# Audit Ledger
 <!--
   å‘½å: {date}__{project}__audit__{id}__{slug}.md
-  ä½ç½®: In-Process/audit/
+  ä½ç½®: .in-process/audit/
   çŠ¶æ€: active | pending_remediation | closed | archived
 -->
 

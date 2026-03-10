@@ -48,7 +48,7 @@
             "topic": "File Governance Architecture",
             "decision": "公有级定义接口契约(contract.md)，项目级在 .claude/ 中存放实际数据",
             "rationale": "公有级=做饭的能力定义，项目级=具体菜谱。数据跟项目走，接口跟公有走。",
-            "alternatives": ["所有数据集中在 ${TOOLBOX_ROOT}/KI/", "projectScope 字段区分"],
+            "alternatives": ["所有数据集中在 D:/toolBox/KI/", "projectScope 字段区分"],
             "outcome": null
         }
     ],

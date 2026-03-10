@@ -11,7 +11,7 @@ description: 唯一入口。用户提交需求后，PM 分析需求、召回上�
 
 ### Step 1: 创建 Session
 1. 生成 session ID: `{YYYYMMDD-HHMMSS}`
-2. 创建 session 目录: `In-Process/active/{session_id}/`
+2. 创建 session 目录: `.in-process/active/{session_id}/`
 3. 创建 `state.json`:
 ```json
 {

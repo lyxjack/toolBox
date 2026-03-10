@@ -12,7 +12,8 @@
 │ Agent Skills 定义             │          │ 项目源码                      │
 │ 治理规则 & 接口契约            │──指导──→│ 项目级 Skills 实例             │
 │ Error_Book (全局共享)         │          │ - Internal_KI                │
-│ 本指南                       │          │ - 项目级 Skills               │
+│ 本指南                       │          │ - In-Process                 │
+│                              │          │ - 项目级 Skills               │
 │                              │          │                              │
 │ 增删改 → 用户确认 → push      │          │ 增删改 → 用户确认 → push       │
 │ repo: megaProject            │          │ repo: 项目自行指定             │
@@ -41,7 +42,7 @@
 ## Project-Level Content
 
 ### Internal KI（项目知识库）
-- **接口契约**: `${TOOLBOX_ROOT}/KI/Internal_KI/contract.md`
+- **接口契约**: `D:/toolBox/KI/Internal_KI/contract.md`
 - **路径**: `.claude/internal_ki/`
 - **索引**: `.claude/internal_ki/index.json`
 - **启用 Category**: {从 frontend, backend, data-logic, code-design 中选择}
@@ -52,7 +53,7 @@
 - **项目 Repo**: {项目的 GitHub repo 地址，如有}
 
 ## 文件治理
-本项目遵循 `${TOOLBOX_ROOT}/Agent/rules/file_governance.md` 规范。
+本项目遵循 `D:/toolBox/Agent/rules/file_governance.md` 规范。
 ```
 
 ### Step 2: 创建 Internal_KI 目录结构
@@ -131,7 +132,7 @@ mkdir -p .claude/internal_ki/{frontend,backend,data-logic,code-design}
 
 Error_Book 是**全局级**的，不需要在项目中创建。
 
-- **位置**: `${TOOLBOX_ROOT}/KI/Error_Book/`
+- **位置**: `D:/toolBox/KI/Error_Book/`
 - **规范**: `KI/Error_Book/contract.md`
 - **使用方式**: Agent 自动在所有项目中启用关键词召回
 
@@ -193,8 +194,8 @@ scope 为变更模块：`internal-ki`、`error-book`、`agent`、`governance` �
 
 ```
 # Format: SENSITIVE_VALUE<TAB>REPLACEMENT
-${TOOLBOX_ROOT}/	${TOOLBOX_ROOT}/
-${USER_HOME}/	${USER_HOME}/
+D:/toolBox/	${TOOLBOX_ROOT}/
+C:/Users/{username}/	${USER_HOME}/
 {project_path}	${PROJECT_ROOT}
 {username}	${USER}
 ```
@@ -222,7 +223,63 @@ ${USER_HOME}/	${USER_HOME}/
 未脱敏文件: {不含敏感内容的文件列表}
 ```
 
-## 7. 完整项目目录结构参考
+## 7. In-Process 初始化（运行期过程文件）
+
+In-Process 是项目级的运行期过程文件层。当项目需要走 PM → CTO → Execution → QA → Joint Approval 闭环时，必须初始化 In-Process。
+
+### Step 1: 创建 In-Process 目录结构
+
+```bash
+mkdir -p .in-process/{active,archive,audit,index,scratch}
+```
+
+### Step 2: 初始化 archive_manifest.json
+
+创建 `.in-process/index/archive_manifest.json`：
+
+```json
+{
+    "_meta": {
+        "projectName": "{项目名}",
+        "projectPath": "{项目绝对路径}",
+        "description": "Archive index — all completed run records",
+        "version": "1.0",
+        "lastUpdated": "{YYYY-MM-DD}"
+    },
+    "entries": [],
+    "lifecycle": {
+        "activeRetention": "until completion or cancellation",
+        "archiveRetention": "90 days",
+        "auditRetention": "permanent",
+        "scratchRetention": "session-scoped, cleared at session end"
+    }
+}
+```
+
+### Step 3: 在项目 CLAUDE.md 中声明
+
+```markdown
+### In-Process（运行期过程文件）
+- **接口契约**: `D:/toolBox/In-Process/contract.md`
+- **路径**: `.in-process/`
+- **索引**: `.in-process/index/archive_manifest.json`
+```
+
+### Step 4: 配置 .gitignore
+
+In-Process 中的临时文件和活跃 run 不应推送：
+
+```gitignore
+# In-Process runtime files
+.in-process/active/
+.in-process/scratch/
+```
+
+归档和审计记录是否推送由项目决定。
+
+完整规范见 `D:/toolBox/In-Process/contract.md`。
+
+## 8. 完整项目目录结构参考
 
 ```
 {project}/
@@ -241,7 +298,16 @@ ${USER_HOME}/	${USER_HOME}/
 │   └── skills/                        ← 项目级技能（按需）
 │       └── {skill-name}/
 │           └── SKILL.md
+├── .in-process/                       ← 运行期过程文件
+│   ├── active/                        ← 当前活跃 run
+│   ├── archive/                       ← 已完成 run（90 天保留）
+│   ├── audit/                         ← 审计记录（永久）
+│   ├── index/
+│   │   └── archive_manifest.json      ← 归档索引
+│   └── scratch/                       ← 临时文件（session 清理）
 └── src/                               ← 项目源码
 ```
 
-注意：`error_book/` **不在项目中**，它是全局级资产，位于 `${TOOLBOX_ROOT}/KI/Error_Book/`。
+注意：
+- `error_book/` **不在项目中**，它是全局级资产，位于 `D:/toolBox/KI/Error_Book/`。
+- `.in-process/` 是项目级资产，接口契约在 `D:/toolBox/In-Process/contract.md`。

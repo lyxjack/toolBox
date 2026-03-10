@@ -49,7 +49,7 @@ Plan å’Œ Audit æ˜¯æ­£å¼å·¥ä»¶ï¼Œæ‹¥æœ‰ç”Ÿå�
 |----|------|-------|---------|
 | **Global** | `Agent/rules/` | æž¶æž„å¸ˆ | æ°¸ä¹… |
 | **Project** | `{project}/Agent/` | PM + CTO | é¡¹ç›®å­˜ç»­æœŸ |
-| **Session/Run** | `{project}/In-Process/active/{id}/` | è‡ªåŠ¨ | å•æ¬¡ run â†’ å½’æ¡£ |
+| **Session/Run** | `{project}/.in-process/active/{id}/` | è‡ªåŠ¨ | å•æ¬¡ run â†’ å½’æ¡£ |
 
 ## 4. çŠ¶æ€æœº
 

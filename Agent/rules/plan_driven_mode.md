@@ -21,7 +21,7 @@
 ## 2. å¯ç”¨åŽçš„å¼ºåˆ¶è¡Œä¸º
 
 ### 2.1 åˆ›å»º Plan å·¥ä»¶
-åœ¨ `In-Process/active/{run_id}/` ä¸‹åˆ›å»ºæ­£å¼ plan æ–‡ä»¶ï¼š
+åœ¨ `.in-process/active/{run_id}/` ä¸‹åˆ›å»ºæ­£å¼ plan æ–‡ä»¶ï¼š
 ```
 å‘½å: {date}__{project}__{type}__{id}__{slug}.md
 ç¤ºä¾‹: 20260307__myapp__plan__001__api-refactor.md

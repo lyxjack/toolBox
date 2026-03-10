@@ -36,9 +36,10 @@ QA 驳回必须带结构化原因码 (`{CATEGORY}-{SUBCATEGORY}`)。
 不得让 execution_plan 与实际执行不一致。
 
 ## IRON LAW 09 — TEMP FILES ARE MANAGED
-临时文件必须放在 `In-Process/scratch/` 下。
+临时文件必须放在项目的 `.in-process/scratch/` 下。
 会话结束时：有价值的归档，无价值的删除。
 禁止在项目根目录随意创建临时文件。
+接口契约见 `In-Process/contract.md`。
 
 ## IRON LAW 10 — PLAN-DRIVEN MODE FOR LARGE CHANGES
 当文件读取超过 15 个或修改超过 5 个文件时，
@@ -57,7 +58,7 @@ Agent Skills 的增删改必须遵守以下治理流程，违反触发 ISO-003�
 6. 若 skill 与已有 skill 功能重叠率 > 70%，必须在 duplicate_review 中标注并由 Skill Governance 角色决策保留/淘汰。
 
 ### 11.2 — 删除 Skill
-1. 删除前必须确认无活跃任务依赖该 skill（检查 `In-Process/active/`）。
+1. 删除前必须确认无活跃任务依赖该 skill（检查项目 `.in-process/active/`）。
 2. 从 `Tool/` 中移除源仓库目录。
 3. 同步删除 `KI/External_KI/master_index.json`、对应类别索引、`cross_references.json` 中的条目。
 4. 同步删除 `Agent/index/skill_registry.json` 和 `duplicate_review.json` 中的条目。

@@ -22,9 +22,9 @@
 ## è¾“å‡º
 | å·¥ä»¶ | ä½ç½® | æ¨¡æ¿/Schema |
 |------|------|------------|
-| `execution_plan.md` | `In-Process/active/{id}/` | `templates/execution_plan.tmpl.md` |
-| `task_dag.json` | `In-Process/active/{id}/` | `schemas/task_dag.schema.json` |
-| `handoffs/T{n}.json` | `In-Process/active/{id}/handoffs/` | `schemas/handoff.schema.json` |
+| `execution_plan.md` | `.in-process/active/{id}/` | `templates/execution_plan.tmpl.md` |
+| `task_dag.json` | `.in-process/active/{id}/` | `schemas/task_dag.schema.json` |
+| `handoffs/T{n}.json` | `.in-process/active/{id}/handoffs/` | `schemas/handoff.schema.json` |
 
 ## è´¨é‡æ ‡å‡†
 - [ ] Reuse Audit éžç©ºï¼Œæ˜Žç¡®åˆ—å‡ºæ£€æŸ¥äº†å“ªäº›çŽ°æœ‰èƒ½åŠ›

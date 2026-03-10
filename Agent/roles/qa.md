@@ -21,8 +21,8 @@
 ## è¾“å‡º
 | å·¥ä»¶ | ä½ç½® | æ¨¡æ¿ |
 |------|------|------|
-| `qa_report.md` | `In-Process/active/{id}/` | `templates/qa_report.tmpl.md` |
-| `rework_orders/rework_{n}.json` | `In-Process/active/{id}/` | `schemas/rework_order.schema.json` |
+| `qa_report.md` | `.in-process/active/{id}/` | `templates/qa_report.tmpl.md` |
+| `rework_orders/rework_{n}.json` | `.in-process/active/{id}/` | `schemas/rework_order.schema.json` |
 | Failure Memory entry | `KI/Error_Book/index.json` | append |
 
 ## è´¨é‡æ ‡å‡†

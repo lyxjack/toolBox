@@ -26,17 +26,17 @@
 | `Agent/rules/project_rules.md` | é¡¹ç›®è§„åˆ™ | **é¡¹ç›®æœŸ** | âŒ é¡¹ç›®å­˜ç»­æœŸå†…ä¸å¯ |
 | `Agent/index/skill_registry.json` | Skill å¯ç”¨æ¸…å• | **é¡¹ç›®æœŸ** | âŒ ä¸å¯ |
 | `Agent/index/duplicate_review.json` | Skill æ²»ç†è®°å½• | **é¡¹ç›®æœŸ** | âŒ ä¸å¯ |
-| `In-Process/audit/*.md` | å®¡è®¡è®°å½• | **æ°¸ä¹…** | âŒ å®¡è®¡è®°å½•æ°¸ä¸åˆ é™¤ |
+| `.in-process/audit/*.md` | å®¡è®¡è®°å½• | **æ°¸ä¹…** | âŒ å®¡è®¡è®°å½•æ°¸ä¸åˆ é™¤ |
 | `KI/Internal_KI/index.json` | é¡¹ç›®è®°å¿† | **é¡¹ç›®æœŸ** | âŒ ä¸å¯ |
 
 ### 1.3 Run Artifactsï¼ˆè¿è¡Œå·¥ä»¶ï¼‰
 | ä½ç½® | å†…å®¹ | ç”Ÿå‘½å‘¨æœŸ | å¯å¦åˆ é™¤ |
 |------|------|---------|---------|
-| `In-Process/active/{id}/state.json` | çŠ¶æ€æœº | **Active run** â†’ å½’æ¡£ | å½’æ¡£åŽä¿ç•™ |
-| `In-Process/active/{id}/*.md` | Plan/Report/Cert | **Active run** â†’ å½’æ¡£ | å½’æ¡£åŽä¿ç•™ |
-| `In-Process/active/{id}/*.json` | DAG/Manifest/Handoff | **Active run** â†’ å½’æ¡£ | å½’æ¡£åŽä¿ç•™ |
-| `In-Process/archive/{id}/` | å·²å®Œæˆ run | **90 å¤©** | âœ… 90 å¤©åŽå¯æ¸…ç† |
-| `In-Process/scratch/*` | ä¸´æ—¶æ–‡ä»¶ | **Session** | âœ… Session ç»“æŸå³æ¸…ç† |
+| `.in-process/active/{id}/state.json` | çŠ¶æ€æœº | **Active run** â†’ å½’æ¡£ | å½’æ¡£åŽä¿ç•™ |
+| `.in-process/active/{id}/*.md` | Plan/Report/Cert | **Active run** â†’ å½’æ¡£ | å½’æ¡£åŽä¿ç•™ |
+| `.in-process/active/{id}/*.json` | DAG/Manifest/Handoff | **Active run** â†’ å½’æ¡£ | å½’æ¡£åŽä¿ç•™ |
+| `.in-process/archive/{id}/` | å·²å®Œæˆ run | **90 å¤©** | âœ… 90 å¤©åŽå¯æ¸…ç† |
+| `.in-process/scratch/*` | ä¸´æ—¶æ–‡ä»¶ | **Session** | âœ… Session ç»“æŸå³æ¸…ç† |
 
 ---
 
@@ -51,7 +51,7 @@ toolBox/
 â”‚   â”œâ”€â”€ skill_registry.json        å¯ç”¨çš„ skill æ¸…å• + ä½¿ç”¨æ•ˆæžœ
 â”‚   â””â”€â”€ duplicate_review.json      é‡å¤ skill çš„æ²»ç†å†³ç­–è®°å½•
 â”‚
-â”œâ”€â”€ In-Process/audit/â† å®¡è®¡è®°å½•ï¼ˆæ°¸ä¸åˆ é™¤ï¼‰
+â”œâ”€â”€ .in-process/audit/â† å®¡è®¡è®°å½•ï¼ˆæ°¸ä¸åˆ é™¤ï¼‰
 â”‚   â””â”€â”€ {date}__{proj}__audit__{id}__{slug}.md
 â”‚
 â”œâ”€â”€ In-Process/â† è¿è¡Œè®°å½•
@@ -74,7 +74,7 @@ toolBox/
 â”œâ”€â”€ KI/Internal_KI/â† é¡¹ç›®çº§è®°å¿†ï¼ˆé•¿æœŸä¿ç•™ï¼‰
 â”‚   â””â”€â”€ index.json                 è·¨ session çš„å­¦ä¹ å’Œå†³ç­–
 â”‚
-â””â”€â”€ In-Process/scratch/â† ä¸´æ—¶æ–‡ä»¶ï¼ˆsession ç»“æŸæ¸…ç†ï¼‰
+â””â”€â”€ .in-process/scratch/â† ä¸´æ—¶æ–‡ä»¶ï¼ˆsession ç»“æŸæ¸…ç†ï¼‰
     â””â”€â”€ _*.{ext}                   è°ƒè¯•è„šæœ¬ã€ä¸­é—´æ•°æ®ã€è‰ç¨¿
 ```
 
@@ -103,12 +103,12 @@ toolBox/
 | Skill åŽ»é‡å®¡è®¡ | `20260307__toolbox__audit__001__skill-dedup-review.md` |
 | å®‰å…¨å®¡æŸ¥ | `20260308__myapp__audit__002__security-review.md` |
 | æŸæ¬¡ run çš„ QA report | `20260307__myapp__report__REQ-20260307-061500__qa-result.md` |
-| æ€§èƒ½åˆ†æžï¼ˆä¸´æ—¶ï¼‰ | `In-Process/scratch/_20260307_perf_analysis.md` ï¼ˆsession ç»“æŸåˆ é™¤ï¼‰|
+| æ€§èƒ½åˆ†æžï¼ˆä¸´æ—¶ï¼‰ | `.in-process/scratch/_20260307_perf_analysis.md` ï¼ˆsession ç»“æŸåˆ é™¤ï¼‰|
 
 ### 3.3 Run ç›®å½•å‘½å
 ```
 {run_id} = YYYYMMDD-HHMMSS
-ç¤ºä¾‹: In-Process/active/20260307-061500/
+ç¤ºä¾‹: .in-process/active/20260307-061500/
 ```
 
 ---
@@ -143,7 +143,7 @@ toolBox/
 | **superseded** | è¢«æ–°ç‰ˆæœ¬æ›¿ä»£ | plan/audit æ›´æ–°åŽæ—§ç‰ˆæ ‡è®° |
 | **closed** | ä»»åŠ¡å®Œæˆ | Run DELIVERED / Audit å…¨ resolved |
 | **expired** | è¶…è¿‡ä¿ç•™æœŸ | tmp æ–‡ä»¶ session ç»“æŸ |
-| **archived** | ç§»å…¥å½’æ¡£å­˜å‚¨ | closed åŽç§»åˆ° In-Process/archive/ |
+| **archived** | ç§»å…¥å½’æ¡£å­˜å‚¨ | closed åŽç§»åˆ° .in-process/archive/ |
 | **deleted** | ç‰©ç†åˆ é™¤ | archive æ»¡ 90 å¤© / expired |
 
 ---
@@ -154,26 +154,26 @@ toolBox/
 - `Agent/rules/` ä¸‹çš„æ‰€æœ‰æ–‡ä»¶
 - `Agent/rules/` ä¸‹çš„æ–‡ä»¶
 - `Agent/index/` ä¸‹çš„æ–‡ä»¶
-- `In-Process/audit/` ä¸‹çš„æ–‡ä»¶
+- `.in-process/audit/` ä¸‹çš„æ–‡ä»¶
 - `KI/Internal_KI/` ä¸‹çš„æ–‡ä»¶
 
 ### 5.2 å¯å½’æ¡£ï¼ˆä¿ç•™ 90 å¤©åŽå¯æ¸…ç†ï¼‰
-- `In-Process/archive/{id}/` â€” å·²å®Œæˆ run çš„å…¨å¥—å·¥ä»¶
+- `.in-process/archive/{id}/` â€” å·²å®Œæˆ run çš„å…¨å¥—å·¥ä»¶
 - æ¸…ç†å‰å»ºè®®å¯¼å‡ºå…³é”® findings åˆ° `KI/Internal_KI/`
 
 ### 5.3 å¯åˆ é™¤ï¼ˆsession ç»“æŸå³æ¸…ç†ï¼‰
-- `In-Process/scratch/` ä¸‹çš„æ‰€æœ‰æ–‡ä»¶
+- `.in-process/scratch/` ä¸‹çš„æ‰€æœ‰æ–‡ä»¶
 - **æ³¨æ„**: å¦‚æžœ tmp ä¸­æœ‰ä»·å€¼çš„å†…å®¹ï¼Œå¿…é¡»åœ¨ session ç»“æŸå‰ promote:
   - åˆ†æžç»“æžœ â†’ `KI/Internal_KI/`
   - å¯å¤ç”¨è„šæœ¬ â†’ é¡¹ç›®ä»£ç ç›®å½•
-  - å®¡è®¡å‘çŽ° â†’ `In-Process/audit/`
+  - å®¡è®¡å‘çŽ° â†’ `.in-process/audit/`
 
 ### 5.4 Promotion æµç¨‹ï¼ˆä¸´æ—¶ â†’ æ­£å¼ï¼‰
 ```
-In-Process/scratch/_analysis.md
+.in-process/scratch/_analysis.md
     â”‚
-    â”œâ”€â”€ æœ‰å®¡è®¡ä»·å€¼ â†’ åˆ›å»ºæ­£å¼ audit å·¥ä»¶ (In-Process/audit/)
-    â”œâ”€â”€ æœ‰è®¡åˆ’ä»·å€¼ â†’ åˆ›å»ºæ­£å¼ plan å·¥ä»¶ (In-Process/active/{id}/)
+    â”œâ”€â”€ æœ‰å®¡è®¡ä»·å€¼ â†’ åˆ›å»ºæ­£å¼ audit å·¥ä»¶ (.in-process/audit/)
+    â”œâ”€â”€ æœ‰è®¡åˆ’ä»·å€¼ â†’ åˆ›å»ºæ­£å¼ plan å·¥ä»¶ (.in-process/active/{id}/)
     â”œâ”€â”€ æœ‰è®°å¿†ä»·å€¼ â†’ è¿½åŠ åˆ° KI/Internal_KI/index.json
     â””â”€â”€ æ— ä¿ç•™ä»·å€¼ â†’ session ç»“æŸæ—¶åˆ é™¤
 ```
@@ -183,15 +183,15 @@ In-Process/scratch/_analysis.md
 ## 6. æ‰§è¡Œæ—¶æœº
 
 ### 6.1 Session/Run å¼€å§‹æ—¶
-- [ ] æ£€æŸ¥ `In-Process/scratch/` æ˜¯å¦æœ‰ä¸Šæ¬¡æ®‹ç•™ â†’ æ¸…ç†æˆ– promote
-- [ ] æ£€æŸ¥ `In-Process/active/` æ˜¯å¦æœ‰æœªå½’æ¡£çš„æ—§ run â†’ å½’æ¡£åˆ° archive/
+- [ ] æ£€æŸ¥ `.in-process/scratch/` æ˜¯å¦æœ‰ä¸Šæ¬¡æ®‹ç•™ â†’ æ¸…ç†æˆ– promote
+- [ ] æ£€æŸ¥ `.in-process/active/` æ˜¯å¦æœ‰æœªå½’æ¡£çš„æ—§ run â†’ å½’æ¡£åˆ° archive/
 
 ### 6.2 Session/Run ç»“æŸæ—¶
-- [ ] æ¸…ç©º `In-Process/scratch/`ï¼ˆå·² promote çš„é™¤å¤–ï¼Œpromote åŽå†åˆ é™¤ tmp åŽŸä»¶ï¼‰
-- [ ] å°† `In-Process/active/{id}/` ç§»åˆ° `In-Process/archive/{id}/`
+- [ ] æ¸…ç©º `.in-process/scratch/`ï¼ˆå·² promote çš„é™¤å¤–ï¼Œpromote åŽå†åˆ é™¤ tmp åŽŸä»¶ï¼‰
+- [ ] å°† `.in-process/active/{id}/` ç§»åˆ° `.in-process/archive/{id}/`
 
 ### 6.3 å®šæœŸç»´æŠ¤ï¼ˆå»ºè®®æ¯æœˆæˆ–æ¯ 10 ä¸ª runï¼‰
-- [ ] æ£€æŸ¥ `In-Process/archive/` ä¸­è¶…è¿‡ 90 å¤©çš„ run â†’ å¯æ¸…ç†
+- [ ] æ£€æŸ¥ `.in-process/archive/` ä¸­è¶…è¿‡ 90 å¤©çš„ run â†’ å¯æ¸…ç†
 - [ ] æ£€æŸ¥ `KI/Internal_KI/index.json` â†’ æ¸…ç†è¿‡æ—¶æ¡ç›®
 
 ---

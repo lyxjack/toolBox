@@ -20,7 +20,7 @@
 
 ### 2.1 åˆ›å»ºä½ç½®
 ```
-In-Process/audit/{date}__{project}__audit__{id}__{slug}.md
+.in-process/audit/{date}__{project}__audit__{id}__{slug}.md
 ç¤ºä¾‹: 20260307__myapp__audit__001__skill-dedup-review.md
 ```
 ä½¿ç”¨æ¨¡æ¿: `Agent/templates/audit_ledger.tmpl.md`
@@ -85,6 +85,6 @@ OPEN â†’ IN_PROGRESS â†’ FIXED â†’ VERIFIED â†’ CLOSED
 | `active` | å®¡è®¡è¿›è¡Œä¸­ |
 | `pending_remediation` | å®¡è®¡å®Œæˆï¼Œç­‰å¾…æ•´æ”¹ |
 | `closed` | æ‰€æœ‰ finding å·² CLOSED/VERIFIED |
-| `archived` | ç§»å…¥ In-Process/archive |
+| `archived` | ç§»å…¥ .in-process/archive |
 
 **ä¿ç•™è§„åˆ™**: Audit æ˜¯æ­£å¼åˆè§„è®°å½•ï¼Œ**æ°¸ä¸åˆ é™¤**ï¼Œåªå½’æ¡£ã€‚

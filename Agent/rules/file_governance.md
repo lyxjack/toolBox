@@ -11,16 +11,18 @@
 | 位置 | 内容 | 治理要求 |
 |------|------|---------|
 | `C:/Users/{user}/.claude/skills/` | 全局 Agent Skills | SKILL.md frontmatter 规范 |
-| `${TOOLBOX_ROOT}/KI/Internal_KI/` | Internal_KI 接口定义 | 仅存 `contract.md`，不存项目数据 |
-| `${TOOLBOX_ROOT}/KI/Error_Book/` | 全局 Error_Book（数据+规范） | `contract.md` + `index.json` + `entries/` |
-| `${TOOLBOX_ROOT}/Agent/templates/project_scaffold/` | 项目脚手架模板 | 定义项目初始结构 |
-| `${TOOLBOX_ROOT}/Agent/index/` | 全局 Skill Registry | 全局技能索引 |
+| `D:/toolBox/KI/Internal_KI/` | Internal_KI 接口定义 | 仅存 `contract.md`，不存项目数据 |
+| `D:/toolBox/KI/Error_Book/` | 全局 Error_Book（数据+规范） | `contract.md` + `index.json` + `entries/` |
+| `D:/toolBox/In-Process/` | In-Process 接口定义 | 仅存 `contract.md`，不存项目数据 |
+| `D:/toolBox/Agent/templates/project_scaffold/` | 项目脚手架模板 | 定义项目初始结构 |
+| `D:/toolBox/Agent/index/` | 全局 Skill Registry | 全局技能索引 |
 
 ### 1.2 项目级（跟项目走）
 
 | 位置 | 内容 | 接口契约 |
 |------|------|---------|
 | `{project}/.claude/internal_ki/` | 项目知识库 | `KI/Internal_KI/contract.md` |
+| `{project}/.in-process/` | 运行期过程文件 | `In-Process/contract.md` |
 | `{project}/.claude/skills/` | 项目级技能 | SKILL.md frontmatter 规范 |
 | `{project}/CLAUDE.md` | 项目规则声明 | 必须声明所有项目级内容路径 |
 
@@ -42,6 +44,14 @@
 │   └── skills/                        ← 项目级技能（按需）
 │       └── {skill-name}/
 │           └── SKILL.md
+├── .in-process/                       ← 运行期过程文件（按需）
+│   ├── active/                        ← 当前活跃 run
+│   ├── archive/                       ← 已完成 run（90 天保留）
+│   ├── audit/                         ← 审计记录（永久）
+│   ├── index/
+│   │   └── archive_manifest.json      ← 归档索引
+│   └── scratch/                       ← 临时文件（session 清理）
+│                                      （接口契约见 In-Process/contract.md）
 └── src/                               ← 项目源码
 ```
 

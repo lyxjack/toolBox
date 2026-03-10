@@ -10,7 +10,7 @@ description: 唯一入口。提交任何需要正式开发流程的需求。
 
 ## Quick Reference
 
-1. 创建 session 目录 → `D:/toolBox/In-Process/active/{id}/`
+1. 创建 session 目录 → `.in-process/active/{id}/`
 2. 记录原始请求
 3. 召回上下文（Error_Book → KI → Skills Index → Project Rules）
 4. 分析需求，必要时向用户提问
