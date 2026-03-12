@@ -140,7 +140,7 @@ _*.{ext}    (下划线前缀标识临时文件)
     │
     ├── 有审计价值 → 创建正式 audit 工件 (.in-process/audit/)
     ├── 有计划价值 → 创建正式 plan 工件 (.in-process/active/{id}/)
-    ├── 有知识价值 → 追加到 .claude/internal_ki/
+    ├── 有知识价值 → 追加到 .claude/Internal_KI/
     └── 无保留价值 → session 结束时删除
 ```
 

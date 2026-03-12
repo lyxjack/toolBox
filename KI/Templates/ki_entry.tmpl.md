@@ -3,7 +3,7 @@
 ## Metadata
 - **ID**: KI-{NNN}
 - **Title**: {TITLE}
-- **Type**: external_ki | internal_ki | pattern
+- **Type**: external_ki | Internal_KI | pattern
 - **Scope**: global | project
 - **Source**: {来源路径或任务编号}
 - **Tags**: [{tag1}, {tag2}]

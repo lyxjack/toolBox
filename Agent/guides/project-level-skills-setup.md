@@ -43,8 +43,8 @@
 
 ### Internal KI（项目知识库）
 - **接口契约**: `{TOOLBOX}/KI/Internal_KI/contract.md`
-- **路径**: `.claude/internal_ki/`
-- **索引**: `.claude/internal_ki/index.json`
+- **路径**: `.claude/Internal_KI/`
+- **索引**: `.claude/Internal_KI/index.json`
 - **启用 Category**: {从 frontend, backend, data-logic, code-design 中选择}
 
 开发前必须查询 Internal KI 中与当前任务相关的知识条目。
@@ -59,14 +59,14 @@
 ### Step 2: 创建 Internal_KI 目录结构
 
 ```bash
-mkdir -p .claude/internal_ki/{frontend,backend,data-logic,code-design}
+mkdir -p .claude/Internal_KI/{frontend,backend,data-logic,code-design}
 ```
 
 仅创建项目需要的 category 目录。参考 `KI/Internal_KI/contract.md` §3 确定启用哪些。
 
 ### Step 3: 初始化 Internal_KI 索引
 
-创建 `.claude/internal_ki/index.json`：
+创建 `.claude/Internal_KI/index.json`：
 
 ```json
 {
@@ -289,7 +289,7 @@ In-Process 中的临时文件和活跃 run 不应推送：
 │   ├── sanitize.map                   ← 脱敏映射（不推送）
 │   ├── scripts/
 │   │   └── sanitize-push.sh           ← 脱敏推送脚本
-│   ├── internal_ki/                   ← 项目知识库
+│   ├── Internal_KI/                   ← 项目知识库
 │   │   ├── index.json
 │   │   ├── frontend/
 │   │   ├── backend/

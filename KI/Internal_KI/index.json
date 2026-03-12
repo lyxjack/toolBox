@@ -1,6 +1,6 @@
 {
     "_meta": {
-        "description": "Internal_KI 接口注册表。定义 Internal_KI 的用途和结构规范。实际项目数据存放在各项目的 .claude/internal_ki/ 中。",
+        "description": "Internal_KI 接口注册表。定义 Internal_KI 的用途和结构规范。实际项目数据存放在各项目的 .claude/Internal_KI/ 中。",
         "version": "3.0",
         "contract": "KI/Internal_KI/contract.md",
         "note": "本文件保留 toolBox 自身的知识条目。各项目的 KI 条目在项目目录内管理。"

@@ -75,7 +75,7 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 | 资产 | 路径（相对项目根） | 职责 |
 |------|-------------------|------|
 | 项目规则 | `CLAUDE.md` | 项目入口——技术栈、启用的 KI 类别、路径声明 |
-| Internal KI | `.claude/internal_ki/` | 项目级正向知识（应该怎么做） |
+| Internal KI | `.claude/Internal_KI/` | 项目级正向知识（应该怎么做） |
 | In-Process | `.in-process/` | 运行期工件（需求包、执行计划、QA 报告等） |
 | Project Skills | `.claude/skills/` | 项目级自定义技能（按需） |
 
@@ -130,7 +130,7 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 | 需求入口文件 | `PM/` | `Agent/`、`KI/` |
 | 接口契约 | `In-Process/contract.md`, `KI/Internal_KI/contract.md` | 项目目录 |
 | 全局错题 | `KI/Error_Book/entries/` | 项目目录 |
-| 项目 KI 条目 | `{project}/.claude/internal_ki/{category}/` | 全局 `KI/` |
+| 项目 KI 条目 | `{project}/.claude/Internal_KI/{category}/` | 全局 `KI/` |
 | 运行期工件 | `{project}/.in-process/` | 全局 `In-Process/` |
 | 临时文件 | `{project}/.in-process/scratch/` | 项目根目录 |
 
@@ -143,7 +143,7 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 ├── CLAUDE.md                              ← 项目入口（必需）
 ├── .gitignore
 ├── .claude/
-│   ├── internal_ki/                       ← 项目知识库
+│   ├── Internal_KI/                       ← 项目知识库
 │   │   ├── index.json                     ← KI 索引（必需）
 │   │   ├── frontend/                      ← 按需启用
 │   │   │   └── {slug}.md
@@ -204,8 +204,8 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 
 ### Internal KI（项目知识库）
 - **接口契约**: `{TOOLBOX_ROOT}/KI/Internal_KI/contract.md`
-- **路径**: `.claude/internal_ki/`
-- **索引**: `.claude/internal_ki/index.json`
+- **路径**: `.claude/Internal_KI/`
+- **索引**: `.claude/Internal_KI/index.json`
 - **启用 Category**: {从 frontend, backend, data-logic, code-design 中选择}
 
 开发前必须查询 Internal KI 中与当前任务相关的知识条目。
@@ -227,10 +227,10 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 创建目录（仅启用需要的 category）：
 
 ```bash
-mkdir -p .claude/internal_ki/{frontend,backend,data-logic,code-design}
+mkdir -p .claude/Internal_KI/{frontend,backend,data-logic,code-design}
 ```
 
-创建 `.claude/internal_ki/index.json`：
+创建 `.claude/Internal_KI/index.json`：
 
 ```json
 {
@@ -289,8 +289,8 @@ mkdir -p .in-process/{active,archive,audit,index,scratch}
 ### Step 5: 验证 Checklist
 
 - [ ] `CLAUDE.md` 存在于项目根目录
-- [ ] `.claude/internal_ki/index.json` 存在且 JSON 合法
-- [ ] `.claude/internal_ki/` 下有且仅有启用的 category 目录
+- [ ] `.claude/Internal_KI/index.json` 存在且 JSON 合法
+- [ ] `.claude/Internal_KI/` 下有且仅有启用的 category 目录
 - [ ] `.in-process/` 下有 `active/`、`archive/`、`audit/`、`index/`、`scratch/` 五个子目录
 - [ ] `.in-process/index/archive_manifest.json` 存在且 JSON 合法
 - [ ] `.gitignore` 包含敏感文件排除规则
@@ -305,8 +305,8 @@ Project: {项目名}
 Path: {项目绝对路径}
 Created:
   ✓ CLAUDE.md
-  ✓ .claude/internal_ki/index.json
-  ✓ .claude/internal_ki/{启用的 category 列表}
+  ✓ .claude/Internal_KI/index.json
+  ✓ .claude/Internal_KI/{启用的 category 列表}
   ✓ .in-process/{active,archive,audit,index,scratch}
   ✓ .in-process/index/archive_manifest.json
   ✓ .gitignore (updated)
@@ -379,8 +379,8 @@ CTO 在 CTO_PLANNING 阶段选择执行模式。详见 `Agent/orchestrator/strat
 | 维度 | 说明 |
 |------|------|
 | **是什么** | 经过验证的、可操作的项目规则和模式 |
-| **在哪里** | `{project}/.claude/internal_ki/{category}/{slug}.md` |
-| **索引** | `{project}/.claude/internal_ki/index.json` |
+| **在哪里** | `{project}/.claude/Internal_KI/{category}/{slug}.md` |
+| **索引** | `{project}/.claude/Internal_KI/index.json` |
 | **何时创建** | QA 通过后、重大技术选型确定后、高频复用模式验证后 |
 | **生命周期** | 跟项目走，status: active → deprecated，不物理删除 |
 | **接口契约** | `KI/Internal_KI/contract.md` |
@@ -420,7 +420,7 @@ CTO 在 CTO_PLANNING 阶段选择执行模式。详见 `Agent/orchestrator/strat
 | `.in-process/audit/` | 审计记录 | **永久** | 永不删除 |
 | `.in-process/index/` | archive_manifest.json | **永久** | 永不删除 |
 | `.in-process/scratch/` | 临时文件 | **session** | session 结束即清理 |
-| `.claude/internal_ki/` | 项目知识条目 | **项目生命周期** | 仅标记 deprecated |
+| `.claude/Internal_KI/` | 项目知识条目 | **项目生命周期** | 仅标记 deprecated |
 
 ### 生命周期操作
 
@@ -462,8 +462,8 @@ CTO 在 CTO_PLANNING 阶段选择执行模式。详见 `Agent/orchestrator/strat
 | 文件 | 路径 |
 |------|------|
 | 项目 CLAUDE.md | `CLAUDE.md` |
-| Internal KI 索引 | `.claude/internal_ki/index.json` |
-| Internal KI 条目 | `.claude/internal_ki/{category}/{slug}.md` |
+| Internal KI 索引 | `.claude/Internal_KI/index.json` |
+| Internal KI 条目 | `.claude/Internal_KI/{category}/{slug}.md` |
 | Archive Manifest | `.in-process/index/archive_manifest.json` |
 | 活跃 Run | `.in-process/active/{YYYYMMDD-HHMMSS}/` |
 | 审计记录 | `.in-process/audit/` |

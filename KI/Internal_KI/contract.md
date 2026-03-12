@@ -13,7 +13,7 @@ Internal_KI 是项目级的精华知识库，存放经过验证的、对项目�
 ```
 {project}/
 └── .claude/
-    └── internal_ki/
+    └── Internal_KI/
         ├── index.json              ← 项目级 KI 索引（必需）
         ├── frontend/               ← 基础 category（按需启用）
         │   └── {slug}.md
@@ -123,8 +123,8 @@ Internal_KI 是项目级的精华知识库，存放经过验证的、对项目�
 项目 CLAUDE.md 中必须声明 Internal_KI 路径：
 ```markdown
 ## Internal KI
-- **路径**: `.claude/internal_ki/`
-- **索引**: `.claude/internal_ki/index.json`
+- **路径**: `.claude/Internal_KI/`
+- **索引**: `.claude/Internal_KI/index.json`
 - **启用 Category**: frontend, backend, data-logic, code-design
 ```
 

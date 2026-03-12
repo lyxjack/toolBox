@@ -22,7 +22,7 @@
 
 | 位置 | 内容 | 接口契约 |
 |------|------|---------|
-| `{project}/.claude/internal_ki/` | 项目知识库 | `KI/Internal_KI/contract.md` |
+| `{project}/.claude/Internal_KI/` | 项目知识库 | `KI/Internal_KI/contract.md` |
 | `{project}/.in-process/` | 运行期过程文件 | `In-Process/contract.md` |
 | `{project}/.claude/skills/` | 项目级技能 | SKILL.md frontmatter 规范 |
 | `{project}/CLAUDE.md` | 项目规则声明 | 必须声明所有项目级内容路径 |
@@ -35,7 +35,7 @@
 {project}/
 ├── CLAUDE.md                          ← 项目入口（必需）
 ├── .claude/
-│   ├── internal_ki/                   ← 项目知识库（按需）
+│   ├── Internal_KI/                   ← 项目知识库（按需）
 │   │   ├── index.json                 ← KI 索引
 │   │   ├── frontend/                  ← 基础 category
 │   │   ├── backend/
@@ -85,7 +85,7 @@
 | KI 条目 | `{slug}.md` | `result-type-pattern.md` |
 | Error Book 条目 | `ERR-{NNN}__{slug}.md` | `ERR-001__unhandled-rejection.md` |
 | SKILL 定义 | `SKILL.md`（固定） | `skills/pm/SKILL.md` |
-| 索引文件 | `index.json`（固定） | `.claude/internal_ki/index.json` |
+| 索引文件 | `index.json`（固定） | `.claude/Internal_KI/index.json` |
 | 接口契约 | `contract.md`（固定） | `KI/Internal_KI/contract.md` |
 
 ## 4. 文件内容格式规范
