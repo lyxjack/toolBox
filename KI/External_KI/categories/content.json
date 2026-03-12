@@ -1,120 +1,24 @@
-﻿{
-    "_meta":  {
-                  "category":  "content",
-                  "label":  "å†…å®¹åˆ›ä½œ / Content",
-                  "skillCount":  5
-              },
-    "skills":  [
-                   {
-                       "name":  "article-writing",
-                       "description":  "Write articles, guides, blog posts, tutorials in a distinctive voice.",
-                       "path":  "everything-claude-code/.agents/skills/article-writing/SKILL.md",
-                       "sizeBytes":  3227,
-                       "tokenEstimate":  950,
-                       "confidence":  0.37,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Voice-consistent long-form writing",
-                                            "Structure and credibility patterns",
-                                            "Brand guidance integration"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "content-engine",
-                                                         "content-strategy"
-                                                     ],
-                                        "note":  "Writing execution. content-strategy for planning, content-engine for distribution"
-                                    }
-                   },
-                   {
-                       "name":  "content-engine",
-                       "description":  "Platform-native content for X, LinkedIn, TikTok, YouTube, newsletters.",
-                       "path":  "everything-claude-code/.agents/skills/content-engine/SKILL.md",
-                       "sizeBytes":  2657,
-                       "tokenEstimate":  800,
-                       "confidence":  0.37,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Multi-platform content adaptation",
-                                            "Platform-native formatting",
-                                            "Content calendar systems",
-                                            "Cross-platform repurposing"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "social-content",
-                                                         "content-strategy"
-                                                     ],
-                                        "note":  "social-content is more detailed for social media. content-engine covers broader distribution"
-                                    }
-                   },
-                   {
-                       "name":  "content-strategy",
-                       "description":  "Plan content strategy, topic clusters, editorial calendar, content roadmap.",
-                       "path":  "content-strategy/SKILL.md",
-                       "sizeBytes":  12421,
-                       "tokenEstimate":  3600,
-                       "confidence":  0.55,
-                       "origin":  "independent",
-                       "bulletPoints":  [
-                                            "Topic cluster planning",
-                                            "Editorial calendar creation",
-                                            "Content pillar definition",
-                                            "Blog strategy",
-                                            "Content marketing roadmap",
-                                            "Has eval companion file"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "content-engine",
-                                                         "article-writing"
-                                                     ],
-                                        "note":  "BEST for content planning. Use article-writing for execution, content-engine for distribution"
-                                    }
-                   },
-                   {
-                       "name":  "social-content",
-                       "description":  "Social media content for LinkedIn, Twitter/X, Instagram, TikTok, Facebook.",
-                       "path":  "social-content/SKILL.md",
-                       "sizeBytes":  8884,
-                       "tokenEstimate":  2600,
-                       "confidence":  0.43,
-                       "origin":  "independent",
-                       "bulletPoints":  [
-                                            "Platform-specific formatting",
-                                            "Engagement optimization",
-                                            "Content repurposing",
-                                            "Scheduling strategies",
-                                            "Viral content patterns",
-                                            "Has reference files"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "content-engine"
-                                                     ],
-                                        "note":  "More detailed than content-engine for social media specifically"
-                                    }
-                   },
-                   {
-                       "name":  "frontend-slides",
-                       "description":  "HTML presentations from scratch or PPT/PPTX conversion.",
-                       "path":  "everything-claude-code/.agents/skills/frontend-slides/SKILL.md",
-                       "sizeBytes":  6742,
-                       "tokenEstimate":  2000,
-                       "confidence":  0.48,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "HTML/CSS/JS slide creation",
-                                            "PPT/PPTX to web conversion",
-                                            "Animation-rich design",
-                                            "Aesthetic exploration workflow"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-
-                                                     ],
-                                        "note":  "Unique presentation niche. Also categorized in frontend"
-                                    }
-                   }
-               ]
+{
+    "_meta": {
+        "category": "content",
+        "label": "内容创作 / Content",
+        "skillCount": 1,
+        "architecture": "anchor-based"
+    },
+    "skills": [
+        {
+            "name": "content",
+            "description": "Unified content anchor: content strategy, presentation slides, social media content, article writing, and content engine automation.",
+            "anchorBase": "content-strategy",
+            "confidence": 0.55,
+            "mergedCount": 5,
+            "mergedFrom": [
+                "content-strategy",
+                "frontend-slides",
+                "social-content",
+                "article-writing",
+                "content-engine"
+            ]
+        }
+    ]
 }

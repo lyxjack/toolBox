@@ -1,5 +1,15 @@
 # toolBox — Enterprise AI Agent Workspace
 
+## Path Variable
+
+> **`{TOOLBOX}`** = 当前文件所在目录的绝对路径（即 toolBox 根目录）。
+> 所有 workflow、template、schema 文件中的 `{TOOLBOX}` 占位符，在运行时解析为此路径。
+> - macOS 示例: `/Users/<username>/toolBox`
+> - Windows 示例: `C:\Users\<username>\toolBox`
+> - Linux 示例: `/home/<username>/toolBox`
+>
+> **解析规则**: Agent 读取 workflow 文件时，将 `{TOOLBOX}` 替换为当前 toolBox 的实际绝对路径。
+
 ## Five-Layer Architecture
 
 本系统采用五层架构，每层职责单一、边界清晰。
@@ -18,27 +28,26 @@
 
 | 规则 | 描述 |
 |------|------|
-| **根目录纯净** | toolBox 根目录只允许存在 `Agent/`、`In-Process/`、`KI/`、`PM/`、`Tool/` 五个业务目录和 `CLAUDE.md` 配置文件。禁止在根目录创建任何其他业务文件夹或散落文件。 |
+| **根目录纯净** | toolBox 根目录只允许存在 `Agent/`、`In-Process/`、`KI/`、`PM/`、`Tool/` 五个业务目录，以及 `CLAUDE.md`、`README.md` 配置/文档文件。禁止在根目录创建任何其他业务文件夹或散落文件。 |
 | **层间不越界** | 每层只存放属于该层职责的文件。PM 层不存代码，Agent 层不存原始 skill，Tool 层不存治理文档，KI 层不存过程文件，In-Process 层不存永久知识。 |
 | **写入路径白名单** | Skill 源仓库 → `Tool/`；索引与知识 → `KI/`；治理规则/模板/编排 → `Agent/`；需求入口 → `PM/`；接口契约 → `In-Process/contract.md`；运行期工件 → 各项目的 `.in-process/`。不在白名单内的路径禁止写入。 |
 | **无冗余副本** | 同一文件不得在多个层中存在副本。如需引用，使用路径引用而非复制。 |
-| **遗留目录已清除** | `AI/` 和 `external_KI/` 已于 2026-03-09 完成迁移并删除。禁止重新创建这些目录。 |
+| **遗留目录禁止创建** | `AI/` 和 `external_KI/` 为已废弃的遗留目录名。禁止创建。 |
 
-## Iron Laws (不可违反)
+## Iron Laws — 总门禁 (Global Gate)
 
-以下铁律在所有操作中必须遵守。完整内容见 `Agent/rules/iron_laws.md`。
+> 以下铁律始终生效，无条件遵守。完整内容见 `Agent/rules/iron_laws.md`。
+> 子门禁铁律（IL 01-07, 11）由各工作流的「前置约束」章节按需加载。
 
-1. **NO REQUIREMENT, NO EXECUTION** — 无需求包不得实现
-2. **NO PLAN, NO CODE** — 无计划不得写代码
-3. **REUSE BEFORE BUILD** — 先查现有能力再新建
-4. **SOURCE PRESERVATION** — 不得修改/删除 Tool/ 中原始 skill 源文件
-5. **QA IS A GATE** — 无 QA 证据不得声称完成
-6. **NO CI-ONLY APPROVAL** — 不得仅凭编译通过放行
-7. **REJECTION REQUIRES REASON CODE** — 驳回必须带原因码
 8. **ARTIFACTS STAY CURRENT** — 工件必须与实际一致
 9. **TEMP FILES ARE MANAGED** — 临时文件纳入项目 `.in-process/scratch/` 管理
 10. **PLAN-DRIVEN MODE FOR LARGE CHANGES** — 大变更必须先有 plan 工件
-11. **SKILL FILE GOVERNANCE** — Skill 增删必须同步更新索引、注册、去重审查，详见 `Agent/rules/iron_laws.md` §11
+
+> **子门禁索引** (进入对应 workflow 时自动加载):
+> - PM 子门禁 (IL 01): `PM/pm_workflow.md`
+> - CTO 子门禁 (IL 02, 03): `Agent/workflow/cto_planning.md`
+> - QA 子门禁 (IL 05, 06, 07): `Agent/workflow/qa_verification.md`
+> - Skill/KI 子门禁 (IL 04, 11): `Agent/workflow/skill_ingestion.md`
 
 ## Workflow Entry Point
 
@@ -56,7 +65,7 @@
 ### Agent Layer
 - Rules: `Agent/rules/` — constitution, iron_laws, plan_driven_mode, qa_standard, artifact_lifecycle, audit_ledger_mode, project_rules
 - Roles: `Agent/roles/` — CTO, QA, Skill Governance
-- Workflows: `Agent/workflow/` — cto_planning, execution (v2 支持串行/并发/蜂群), qa_verification, joint_approval, ki_maintenance
+- Workflows: `Agent/workflow/` — cto_planning, execution (v2 支持串行/并发/蜂群), qa_verification, joint_approval, ki_maintenance, skill_ingestion
 - Orchestrator: `Agent/orchestrator/strategy.md` — 串行/并发/蜂群选择指南
 - Schemas: `Agent/schemas/` — task_dag, change_manifest, handoff, rework_order
 - Templates: `Agent/templates/` — execution_plan, qa_report, delivery_cert, plan, audit_ledger, audit_report, req_impl_matrix
@@ -107,6 +116,5 @@ CTO 在规划阶段必须选择执行模式（详见 `Agent/orchestrator/strateg
 - **并发 (Parallel)**: 独立、低重叠、可并行测试
 - **蜂群 (Swarm)**: 探索性、多方案对比、大规模知识提炼
 
-## Migration Record
+**强制规则**: 当 task 数 >= 3 且任务间无数据依赖时，**禁止选择串行模式**，必须使用并发或蜂群。详见 `Agent/workflow/cto_planning.md` Step 3。
 
-遗留目录 `AI/` 和 `external_KI/` 已于 **2026-03-09** 完成审计、迁移并删除。所有内容已合并至五层架构对应位置，无数据丢失。

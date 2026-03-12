@@ -10,12 +10,13 @@
 
 | 位置 | 内容 | 治理要求 |
 |------|------|---------|
-| `C:/Users/{user}/.claude/skills/` | 全局 Agent Skills | SKILL.md frontmatter 规范 |
-| `D:/toolBox/KI/Internal_KI/` | Internal_KI 接口定义 | 仅存 `contract.md`，不存项目数据 |
-| `D:/toolBox/KI/Error_Book/` | 全局 Error_Book（数据+规范） | `contract.md` + `index.json` + `entries/` |
-| `D:/toolBox/In-Process/` | In-Process 接口定义 | 仅存 `contract.md`，不存项目数据 |
-| `D:/toolBox/Agent/templates/project_scaffold/` | 项目脚手架模板 | 定义项目初始结构 |
-| `D:/toolBox/Agent/index/` | 全局 Skill Registry | 全局技能索引 |
+| `~/.claude/skills/` (用户全局) | 全局 Agent Skills | SKILL.md frontmatter 规范 |
+| `{TOOLBOX}/README.md` | 开源入口文档 | 根目录白名单允许 |
+| ``{TOOLBOX}/KI/Internal_KI/`` | Internal_KI 接口定义 | 仅存 `contract.md`，不存项目数据 |
+| ``{TOOLBOX}/KI/Error_Book/`` | 全局 Error_Book（数据+规范） | `contract.md` + `index.json` + `entries/` |
+| ``{TOOLBOX}/In-Process/`` | In-Process 接口定义 | 仅存 `contract.md`，不存项目数据 |
+| ``{TOOLBOX}/Agent/templates/project_scaffold/`` | 项目脚手架模板 | 定义项目初始结构 |
+| ``{TOOLBOX}/Agent/index/`` | 全局 Skill Registry | 全局技能索引 |
 
 ### 1.2 项目级（跟项目走）
 

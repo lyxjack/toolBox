@@ -1,200 +1,71 @@
 {
     "_meta": {
-        "description": "Cross-reference mapping for duplicate/overlapping skills across repositories",
-        "totalDuplicateSets": 21,
-        "guideline": "When a skill has duplicates, use the 'recommended' path (largest/most comprehensive version)"
+        "description": "Cross-reference mapping for anchor-based architecture. Intra-category overlaps eliminated by merge. Only inter-category references remain.",
+        "architecture": "anchor-based",
+        "totalAnchors": 12,
+        "lastUpdated": "2026-03-11"
     },
-    "exactDuplicates": [
+    "interCategoryReferences": [
         {
-            "name": "api-design",
-            "recommended": "everything-claude-code/.agents/skills/api-design/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/skills/api-design/SKILL.md"
-            ],
-            "verdict": "Same content. .agents/ version is the installed copy"
+            "anchor": "testing",
+            "relatedAnchors": ["security", "devops"],
+            "note": "Testing Tier 4 covers security scanning (sanitizers, CVE checks). DevOps covers CI/CD pipeline verification."
         },
         {
-            "name": "backend-patterns",
-            "recommended": "everything-claude-code/.agents/skills/backend-patterns/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/skills/backend-patterns/SKILL.md"
-            ],
-            "verdict": "Same content"
+            "anchor": "security",
+            "relatedAnchors": ["testing", "backend"],
+            "note": "Security review overlaps with testing Tier 4 (arch/security) and backend (auth, input validation)."
         },
         {
-            "name": "coding-standards",
-            "recommended": "everything-claude-code/.agents/skills/coding-standards/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/skills/coding-standards/SKILL.md"
-            ],
-            "verdict": "Same content"
+            "anchor": "devops",
+            "relatedAnchors": ["testing", "backend"],
+            "note": "DevOps verification loops related to testing CI/CD. Docker patterns related to backend deployment."
         },
         {
-            "name": "content-engine",
-            "recommended": "everything-claude-code/.agents/skills/content-engine/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/skills/content-engine/SKILL.md"
-            ],
-            "verdict": "Same content"
+            "anchor": "frontend",
+            "relatedAnchors": ["language-specific", "mobile-native"],
+            "note": "Frontend coding standards overlap with language-specific TypeScript. Liquid Glass design relates to mobile-native SwiftUI."
         },
         {
-            "name": "e2e-testing",
-            "recommended": "everything-claude-code/.agents/skills/e2e-testing/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/skills/e2e-testing/SKILL.md"
-            ],
-            "verdict": "Same content"
+            "anchor": "backend",
+            "relatedAnchors": ["language-specific", "devops"],
+            "note": "Backend framework patterns (Django, Spring) reference language-specific Python/Java. Deployment in devops."
         },
         {
-            "name": "eval-harness",
-            "recommended": "everything-claude-code/skills/eval-harness/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/.agents/skills/eval-harness/SKILL.md"
-            ],
-            "verdict": "skills/ version is slightly larger (6764 vs 5751 bytes)"
+            "anchor": "ai-agent",
+            "relatedAnchors": ["workflow", "meta-tooling"],
+            "note": "Agent loops relate to workflow parallel agents. Eval harness relates to meta-tooling skill auditing."
         },
         {
-            "name": "frontend-patterns",
-            "recommended": "everything-claude-code/.agents/skills/frontend-patterns/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/skills/frontend-patterns/SKILL.md"
-            ],
-            "verdict": "Same content"
+            "anchor": "workflow",
+            "relatedAnchors": ["ai-agent", "testing"],
+            "note": "Parallel agent dispatch relates to ai-agent. Verification before completion relates to testing."
         },
         {
-            "name": "frontend-slides",
-            "recommended": "everything-claude-code/.agents/skills/frontend-slides/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/skills/frontend-slides/SKILL.md"
-            ],
-            "verdict": "Same content"
-        },
-        {
-            "name": "investor-materials",
-            "recommended": "everything-claude-code/.agents/skills/investor-materials/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/skills/investor-materials/SKILL.md"
-            ],
-            "verdict": "Same content"
-        },
-        {
-            "name": "investor-outreach",
-            "recommended": "everything-claude-code/.agents/skills/investor-outreach/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/skills/investor-outreach/SKILL.md"
-            ],
-            "verdict": "Same content"
-        },
-        {
-            "name": "market-research",
-            "recommended": "everything-claude-code/.agents/skills/market-research/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/skills/market-research/SKILL.md"
-            ],
-            "verdict": "Same content"
-        },
-        {
-            "name": "security-review",
-            "recommended": "everything-claude-code/.agents/skills/security-review/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/skills/security-review/SKILL.md"
-            ],
-            "verdict": "Same content"
-        },
-        {
-            "name": "strategic-compact",
-            "recommended": "everything-claude-code/.agents/skills/strategic-compact/SKILL.md",
-            "duplicates": [
-                "everything-claude-code/skills/strategic-compact/SKILL.md"
-            ],
-            "verdict": "Same content"
-        },
-        {
-            "name": "subagent-driven-development",
-            "recommended": "subagent-driven-development/SKILL.md",
-            "duplicates": [
-                "superpowers/skills/subagent-driven-development/SKILL.md"
-            ],
-            "verdict": "Identical content, same size (9976 bytes)"
-        },
-        {
-            "name": "systematic-debugging",
-            "recommended": "superpowers/skills/systematic-debugging/SKILL.md",
-            "duplicates": [
-                "systematic-debugging/SKILL.md"
-            ],
-            "verdict": "Identical content, same size (9884 bytes). superpowers/ has richer companion files"
-        },
-        {
-            "name": "test-driven-development",
-            "recommended": "superpowers/skills/test-driven-development/SKILL.md",
-            "duplicates": [
-                "test-driven-development/SKILL.md"
-            ],
-            "verdict": "Identical content, same size (9867 bytes). superpowers/ has companion anti-patterns.md"
-        }
-    ],
-    "semanticOverlaps": [
-        {
-            "topic": "TDD / Test-Driven Development",
-            "skills": [
-                "tdd-workflow",
-                "test-driven-development",
-                "django-tdd",
-                "springboot-tdd"
-            ],
-            "recommendation": "tdd-workflow (ECC) for general TDD; test-driven-development (superpowers) for anti-patterns; framework-specific for Django/Spring"
-        },
-        {
-            "topic": "Agent Loops / Autonomous Execution",
-            "skills": [
-                "autonomous-loops",
-                "continuous-agent-loop",
-                "ralphinho-rfc-pipeline"
-            ],
-            "recommendation": "autonomous-loops is the comprehensive reference. continuous-agent-loop and ralphinho are stubs"
-        },
-        {
-            "topic": "Content Creation & Distribution",
-            "skills": [
-                "content-engine",
-                "social-content",
-                "content-strategy",
-                "article-writing"
-            ],
-            "recommendation": "content-strategy for planning → article-writing for long-form → social-content for social → content-engine for multi-platform"
-        },
-        {
-            "topic": "Verification Before Completion",
-            "skills": [
-                "verification-loop",
-                "verification-before-completion",
-                "django-verification",
-                "springboot-verification"
-            ],
-            "recommendation": "verification-before-completion for workflow discipline; framework-specific for Django/Spring projects"
-        },
-        {
-            "topic": "Skill Creation & Management",
-            "skills": [
-                "skill-creator",
-                "writing-skills",
-                "skill-stocktake",
-                "find-skills"
-            ],
-            "recommendation": "skill-creator is most comprehensive. writing-skills for opinionated workflow. skill-stocktake for auditing"
+            "anchor": "meta-tooling",
+            "relatedAnchors": ["ai-agent", "workflow"],
+            "note": "Skill creation/auditing relates to ai-agent evaluation. Configuration relates to workflow setup."
         }
     ],
     "superseded": [
         {
             "old": "continuous-learning",
             "new": "continuous-learning-v2",
+            "mergedInto": "ai-agent anchor",
             "reason": "v2 adds project-scoped instincts and confidence scoring"
         },
         {
             "old": "continuous-agent-loop",
             "new": "autonomous-loops",
-            "reason": "autonomous-loops is the comprehensive skill; continuous-agent-loop is a 1KB stub"
+            "mergedInto": "ai-agent anchor",
+            "reason": "autonomous-loops is the comprehensive skill; continuous-agent-loop was a stub"
+        },
+        {
+            "old": "tdd-workflow",
+            "new": "test-driven-development",
+            "mergedInto": "testing anchor",
+            "reason": "80% overlap, practical examples preserved in anchor"
         }
-    ]
+    ],
+    "migrationNote": "On 2026-03-11, all 84 individual skills were merged into 12 category anchors. Intra-category overlaps (exactDuplicates, semanticOverlaps) are now resolved within each anchor. This file retains only inter-category cross-references."
 }

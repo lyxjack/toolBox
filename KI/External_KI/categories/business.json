@@ -1,116 +1,24 @@
-﻿{
-    "_meta":  {
-                  "category":  "business",
-                  "label":  "å•†ä¸š / Business",
-                  "skillCount":  5
-              },
-    "skills":  [
-                   {
-                       "name":  "investor-materials",
-                       "description":  "Pitch decks, one-pagers, investor memos, financial models, fundraising materials.",
-                       "path":  "everything-claude-code/.agents/skills/investor-materials/SKILL.md",
-                       "sizeBytes":  2819,
-                       "tokenEstimate":  820,
-                       "confidence":  0.33,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Pitch deck creation",
-                                            "One-pager design",
-                                            "Financial projections",
-                                            "Use-of-funds tables",
-                                            "Internal consistency across materials"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "investor-outreach"
-                                                     ],
-                                        "note":  "Materials creation. investor-outreach is for communications"
-                                    }
-                   },
-                   {
-                       "name":  "investor-outreach",
-                       "description":  "Cold emails, warm intro blurbs, follow-ups for fundraising.",
-                       "path":  "everything-claude-code/.agents/skills/investor-outreach/SKILL.md",
-                       "sizeBytes":  2216,
-                       "tokenEstimate":  650,
-                       "confidence":  0.3,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Cold email drafting",
-                                            "Warm intro blurbs",
-                                            "Follow-up sequences",
-                                            "Update emails to investors"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "investor-materials"
-                                                     ],
-                                        "note":  "Communications focus. investor-materials is for documents"
-                                    }
-                   },
-                   {
-                       "name":  "market-research",
-                       "description":  "Market research, competitive analysis, due diligence with source attribution.",
-                       "path":  "everything-claude-code/.agents/skills/market-research/SKILL.md",
-                       "sizeBytes":  2301,
-                       "tokenEstimate":  670,
-                       "confidence":  0.3,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Market sizing",
-                                            "Competitor comparison",
-                                            "Fund/investor research",
-                                            "Technology scans",
-                                            "Decision-oriented summaries"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-
-                                                     ],
-                                        "note":  "Unique business research skill"
-                                    }
-                   },
-                   {
-                       "name":  "nutrient-document-processing",
-                       "description":  "Process, convert, OCR, extract, redact, sign documents via Nutrient DWS API.",
-                       "path":  "everything-claude-code/skills/nutrient-document-processing/SKILL.md",
-                       "sizeBytes":  5955,
-                       "tokenEstimate":  1700,
-                       "confidence":  0.53,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "PDF/DOCX/XLSX/PPTX processing",
-                                            "OCR for scanned documents",
-                                            "Data extraction",
-                                            "Redaction and signing",
-                                            "HTML to PDF conversion"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-
-                                                     ],
-                                        "note":  "Unique document processing skill. Requires Nutrient DWS API"
-                                    }
-                   },
-                   {
-                       "name":  "visa-doc-translate",
-                       "description":  "Translate visa application documents (images) to English bilingual PDF.",
-                       "path":  "everything-claude-code/skills/visa-doc-translate/SKILL.md",
-                       "sizeBytes":  3976,
-                       "tokenEstimate":  1150,
-                       "confidence":  0.38,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Image-to-text translation",
-                                            "Bilingual PDF creation",
-                                            "Visa document specific"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "nutrient-document-processing"
-                                                     ],
-                                        "note":  "Highly specific use case"
-                                    }
-                   }
-               ]
+{
+    "_meta": {
+        "category": "business",
+        "label": "商业 / Business",
+        "skillCount": 1,
+        "architecture": "anchor-based"
+    },
+    "skills": [
+        {
+            "name": "business",
+            "description": "Unified business anchor: document processing (Nutrient), visa document translation, investor materials, investor outreach, and market research.",
+            "anchorBase": "nutrient-document-processing",
+            "confidence": 0.53,
+            "mergedCount": 5,
+            "mergedFrom": [
+                "nutrient-document-processing",
+                "visa-doc-translate",
+                "investor-materials",
+                "investor-outreach",
+                "market-research"
+            ]
+        }
+    ]
 }

@@ -201,7 +201,7 @@ _*.{ext}    (下划线前缀标识临时文件)
 
 ```markdown
 ## In-Process（运行期过程文件）
-- **接口契约**: `D:/toolBox/In-Process/contract.md`
+- **接口契约**: `{TOOLBOX}/In-Process/contract.md`
 - **路径**: `.in-process/`
 - **索引**: `.in-process/index/archive_manifest.json`
 ```

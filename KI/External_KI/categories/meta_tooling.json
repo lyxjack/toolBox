@@ -1,176 +1,27 @@
-﻿{
-    "_meta":  {
-                  "category":  "meta_tooling",
-                  "label":  "å…ƒå·¥å…· / Meta \u0026 Tooling",
-                  "skillCount":  8
-              },
-    "skills":  [
-                   {
-                       "name":  "skill-creator",
-                       "description":  "Create, modify, evaluate, benchmark, and optimize skills.",
-                       "path":  "skill-creator/SKILL.md",
-                       "sizeBytes":  33653,
-                       "tokenEstimate":  9800,
-                       "confidence":  0.68,
-                       "origin":  "independent",
-                       "bulletPoints":  [
-                                            "Skill creation from scratch",
-                                            "Skill modification and improvement",
-                                            "Eval-based skill testing",
-                                            "Benchmark with variance analysis",
-                                            "Description optimization for triggering accuracy",
-                                            "Comprehensive methodology (33KB)"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "writing-skills"
-                                                     ],
-                                        "note":  "MOST COMPREHENSIVE skill creation tool. writing-skills is a subset with different perspective"
-                                    }
-                   },
-                   {
-                       "name":  "writing-skills",
-                       "description":  "Create, edit, and verify skills before deployment.",
-                       "path":  "superpowers/skills/writing-skills/SKILL.md",
-                       "sizeBytes":  22465,
-                       "tokenEstimate":  6500,
-                       "confidence":  0.85,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "Skill file authoring",
-                                            "YAML frontmatter conventions",
-                                            "Verification before deployment",
-                                            "7 companion files in directory"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "skill-creator"
-                                                     ],
-                                        "note":  "More opinionated workflow. skill-creator is broader"
-                                    }
-                   },
-                   {
-                       "name":  "find-skills",
-                       "description":  "Discover and install agent skills from available sources.",
-                       "path":  "find-skills/SKILL.md",
-                       "sizeBytes":  4635,
-                       "tokenEstimate":  1350,
-                       "confidence":  0.5,
-                       "origin":  "independent",
-                       "bulletPoints":  [
-                                            "Skill discovery workflow",
-                                            "Installation guidance",
-                                            "Capability matching"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "using-superpowers",
-                                                         "skill-stocktake"
-                                                     ],
-                                        "note":  "Discovery focus. using-superpowers is about using loaded skills"
-                                    }
-                   },
-                   {
-                       "name":  "skill-stocktake",
-                       "description":  "Audit skills and commands for quality (Quick Scan or Full Stocktake).",
-                       "path":  "everything-claude-code/skills/skill-stocktake/SKILL.md",
-                       "sizeBytes":  7676,
-                       "tokenEstimate":  2200,
-                       "confidence":  0.82,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Quick Scan (changed skills only)",
-                                            "Full Stocktake mode",
-                                            "Sequential subagent batch evaluation",
-                                            "Quality metrics"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "skill-creator"
-                                                     ],
-                                        "note":  "Auditing focus. skill-creator covers creation and optimization"
-                                    }
-                   },
-                   {
-                       "name":  "configure-ecc",
-                       "description":  "Interactive installer for Everything Claude Code skills and rules.",
-                       "path":  "everything-claude-code/skills/configure-ecc/SKILL.md",
-                       "sizeBytes":  13892,
-                       "tokenEstimate":  4000,
-                       "confidence":  0.62,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Skill selection wizard",
-                                            "User-level vs project-level installation",
-                                            "Path verification",
-                                            "File optimization"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-
-                                                     ],
-                                        "note":  "ECC-specific configuration tool"
-                                    }
-                   },
-                   {
-                       "name":  "using-superpowers",
-                       "description":  "How to find and use skills at conversation start.",
-                       "path":  "superpowers/skills/using-superpowers/SKILL.md",
-                       "sizeBytes":  4207,
-                       "tokenEstimate":  1200,
-                       "confidence":  0.25,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "Skill discovery at conversation start",
-                                            "Skill invocation patterns",
-                                            "Mandatory skill usage before responding"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "find-skills"
-                                                     ],
-                                        "note":  "Usage patterns. find-skills is for discovery"
-                                    }
-                   },
-                   {
-                       "name":  "nanoclaw-repl",
-                       "description":  "Operate NanoClaw v2, ECC\u0027s session-aware REPL on claude -p.",
-                       "path":  "everything-claude-code/skills/nanoclaw-repl/SKILL.md",
-                       "sizeBytes":  886,
-                       "tokenEstimate":  260,
-                       "confidence":  0.12,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Session-aware REPL",
-                                            "Zero-dependency",
-                                            "Built on claude -p"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "autonomous-loops"
-                                                     ],
-                                        "note":  "Minimal stub. autonomous-loops section 2 covers NanoClaw in detail"
-                                    }
-                   },
-                   {
-                       "name":  "project-guidelines-example",
-                       "description":  "Example project-specific skill template from a real production app.",
-                       "path":  "everything-claude-code/skills/project-guidelines-example/SKILL.md",
-                       "sizeBytes":  10159,
-                       "tokenEstimate":  3000,
-                       "confidence":  0.65,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Template for project-specific skills",
-                                            "Real production app example",
-                                            "Convention documentation pattern"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-
-                                                     ],
-                                        "note":  "Template/example, not actionable skill"
-                                    }
-                   }
-               ]
+{
+    "_meta": {
+        "category": "meta_tooling",
+        "label": "元工具 / Meta & Tooling",
+        "skillCount": 1,
+        "architecture": "anchor-based"
+    },
+    "skills": [
+        {
+            "name": "meta-tooling",
+            "description": "Unified meta-tooling anchor: skill writing, stocktaking, creation, project guidelines, ECC configuration, skill discovery, superpowers usage, and nanoclaw REPL.",
+            "anchorBase": "writing-skills",
+            "confidence": 0.85,
+            "mergedCount": 8,
+            "mergedFrom": [
+                "writing-skills",
+                "skill-stocktake",
+                "skill-creator",
+                "project-guidelines-example",
+                "configure-ecc",
+                "find-skills",
+                "using-superpowers",
+                "nanoclaw-repl"
+            ]
+        }
+    ]
 }

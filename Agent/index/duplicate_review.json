@@ -1,186 +1,194 @@
-﻿{
+{
     "_meta": {
-        "description": "Duplicate skill governance for toolBox. Pre-populated from cross_references.json + quality audit.",
-        "version": "1.0",
-        "lastUpdated": "2026-03-07",
-        "totalReviewedGroups": 5
+        "description": "Duplicate skill governance for toolBox. Anchor-based architecture — all intra-category duplicates resolved by merge into anchors.",
+        "version": "2.0",
+        "architecture": "anchor-based",
+        "lastUpdated": "2026-03-11",
+        "totalAnchors": 12,
+        "totalOriginalSkills": 84,
+        "migrationDate": "2026-03-11",
+        "migrationNote": "All 84 individual skills merged into 12 category anchors. Intra-category dedup is now inherent in the anchor structure."
     },
-    "reviews": [
+    "anchorMergeHistory": [
         {
-            "topic": "TDD / Test-Driven Development",
-            "primarySkill": {
-                "name": "test-driven-development",
-                "path": "Tool/superpowers/skills/test-driven-development/SKILL.md",
-                "confidence": 0.81,
-                "selectionReason": "Highest confidence (0.81). 13 code blocks, good/bad comparisons, anti-patterns companion file, checklist, tables."
-            },
-            "alternateSkills": [
-                {
-                    "name": "tdd-workflow",
-                    "path": "Tool/everything-claude-code/.agents/skills/tdd-workflow/SKILL.md",
-                    "confidence": 0.63,
-                    "relationship": "overlap",
-                    "useWhen": "Need TypeScript/bash-specific TDD examples (24 code blocks in TS)"
-                },
-                {
-                    "name": "django-tdd",
-                    "path": "Tool/everything-claude-code/skills/django-tdd/SKILL.md",
-                    "confidence": 0.70,
-                    "relationship": "subset",
-                    "useWhen": "Django projects specifically (pytest-django, factory_boy)"
-                },
-                {
-                    "name": "springboot-tdd",
-                    "path": "Tool/everything-claude-code/skills/springboot-tdd/SKILL.md",
-                    "confidence": 0.37,
-                    "relationship": "subset",
-                    "useWhen": "Spring Boot projects (JUnit 5, Mockito, MockMvc)"
+            "anchor": "testing",
+            "mergedCount": 8,
+            "anchorBase": "test-driven-development",
+            "mergedSkills": [
+                "test-driven-development (0.81)",
+                "python-testing (0.72)",
+                "django-tdd (0.70)",
+                "golang-testing (0.67)",
+                "cpp-testing (0.63)",
+                "e2e-testing (0.56)",
+                "systematic-debugging (0.56)",
+                "springboot-tdd (0.37)"
+            ],
+            "preMergeDedup": {
+                "tdd-workflow_into_test-driven-development": {
+                    "overlapPercentage": 80,
+                    "date": "2026-03-11",
+                    "decision": "merged practical patterns into test-driven-development before anchor creation"
                 }
-            ],
-            "rejectedSkills": [],
-            "crossReferences": [
-                "python-testing",
-                "golang-testing",
-                "cpp-testing"
-            ],
-            "fitScore": 0.85,
-            "riskNotes": "tdd-workflow and test-driven-development have different perspectives; both valuable",
-            "workflowCompleteness": "complete",
-            "testability": "high"
+            }
         },
         {
-            "topic": "Agent Loops / Autonomous Execution",
-            "primarySkill": {
-                "name": "autonomous-loops",
-                "path": "Tool/everything-claude-code/skills/autonomous-loops/SKILL.md",
-                "confidence": 0.72,
-                "selectionReason": "Most comprehensive: 612 lines, 6 loop patterns, decision matrix, 23 code blocks."
-            },
-            "alternateSkills": [],
-            "rejectedSkills": [
-                {
-                    "name": "continuous-agent-loop",
-                    "path": "Tool/everything-claude-code/skills/continuous-agent-loop/SKILL.md",
-                    "confidence": 0.14,
-                    "rejectionReason": "45 lines, 1 code block. Superseded by autonomous-loops.",
-                    "rejectionCode": "superseded"
-                },
-                {
-                    "name": "ralphinho-rfc-pipeline",
-                    "path": "Tool/everything-claude-code/skills/ralphinho-rfc-pipeline/SKILL.md",
-                    "confidence": 0.18,
-                    "rejectionReason": "67 lines, 0 code blocks. A stub pointing to autonomous-loops section 6.",
-                    "rejectionCode": "superseded"
-                }
+            "anchor": "ai-agent",
+            "mergedCount": 11,
+            "anchorBase": "autonomous-loops",
+            "mergedSkills": [
+                "autonomous-loops (0.72)",
+                "continuous-learning-v2 (0.72)",
+                "agentic-engineering (0.67)",
+                "ai-first-engineering (0.63)",
+                "agent-harness-construction (0.60)",
+                "cost-aware-llm-pipeline (0.58)",
+                "eval-harness (0.55)",
+                "enterprise-agent-ops (0.52)",
+                "iterative-retrieval (0.50)",
+                "regex-vs-llm-structured-text (0.46)",
+                "foundation-models-on-device (0.39)"
             ],
-            "crossReferences": [
-                "agentic-engineering",
-                "ai-first-engineering"
-            ],
-            "fitScore": 0.90,
-            "riskNotes": "None. autonomous-loops clearly supersedes both alternatives.",
-            "workflowCompleteness": "complete",
-            "testability": "medium"
+            "preMergeDedup": {
+                "continuous-agent-loop": "rejected (superseded by autonomous-loops, 0.14)",
+                "ralphinho-rfc-pipeline": "rejected (superseded by autonomous-loops, 0.18)",
+                "continuous-learning-v1": "rejected (superseded by v2, 0.41)"
+            }
         },
         {
-            "topic": "Continuous Learning",
-            "primarySkill": {
-                "name": "continuous-learning-v2",
-                "path": "Tool/everything-claude-code/skills/continuous-learning-v2/SKILL.md",
-                "confidence": 0.72,
-                "selectionReason": "v2 adds project-scoped instincts and confidence scoring. 364 lines, 3 companion dirs."
-            },
-            "alternateSkills": [],
-            "rejectedSkills": [
-                {
-                    "name": "continuous-learning",
-                    "path": "Tool/everything-claude-code/skills/continuous-learning/SKILL.md",
-                    "confidence": 0.41,
-                    "rejectionReason": "v1 superseded by v2. Less structured, no project scoping.",
-                    "rejectionCode": "superseded"
-                }
-            ],
-            "crossReferences": [],
-            "fitScore": 0.80,
-            "riskNotes": "None.",
-            "workflowCompleteness": "complete",
-            "testability": "medium"
+            "anchor": "workflow",
+            "mergedCount": 12,
+            "anchorBase": "dispatching-parallel-agents",
+            "mergedSkills": [
+                "dispatching-parallel-agents (0.57)",
+                "finishing-a-development-branch (0.57)",
+                "using-git-worktrees (0.55)",
+                "receiving-code-review (0.54)",
+                "search-first (0.52)",
+                "writing-plans (0.50)",
+                "subagent-driven-development (0.44)",
+                "strategic-compact (0.42)",
+                "verification-before-completion (0.41)",
+                "requesting-code-review (0.36)",
+                "executing-plans (0.29)",
+                "brainstorming (0.25)"
+            ]
         },
         {
-            "topic": "Verification / QA Loops",
-            "primarySkill": {
-                "name": "verification-before-completion",
-                "path": "Tool/superpowers/skills/verification-before-completion/SKILL.md",
-                "confidence": 0.41,
-                "selectionReason": "Workflow discipline focus. Best for general verification mindset."
-            },
-            "alternateSkills": [
-                {
-                    "name": "django-verification",
-                    "path": "Tool/everything-claude-code/skills/django-verification/SKILL.md",
-                    "confidence": 0.67,
-                    "relationship": "superset",
-                    "useWhen": "Django projects (has higher score due to concrete bash commands)"
-                },
-                {
-                    "name": "springboot-verification",
-                    "path": "Tool/everything-claude-code/skills/springboot-verification/SKILL.md",
-                    "confidence": 0.54,
-                    "relationship": "superset",
-                    "useWhen": "Spring Boot projects"
-                },
-                {
-                    "name": "verification-loop",
-                    "path": "Tool/everything-claude-code/.agents/skills/verification-loop/SKILL.md",
-                    "confidence": 0.50,
-                    "relationship": "overlap",
-                    "useWhen": "Need Claude Code session-specific verification"
-                }
-            ],
-            "rejectedSkills": [],
-            "crossReferences": [
-                "e2e-testing",
-                "tdd-workflow"
-            ],
-            "fitScore": 0.75,
-            "riskNotes": "All verification skills are relatively thin. Framework-specific ones score higher.",
-            "workflowCompleteness": "partial",
-            "testability": "high"
+            "anchor": "backend",
+            "mergedCount": 8,
+            "anchorBase": "api-design",
+            "mergedSkills": [
+                "api-design (0.77)",
+                "database-migrations (0.75)",
+                "django-patterns (0.62)",
+                "clickhouse-io (0.58)",
+                "backend-patterns (0.52)",
+                "postgres-patterns (0.51)",
+                "springboot-patterns (0.48)",
+                "content-hash-cache-pattern (0.47)"
+            ]
         },
         {
-            "topic": "Skill Creation & Management",
-            "primarySkill": {
-                "name": "writing-skills",
-                "path": "Tool/superpowers/skills/writing-skills/SKILL.md",
-                "confidence": 0.85,
-                "selectionReason": "Highest score in toolBox. 655 lines, 21 code blocks, 5 companions, rich structure."
-            },
-            "alternateSkills": [
-                {
-                    "name": "skill-creator",
-                    "path": "Tool/skill-creator/SKILL.md",
-                    "confidence": 0.68,
-                    "relationship": "overlap",
-                    "useWhen": "Need eval/benchmark capabilities for skills. Broader than writing-skills."
-                },
-                {
-                    "name": "skill-stocktake",
-                    "path": "Tool/everything-claude-code/skills/skill-stocktake/SKILL.md",
-                    "confidence": 0.53,
-                    "relationship": "independent",
-                    "useWhen": "Auditing existing skills quality (Quick Scan or Full Stocktake)"
-                }
-            ],
-            "rejectedSkills": [],
-            "crossReferences": [
-                "find-skills",
-                "using-superpowers",
-                "configure-ecc"
-            ],
-            "fitScore": 0.90,
-            "riskNotes": "writing-skills and skill-creator have different angles; both useful.",
-            "workflowCompleteness": "complete",
-            "testability": "high"
+            "anchor": "meta-tooling",
+            "mergedCount": 8,
+            "anchorBase": "writing-skills",
+            "mergedSkills": [
+                "writing-skills (0.85)",
+                "skill-stocktake (0.82)",
+                "skill-creator (0.68)",
+                "project-guidelines-example (0.65)",
+                "configure-ecc (0.62)",
+                "find-skills (0.50)",
+                "using-superpowers (0.25)",
+                "nanoclaw-repl (0.12)"
+            ]
+        },
+        {
+            "anchor": "frontend",
+            "mergedCount": 7,
+            "anchorBase": "ui-ux-pro-max",
+            "mergedSkills": [
+                "ui-ux-pro-max (0.70)",
+                "coding-standards (0.63)",
+                "frontend-patterns (0.52)",
+                "liquid-glass-design (0.52)",
+                "vercel-composition-patterns (0.46)",
+                "canvas-design (0.39)",
+                "frontend-design (0.16)"
+            ]
+        },
+        {
+            "anchor": "language-specific",
+            "mergedCount": 5,
+            "anchorBase": "golang-patterns",
+            "mergedSkills": [
+                "golang-patterns (0.70)",
+                "cpp-coding-standards (0.68)",
+                "python-patterns (0.68)",
+                "java-coding-standards (0.43)",
+                "jpa-patterns (0.40)"
+            ]
+        },
+        {
+            "anchor": "security",
+            "mergedCount": 5,
+            "anchorBase": "security-review",
+            "mergedSkills": [
+                "security-review (0.68)",
+                "security-scan (0.60)",
+                "django-security (0.58)",
+                "plankton-code-quality (0.55)",
+                "springboot-security (0.53)"
+            ]
+        },
+        {
+            "anchor": "devops",
+            "mergedCount": 5,
+            "anchorBase": "django-verification",
+            "mergedSkills": [
+                "django-verification (0.67)",
+                "docker-patterns (0.64)",
+                "deployment-patterns (0.63)",
+                "springboot-verification (0.54)",
+                "verification-loop (0.50)"
+            ]
+        },
+        {
+            "anchor": "content",
+            "mergedCount": 5,
+            "anchorBase": "content-strategy",
+            "mergedSkills": [
+                "content-strategy (0.55)",
+                "frontend-slides (0.48)",
+                "social-content (0.43)",
+                "article-writing (0.37)",
+                "content-engine (0.37)"
+            ]
+        },
+        {
+            "anchor": "mobile-native",
+            "mergedCount": 5,
+            "anchorBase": "vercel-react-native-skills",
+            "mergedSkills": [
+                "vercel-react-native-skills (0.51)",
+                "swiftui-patterns (0.50)",
+                "swift-concurrency-6-2 (0.49)",
+                "swift-actor-persistence (0.41)",
+                "swift-protocol-di-testing (0.38)"
+            ]
+        },
+        {
+            "anchor": "business",
+            "mergedCount": 5,
+            "anchorBase": "nutrient-document-processing",
+            "mergedSkills": [
+                "nutrient-document-processing (0.53)",
+                "visa-doc-translate (0.38)",
+                "investor-materials (0.33)",
+                "investor-outreach (0.30)",
+                "market-research (0.30)"
+            ]
         }
     ]
 }

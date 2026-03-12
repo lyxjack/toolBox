@@ -4,6 +4,15 @@ description: 五层验证。有真实否决权。驳回必须带原因码和返�
 
 # QA Verification
 
+## 前置约束 — QA 子门禁
+> 进入本工作流时，以下铁律自动生效（全文见 `Agent/rules/iron_laws.md`）。
+
+| 铁律 | 一句话 | 门禁效果 |
+|------|--------|---------|
+| **IL 05** | QA IS A GATE | 无 qa_report 不得声称完成 |
+| **IL 06** | NO CI-ONLY APPROVAL | 不得仅凭编译通过放行 |
+| **IL 07** | REJECTION REQUIRES REASON CODE | 驳回必须带原因码和 rework_order |
+
 ## 触发条件
 Execution 完成 Gate③ 后交接，`state.json` 的 `currentState` 为 `QA_VERIFICATION`。
 

@@ -36,7 +36,7 @@
 | Windows | 正斜杠或反斜杠均可，推荐正斜杠 | `D:/toolBox/Agent/` |
 | macOS/Linux | 正斜杠 | `/Users/{user}/toolBox/Agent/` |
 
-toolBox 根目录在本文档中记为 `{TOOLBOX_ROOT}`，默认值为 `D:/toolBox/`。
+toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义）。Agent 运行时根据当前操作系统解析为实际绝对路径。
 
 ---
 

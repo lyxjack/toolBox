@@ -6,7 +6,7 @@ description: 唯一入口。提交任何需要正式开发流程的需求。
 
 **本 workflow 是所有正式开发请求的唯一入口。**
 
-执行步骤：读取并严格遵循 `D:/toolBox/PM/pm_workflow.md` 中的完整指令。
+执行步骤：读取并严格遵循 `{TOOLBOX}/PM/pm_workflow.md` 中的完整指令。
 
 ## Quick Reference
 

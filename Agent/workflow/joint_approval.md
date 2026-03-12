@@ -1,79 +1,81 @@
-﻿---
-description: CTO + PM è”åˆéªŒæ”¶ã€‚åŒæ–¹ç‹¬ç«‹å‡ºå…·æ„è§ï¼Œä»»ä¸€å¦å†³åˆ™è¿”å·¥ã€‚
+---
+description: CTO + PM 联合验收。双方独立出具意见，任一否决则返工。
 ---
 
 # Joint Approval
 
-## è§¦å‘æ¡ä»¶
-QA 5 å±‚å…¨ PASSï¼Œ`state.json` çš„ `currentState` ä¸º `JOINT_APPROVAL`ã€‚
+## 触发条件
+QA 5 层全 PASS，`state.json` 的 `currentState` 为 `JOINT_APPROVAL`。
 
-## è¾“å…¥
+## 输入
 - `requirement_package.md`
 - `execution_plan.md`
-- `qa_report.md`ï¼ˆPASS çŠ¶æ€ï¼‰
-- æ‰€æœ‰ `change_manifests/*.json`
-- æ‰€æœ‰ `rework_orders/*.json`ï¼ˆå¦‚æœ‰ï¼‰
+- `qa_report.md`（PASS 状态）
+- 所有 `change_manifests/*.json`
+- 所有 `rework_orders/*.json`（如有）
 
-## æ­¥éª¤
+## 步骤
 
-### Step 1: ç”Ÿæˆ Delivery Certificate è‰ç¨¿
-æŒ‰ `d:\toolBox\AI\_agent_arch\global\templates\delivery_cert.tmpl.md` æ¨¡æ¿:
+### Step 1: 生成 Delivery Certificate 草稿
+按 `{TOOLBOX}/Agent/templates/delivery_cert.tmpl.md` 模板:
 
-**1a. Requirement â†” Implementation Matrix**
-ä»Ž qa_report Layer 2 ä¸­æå–é€æ¡ AC å¯¹ç…§ç»“æžœã€‚
+**1a. Requirement <-> Implementation Matrix**
+从 qa_report Layer 2 中提取逐条 AC 对照结果。
 
-**1b. Error â†” Fix Matrix**
-ä»Žæ‰€æœ‰ rework_order æ±‡æ€»:
-- æ¯æ¬¡é©³å›žçš„ reason_code + æè¿°
-- ä¿®å¤æŽªæ–½
-- æœ€ç»ˆéªŒè¯çŠ¶æ€
-å¦‚æ— è¿”å·¥ï¼Œå¡« N/Aã€‚
+**1b. Error <-> Fix Matrix**
+从所有 rework_order 汇总:
+- 每次驳回的 reason_code + 描述
+- 修复措施
+- 最终验证状态
+如无返工，填 N/A。
 
 **1c. Test Results Summary**
-ä»Ž change_manifests èšåˆ testResultsã€‚
+从 change_manifests 聚合 testResults。
 
 **1d. Minimal Change Certification**
-å¼•ç”¨ execution_plan ä¸­çš„ Minimal Change Rationaleã€‚
+引用 execution_plan 中的 Minimal Change Rationale。
 
-### Step 2: CTO å®¡æ‰¹
-CTO è§†è§’å®¡æŸ¥:
-- [ ] æŠ€æœ¯æ–¹æ¡ˆæ˜¯å¦æŒ‰è®¡åˆ’æ‰§è¡Œ
-- [ ] æ˜¯å¦æœ‰éšè—çš„æŠ€æœ¯å€ºåŠ¡
-- [ ] å˜æ›´èŒƒå›´æ˜¯å¦æœ€å°åŒ–
-- [ ] æž¶æž„å†³ç­–æ˜¯å¦åˆç†
+### Step 2: CTO 审批
+CTO 视角审查:
+- [ ] 技术方案是否按计划执行
+- [ ] 是否有隐藏的技术债务
+- [ ] 变更范围是否最小化
+- [ ] 架构决策是否合理
 
 **CTO Verdict**: APPROVE / REJECT
-**CTO Notes**: {å®¡æŸ¥æ„è§}
+**CTO Notes**: {审查意见}
 
-### Step 3: PM å®¡æ‰¹
-PM è§†è§’å®¡æŸ¥:
-- [ ] ç”¨æˆ·éœ€æ±‚æ˜¯å¦è¢«æ­£ç¡®æ»¡è¶³
-- [ ] AC å¯¹ç…§è¡¨æ˜¯å¦å…¨éƒ¨ PASS
-- [ ] äº¤ä»˜æ˜¯å¦ç¬¦åˆç”¨æˆ·é¢„æœŸ
-- [ ] æ˜¯å¦æœ‰è¢«é—å¿˜çš„éœ€æ±‚é¡¹
+### Step 3: PM 审批
+PM 视角审查:
+- [ ] 用户需求是否被正确满足
+- [ ] AC 对照表是否全部 PASS
+- [ ] 交付是否符合用户预期
+- [ ] 是否有被遗忘的需求项
 
 **PM Verdict**: APPROVE / REJECT
-**PM Notes**: {å®¡æŸ¥æ„è§}
+**PM Notes**: {审查意见}
 
-### Step 4: æœ€ç»ˆåˆ¤å®š
+### Step 4: 最终判定
 
-**åŒæ–¹ APPROVE:**
-1. å®Œæˆ `delivery_cert.md`
-2. æ›´æ–° state â†’ `DELIVERED`
-3. å‘ç”¨æˆ·äº¤ä»˜æˆæžœï¼Œé™„å¸¦:
-   - éœ€æ±‚ä¸Žå®žçŽ°å¯¹ç…§è¡¨
-   - é”™è¯¯ä¸Žä¿®æ”¹å¯¹ç…§è¡¨ï¼ˆå¦‚æœ‰ï¼‰
-   - æµ‹è¯•ç»“æžœ
-   - æœ€å°åŒ–ä¿®æ”¹è®¤è¯
+**双方 APPROVE:**
+1. 完成 `delivery_cert.md`，**写入 `.in-process/active/{session_id}/`**
+2. 更新 state -> `DELIVERED`
+3. 向用户交付成果，附带:
+   - 需求与实现对照表
+   - 错误与修改对照表（如有）
+   - 测试结果
+   - 最小化修改认证
 
-**ä»»ä¸€ REJECT:**
-1. åœ¨ delivery_cert ä¸­è®°å½•å¦å†³æ„è§
-2. åˆ›å»º rework_orderï¼ˆç”±å¦å†³æ–¹æŒ‡å®š reason_code å’Œ targetï¼‰
-3. æ›´æ–° state â†’ `REWORK`
-4. è·¯ç”±åˆ°ç›®æ ‡è§’è‰²
+**任一 REJECT:**
+1. 在 delivery_cert 中记录否决意见
+2. 创建 rework_order（由否决方指定 reason_code 和 target）
+3. 更新 state -> `REWORK`
+4. 路由到目标角色
 
-### Step 5: Session å½’æ¡£
-äº¤ä»˜å®ŒæˆåŽ:
-- `_tmp/` ç›®å½•ä¸­æœ‰ä»·å€¼çš„æ–‡ä»¶ç§»åˆ° session æ ¹ç›®å½•
-- æ¸…ç† `_tmp/`
-- session ç›®å½•ä¿ç•™ä½œä¸ºå®¡è®¡è®°å½•
+### Step 5: Session 归档
+交付完成后:
+- `.in-process/scratch/` 中有价值的文件 promote 到 session 目录或 audit/
+- 清理 `.in-process/scratch/`
+- 将 `.in-process/active/{session_id}/` 移至 `.in-process/archive/{session_id}/`
+- 更新 `.in-process/index/archive_manifest.json`
+- session 目录保留作为审计记录

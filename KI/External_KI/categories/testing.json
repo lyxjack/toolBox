@@ -1,209 +1,27 @@
-﻿{
-    "_meta":  {
-                  "category":  "testing",
-                  "label":  "æµ‹è¯• / Testing",
-                  "skillCount":  9
-              },
-    "skills":  [
-                   {
-                       "name":  "tdd-workflow",
-                       "description":  "Enforces TDD with 80%+ coverage including unit, integration, and E2E tests.",
-                       "path":  "everything-claude-code/.agents/skills/tdd-workflow/SKILL.md",
-                       "sizeBytes":  10185,
-                       "tokenEstimate":  3000,
-                       "confidence":  0.63,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Red-Green-Refactor cycle",
-                                            "80%+ coverage requirement",
-                                            "Unit/integration/E2E test layers",
-                                            "Framework-agnostic TDD methodology"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "test-driven-development"
-                                                     ],
-                                        "note":  "tdd-workflow (ECC) is more structured; test-driven-development (superpowers) adds anti-patterns guide. Both excellent"
-                                    }
-                   },
-                   {
-                       "name":  "test-driven-development",
-                       "description":  "TDD methodology: use before writing implementation code.",
-                       "path":  "superpowers/skills/test-driven-development/SKILL.md",
-                       "sizeBytes":  9867,
-                       "tokenEstimate":  2900,
-                       "confidence":  0.81,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "TDD before implementation",
-                                            "Anti-patterns reference (separate file)",
-                                            "Test structure and naming",
-                                            "Coverage enforcement"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "tdd-workflow"
-                                                     ],
-                                        "note":  "Has separate testing-anti-patterns.md companion. Slightly different angle from tdd-workflow"
-                                    }
-                   },
-                   {
-                       "name":  "e2e-testing",
-                       "description":  "Playwright E2E testing: POM, config, CI/CD, artifacts, flaky test strategies.",
-                       "path":  "everything-claude-code/.agents/skills/e2e-testing/SKILL.md",
-                       "sizeBytes":  8391,
-                       "tokenEstimate":  2500,
-                       "confidence":  0.56,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Playwright-specific patterns",
-                                            "Page Object Model",
-                                            "CI/CD integration",
-                                            "Artifact management",
-                                            "Flaky test strategies"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-
-                                                     ],
-                                        "note":  "Unique: only E2E-specific skill"
-                                    }
-                   },
-                   {
-                       "name":  "systematic-debugging",
-                       "description":  "Use when encountering any bug, test failure, or unexpected behavior.",
-                       "path":  "superpowers/skills/systematic-debugging/SKILL.md",
-                       "sizeBytes":  9884,
-                       "tokenEstimate":  2900,
-                       "confidence":  0.56,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "Root cause analysis tracing",
-                                            "Condition-based waiting patterns",
-                                            "Defense-in-depth strategies",
-                                            "Test pressure levels (1-3)",
-                                            "Find-polluter script for test isolation",
-                                            "Companion .md and .ts example files"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-
-                                                     ],
-                                        "note":  "Unique debugging methodology. Has rich companion files"
-                                    }
-                   },
-                   {
-                       "name":  "django-tdd",
-                       "description":  "Django testing with pytest-django, factory_boy, mocking, coverage.",
-                       "path":  "everything-claude-code/skills/django-tdd/SKILL.md",
-                       "sizeBytes":  21651,
-                       "tokenEstimate":  6300,
-                       "confidence":  0.7,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "pytest-django fixtures and config",
-                                            "factory_boy for test data",
-                                            "DRF API testing",
-                                            "Mocking strategies",
-                                            "Coverage requirements"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "python-testing",
-                                                         "tdd-workflow"
-                                                     ],
-                                        "note":  "BEST for Django testing. python-testing is more general"
-                                    }
-                   },
-                   {
-                       "name":  "springboot-tdd",
-                       "description":  "TDD for Spring Boot: JUnit 5, Mockito, MockMvc, Testcontainers, JaCoCo.",
-                       "path":  "everything-claude-code/skills/springboot-tdd/SKILL.md",
-                       "sizeBytes":  3932,
-                       "tokenEstimate":  1200,
-                       "confidence":  0.37,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "JUnit 5 test structure",
-                                            "Mockito mocking",
-                                            "MockMvc for controller tests",
-                                            "Testcontainers for integration",
-                                            "JaCoCo coverage"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "tdd-workflow"
-                                                     ],
-                                        "note":  "Spring Boot specific. More concise than django-tdd"
-                                    }
-                   },
-                   {
-                       "name":  "python-testing",
-                       "description":  "Python testing with pytest: TDD, fixtures, mocking, parametrization, coverage.",
-                       "path":  "everything-claude-code/skills/python-testing/SKILL.md",
-                       "sizeBytes":  19678,
-                       "tokenEstimate":  5700,
-                       "confidence":  0.72,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "pytest fixtures and conftest",
-                                            "Parametrized tests",
-                                            "Mocking with unittest.mock",
-                                            "Coverage with pytest-cov",
-                                            "TDD methodology for Python"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "django-tdd",
-                                                         "tdd-workflow"
-                                                     ],
-                                        "note":  "BEST for general Python testing. django-tdd extends this for Django"
-                                    }
-                   },
-                   {
-                       "name":  "golang-testing",
-                       "description":  "Go testing: table-driven tests, subtests, benchmarks, fuzzing, coverage.",
-                       "path":  "everything-claude-code/skills/golang-testing/SKILL.md",
-                       "sizeBytes":  17358,
-                       "tokenEstimate":  5100,
-                       "confidence":  0.67,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Table-driven test pattern",
-                                            "Subtests and t.Run()",
-                                            "Benchmarks and profiling",
-                                            "Fuzzing",
-                                            "Test coverage",
-                                            "Idiomatic Go testing"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "golang-patterns"
-                                                     ],
-                                        "note":  "Paired with golang-patterns for full Go development"
-                                    }
-                   },
-                   {
-                       "name":  "cpp-testing",
-                       "description":  "C++ tests: GoogleTest/CTest, failing/flaky tests, coverage/sanitizers.",
-                       "path":  "everything-claude-code/skills/cpp-testing/SKILL.md",
-                       "sizeBytes":  9487,
-                       "tokenEstimate":  2800,
-                       "confidence":  0.63,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "GoogleTest framework",
-                                            "CTest configuration",
-                                            "Sanitizers (ASan, TSan, UBSan)",
-                                            "Coverage with gcov/lcov",
-                                            "Flaky test diagnosis"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "cpp-coding-standards"
-                                                     ],
-                                        "note":  "Paired with cpp-coding-standards for full C++ development"
-                                    }
-                   }
-               ]
+{
+    "_meta": {
+        "category": "testing",
+        "label": "测试 / Testing",
+        "skillCount": 1,
+        "architecture": "anchor-based"
+    },
+    "skills": [
+        {
+            "name": "testing",
+            "description": "Unified testing anchor: TDD methodology, Python/Django/Go/C++ testing, E2E (Playwright), systematic debugging, and Spring Boot TDD. Organized in Tier 1-6 structure.",
+            "anchorBase": "test-driven-development",
+            "confidence": 0.81,
+            "mergedCount": 8,
+            "mergedFrom": [
+                "test-driven-development",
+                "python-testing",
+                "django-tdd",
+                "golang-testing",
+                "cpp-testing",
+                "e2e-testing",
+                "systematic-debugging",
+                "springboot-tdd"
+            ]
+        }
+    ]
 }

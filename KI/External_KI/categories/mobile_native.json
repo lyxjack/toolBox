@@ -1,115 +1,24 @@
-﻿{
-    "_meta":  {
-                  "category":  "mobile_native",
-                  "label":  "ç§»åŠ¨ç«¯/åŽŸç”Ÿ / Mobile \u0026 Native",
-                  "skillCount":  5
-              },
-    "skills":  [
-                   {
-                       "name":  "vercel-react-native-skills",
-                       "description":  "React Native development patterns and best practices.",
-                       "path":  "react-native-skills/SKILL.md",
-                       "sizeBytes":  4560,
-                       "tokenEstimate":  1300,
-                       "confidence":  0.51,
-                       "origin":  "Vercel",
-                       "bulletPoints":  [
-                                            "React Native component patterns",
-                                            "Navigation patterns",
-                                            "State management for RN",
-                                            "Platform-specific code handling",
-                                            "Large AGENTS.md (76KB) with detailed rules",
-                                            "38 rule files in rules/ directory"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "frontend-patterns"
-                                                     ],
-                                        "note":  "Unique RN focus. frontend-patterns covers web React"
-                                    }
-                   },
-                   {
-                       "name":  "swiftui-patterns",
-                       "description":  "SwiftUI architecture, state management with @Observable, navigation, performance.",
-                       "path":  "everything-claude-code/skills/swiftui-patterns/SKILL.md",
-                       "sizeBytes":  7198,
-                       "tokenEstimate":  2100,
-                       "confidence":  0.5,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "@Observable state management",
-                                            "View composition patterns",
-                                            "Navigation design",
-                                            "Performance optimization",
-                                            "Modern iOS/macOS UI patterns"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "swift-concurrency-6-2",
-                                                         "liquid-glass-design"
-                                                     ],
-                                        "note":  "BEST for SwiftUI. Complement with liquid-glass-design for styling"
-                                    }
-                   },
-                   {
-                       "name":  "swift-concurrency-6-2",
-                       "description":  "Swift 6.2 Approachable Concurrency.",
-                       "path":  "everything-claude-code/skills/swift-concurrency-6-2/SKILL.md",
-                       "sizeBytes":  8226,
-                       "tokenEstimate":  2400,
-                       "confidence":  0.49,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Single-threaded default model",
-                                            "@concurrent annotation",
-                                            "Isolated conformances"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-
-                                                     ],
-                                        "note":  "Also in language_specific. Swift 6.2+ only"
-                                    }
-                   },
-                   {
-                       "name":  "swift-actor-persistence",
-                       "description":  "Thread-safe persistence in Swift using actors.",
-                       "path":  "everything-claude-code/skills/swift-actor-persistence/SKILL.md",
-                       "sizeBytes":  4941,
-                       "tokenEstimate":  1450,
-                       "confidence":  0.41,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Actor-based thread safety",
-                                            "File-backed cache pattern"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-
-                                                     ],
-                                        "note":  "Also in language_specific. Persistence-specific"
-                                    }
-                   },
-                   {
-                       "name":  "swift-protocol-di-testing",
-                       "description":  "Protocol-based DI for testable Swift â€“ mock file system, network, APIs.",
-                       "path":  "everything-claude-code/skills/swift-protocol-di-testing/SKILL.md",
-                       "sizeBytes":  6197,
-                       "tokenEstimate":  1800,
-                       "confidence":  0.38,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Protocol-based dependency injection",
-                                            "Mock file system and network",
-                                            "Swift Testing framework integration",
-                                            "Focused protocol design"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-
-                                                     ],
-                                        "note":  "Unique: Swift testability through DI"
-                                    }
-                   }
-               ]
+{
+    "_meta": {
+        "category": "mobile_native",
+        "label": "移动端/原生 / Mobile & Native",
+        "skillCount": 1,
+        "architecture": "anchor-based"
+    },
+    "skills": [
+        {
+            "name": "mobile-native",
+            "description": "Unified mobile-native anchor: React Native (Vercel), SwiftUI patterns, Swift concurrency 6.2, Swift actor persistence, and Swift protocol-based DI testing.",
+            "anchorBase": "vercel-react-native-skills",
+            "confidence": 0.51,
+            "mergedCount": 5,
+            "mergedFrom": [
+                "vercel-react-native-skills",
+                "swiftui-patterns",
+                "swift-concurrency-6-2",
+                "swift-actor-persistence",
+                "swift-protocol-di-testing"
+            ]
+        }
+    ]
 }

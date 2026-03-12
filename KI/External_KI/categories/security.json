@@ -1,123 +1,24 @@
-﻿{
-    "_meta":  {
-                  "category":  "security",
-                  "label":  "å®‰å…¨ / Security",
-                  "skillCount":  5
-              },
-    "skills":  [
-                   {
-                       "name":  "security-review",
-                       "description":  "Comprehensive security checklist when adding auth, handling input, working with secrets, API endpoints, or payments.",
-                       "path":  "everything-claude-code/.agents/skills/security-review/SKILL.md",
-                       "sizeBytes":  12709,
-                       "tokenEstimate":  3700,
-                       "confidence":  0.68,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Authentication/authorization checklist",
-                                            "Input validation and sanitization",
-                                            "Secrets management",
-                                            "API endpoint security",
-                                            "Payment/sensitive feature patterns",
-                                            "OWASP-aligned review"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "django-security",
-                                                         "springboot-security"
-                                                     ],
-                                        "note":  "BEST general security. Framework-specific skills go deeper for Django/Spring"
-                                    }
-                   },
-                   {
-                       "name":  "security-scan",
-                       "description":  "Scan Claude Code config for vulnerabilities using AgentShield.",
-                       "path":  "everything-claude-code/skills/security-scan/SKILL.md",
-                       "sizeBytes":  4634,
-                       "tokenEstimate":  1400,
-                       "confidence":  0.6,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "CLAUDE.md injection risk scanning",
-                                            "MCP server config auditing",
-                                            "Hook security verification",
-                                            "Agent definition review"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "security-review"
-                                                     ],
-                                        "note":  "Unique niche: Claude Code config security, not application code"
-                                    }
-                   },
-                   {
-                       "name":  "django-security",
-                       "description":  "Django security: auth, CSRF, SQL injection prevention, XSS, secure deployment.",
-                       "path":  "everything-claude-code/skills/django-security/SKILL.md",
-                       "sizeBytes":  16398,
-                       "tokenEstimate":  4800,
-                       "confidence":  0.58,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Django auth system hardening",
-                                            "CSRF protection patterns",
-                                            "SQL injection prevention with ORM",
-                                            "XSS prevention in templates",
-                                            "Security middleware configuration",
-                                            "Secure deployment settings"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "security-review",
-                                                         "django-patterns"
-                                                     ],
-                                        "note":  "BEST for Django security. Extends security-review with Django specifics"
-                                    }
-                   },
-                   {
-                       "name":  "springboot-security",
-                       "description":  "Spring Security: authn/authz, validation, CSRF, secrets, headers, rate limiting.",
-                       "path":  "everything-claude-code/skills/springboot-security/SKILL.md",
-                       "sizeBytes":  8291,
-                       "tokenEstimate":  2400,
-                       "confidence":  0.53,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Spring Security filter chain",
-                                            "JWT authentication setup",
-                                            "Method-level authorization",
-                                            "CSRF configuration",
-                                            "Security headers",
-                                            "Dependency vulnerability scanning"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "security-review",
-                                                         "springboot-patterns"
-                                                     ],
-                                        "note":  "BEST for Spring security. Extends security-review with Spring specifics"
-                                    }
-                   },
-                   {
-                       "name":  "plankton-code-quality",
-                       "description":  "Write-time code quality enforcement: auto-formatting, linting, Claude-powered fixes via hooks.",
-                       "path":  "everything-claude-code/skills/plankton-code-quality/SKILL.md",
-                       "sizeBytes":  8238,
-                       "tokenEstimate":  2400,
-                       "confidence":  0.55,
-                       "origin":  "community",
-                       "bulletPoints":  [
-                                            "Git hook-based quality enforcement",
-                                            "Auto-formatting on file edit",
-                                            "Linting integration",
-                                            "Claude-powered auto-fix suggestions"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "coding-standards"
-                                                     ],
-                                        "note":  "Enforcement tooling, not patterns. Complements coding-standards"
-                                    }
-                   }
-               ]
+{
+    "_meta": {
+        "category": "security",
+        "label": "安全 / Security",
+        "skillCount": 1,
+        "architecture": "anchor-based"
+    },
+    "skills": [
+        {
+            "name": "security",
+            "description": "Unified security anchor: security review, vulnerability scanning, Django/Spring Boot security, and code quality enforcement.",
+            "anchorBase": "security-review",
+            "confidence": 0.68,
+            "mergedCount": 5,
+            "mergedFrom": [
+                "security-review",
+                "security-scan",
+                "django-security",
+                "plankton-code-quality",
+                "springboot-security"
+            ]
+        }
+    ]
 }

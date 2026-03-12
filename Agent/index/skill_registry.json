@@ -1,160 +1,119 @@
-﻿{
+{
     "_meta": {
-        "description": "toolBox project skill registry. Top 30 skills by confidence, pre-populated from quality audit.",
-        "version": "1.0",
-        "lastUpdated": "2026-03-07",
-        "dataSource": "AI/_quality_audit_corrected.json"
+        "description": "toolBox skill registry. Anchor-based architecture — 12 anchors, one per category.",
+        "version": "2.0",
+        "architecture": "anchor-based",
+        "lastUpdated": "2026-03-11",
+        "totalAnchors": 12
     },
-    "enabledSkills": [
+    "anchors": [
         {
-            "name": "writing-skills",
-            "path": "Tool/superpowers/skills/writing-skills/SKILL.md",
+            "name": "meta-tooling",
             "category": "meta_tooling",
+            "anchorBase": "writing-skills",
             "confidence": 0.85,
-            "enabledReason": "Highest quality skill. Essential for skill creation workflow.",
-            "usageNotes": "Has 5 companion files + 1 subdirectory. Load SKILL.md first.",
-            "lastUsed": null,
-            "effectiveness": null
+            "mergedCount": 8,
+            "path": "KI/External_KI/skills/meta-tooling/meta-tooling.md",
+            "usageNotes": "Skill creation, discovery, auditing, configuration. Highest confidence anchor."
         },
         {
-            "name": "test-driven-development",
-            "path": "Tool/superpowers/skills/test-driven-development/SKILL.md",
+            "name": "testing",
             "category": "testing",
+            "anchorBase": "test-driven-development",
             "confidence": 0.81,
-            "enabledReason": "Comprehensive TDD with anti-patterns companion file.",
-            "usageNotes": "Prefer over tdd-workflow (0.63) for general TDD guidance.",
-            "lastUsed": null,
-            "effectiveness": null
+            "mergedCount": 8,
+            "path": "KI/External_KI/skills/testing/testing.md",
+            "usageNotes": "QA with Tier 1-6 structure. Tier 1/2 auto-trigger, Tier 3/4/6 manual. Covers TDD, E2E, debugging, multi-language."
         },
         {
-            "name": "api-design",
-            "path": "Tool/everything-claude-code/.agents/skills/api-design/SKILL.md",
+            "name": "backend",
             "category": "backend",
+            "anchorBase": "api-design",
             "confidence": 0.77,
-            "enabledReason": "Best API design reference. 4 languages, 24 code blocks.",
-            "usageNotes": "Has companion directory. Covers REST patterns comprehensively.",
-            "lastUsed": null,
-            "effectiveness": null
+            "mergedCount": 8,
+            "path": "KI/External_KI/skills/backend/backend.md",
+            "usageNotes": "API design, server patterns, database/ORM, caching, Docker, Django/Spring Boot/Next.js."
         },
         {
-            "name": "database-migrations",
-            "path": "Tool/everything-claude-code/skills/database-migrations/SKILL.md",
-            "category": "backend",
-            "confidence": 0.75,
-            "enabledReason": "Multi-ORM migration coverage. 5 languages.",
-            "usageNotes": "Use for any schema change workflow.",
-            "lastUsed": null,
-            "effectiveness": null
-        },
-        {
-            "name": "python-testing",
-            "path": "Tool/everything-claude-code/skills/python-testing/SKILL.md",
-            "category": "testing",
-            "confidence": 0.72,
-            "enabledReason": "816 lines, 41 code blocks. Most comprehensive Python testing.",
-            "usageNotes": "Use for general Python. For Django-specific, use django-tdd.",
-            "lastUsed": null,
-            "effectiveness": null
-        },
-        {
-            "name": "autonomous-loops",
-            "path": "Tool/everything-claude-code/skills/autonomous-loops/SKILL.md",
+            "name": "ai-agent",
             "category": "ai_agent",
+            "anchorBase": "autonomous-loops",
             "confidence": 0.72,
-            "enabledReason": "Most comprehensive agent loop reference. 6 patterns, 612 lines.",
-            "usageNotes": "Supersedes continuous-agent-loop and ralphinho-rfc-pipeline.",
-            "lastUsed": null,
-            "effectiveness": null
+            "mergedCount": 11,
+            "path": "KI/External_KI/skills/ai-agent/ai-agent.md",
+            "usageNotes": "Agent loops, LLM pipelines, evaluation, retrieval, cost optimization, on-device, enterprise ops."
         },
         {
-            "name": "continuous-learning-v2",
-            "path": "Tool/everything-claude-code/skills/continuous-learning-v2/SKILL.md",
-            "category": "ai_agent",
-            "confidence": 0.72,
-            "enabledReason": "v2 supersedes v1. Project-scoped instincts.",
-            "usageNotes": "Has 1 companion file + 3 subdirectories.",
-            "lastUsed": null,
-            "effectiveness": null
-        },
-        {
-            "name": "golang-patterns",
-            "path": "Tool/everything-claude-code/skills/golang-patterns/SKILL.md",
-            "category": "language_specific",
-            "confidence": 0.70,
-            "enabledReason": "Idiomatic Go. 26 code blocks, good/bad comparisons.",
-            "usageNotes": "Pair with golang-testing for full Go development.",
-            "lastUsed": null,
-            "effectiveness": null
-        },
-        {
-            "name": "ui-ux-pro-max",
-            "path": "Tool/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/SKILL.md",
+            "name": "frontend",
             "category": "frontend",
+            "anchorBase": "ui-ux-pro-max",
             "confidence": 0.70,
-            "enabledReason": "Best UI/UX design reference. 50 styles, 21 palettes.",
-            "usageNotes": "Has 2 companion files. Large data/ and templates/ directories.",
-            "lastUsed": null,
-            "effectiveness": null
+            "mergedCount": 7,
+            "path": "KI/External_KI/skills/frontend/frontend.md",
+            "usageNotes": "UI/UX design, React patterns, hooks, state management, animations, accessibility, Liquid Glass."
         },
         {
-            "name": "django-tdd",
-            "path": "Tool/everything-claude-code/skills/django-tdd/SKILL.md",
-            "category": "testing",
+            "name": "language-specific",
+            "category": "language_specific",
+            "anchorBase": "golang-patterns",
             "confidence": 0.70,
-            "enabledReason": "Deep Django testing. 729 lines.",
-            "usageNotes": "Use for Django projects. python-testing for general Python.",
-            "lastUsed": null,
-            "effectiveness": null
+            "mergedCount": 5,
+            "path": "KI/External_KI/skills/language-specific/language-specific.md",
+            "usageNotes": "Go, C++, Python, Java, JPA/Hibernate coding standards and patterns."
         },
         {
-            "name": "skill-creator",
-            "path": "Tool/skill-creator/SKILL.md",
-            "category": "meta_tooling",
-            "confidence": 0.68,
-            "enabledReason": "Most comprehensive skill creation tool. 485 lines.",
-            "usageNotes": "writing-skills is more opinionated; skill-creator is broader.",
-            "lastUsed": null,
-            "effectiveness": null
-        },
-        {
-            "name": "python-patterns",
-            "path": "Tool/everything-claude-code/skills/python-patterns/SKILL.md",
-            "category": "language_specific",
-            "confidence": 0.68,
-            "enabledReason": "750 lines, 34 code blocks for pythonic patterns.",
-            "usageNotes": "General Python. For Django â†’ django-patterns.",
-            "lastUsed": null,
-            "effectiveness": null
-        },
-        {
-            "name": "cpp-coding-standards",
-            "path": "Tool/everything-claude-code/skills/cpp-coding-standards/SKILL.md",
-            "category": "language_specific",
-            "confidence": 0.68,
-            "enabledReason": "Largest skill file. C++ Core Guidelines based.",
-            "usageNotes": "Pair with cpp-testing.",
-            "lastUsed": null,
-            "effectiveness": null
-        },
-        {
-            "name": "security-review",
-            "path": "Tool/everything-claude-code/.agents/skills/security-review/SKILL.md",
+            "name": "security",
             "category": "security",
+            "anchorBase": "security-review",
             "confidence": 0.68,
-            "enabledReason": "Best general security skill. OWASP-aligned.",
-            "usageNotes": "For Django â†’ django-security. For Spring â†’ springboot-security.",
-            "lastUsed": null,
-            "effectiveness": null
+            "mergedCount": 5,
+            "path": "KI/External_KI/skills/security/security.md",
+            "usageNotes": "OWASP review, scanning, Django/Spring Boot security, code quality enforcement."
         },
         {
-            "name": "systematic-debugging",
-            "path": "Tool/superpowers/skills/systematic-debugging/SKILL.md",
-            "category": "testing",
-            "confidence": 0.56,
-            "enabledReason": "Unique debugging methodology. 10 companion files.",
-            "usageNotes": "Low code blocks in SKILL.md but rich companion resources.",
-            "lastUsed": null,
-            "effectiveness": null
+            "name": "devops",
+            "category": "devops",
+            "anchorBase": "django-verification",
+            "confidence": 0.67,
+            "mergedCount": 5,
+            "path": "KI/External_KI/skills/devops/devops.md",
+            "usageNotes": "Deployment, Docker, CI/CD, verification loops (generic + Django + Spring)."
+        },
+        {
+            "name": "workflow",
+            "category": "workflow",
+            "anchorBase": "dispatching-parallel-agents",
+            "confidence": 0.57,
+            "mergedCount": 12,
+            "path": "KI/External_KI/skills/workflow/workflow.md",
+            "usageNotes": "Planning, execution, code review, branching, parallel agents, git worktrees, verification."
+        },
+        {
+            "name": "content",
+            "category": "content",
+            "anchorBase": "content-strategy",
+            "confidence": 0.55,
+            "mergedCount": 5,
+            "path": "KI/External_KI/skills/content/content.md",
+            "usageNotes": "Content strategy, article writing, social media, presentations."
+        },
+        {
+            "name": "business",
+            "category": "business",
+            "anchorBase": "nutrient-document-processing",
+            "confidence": 0.53,
+            "mergedCount": 5,
+            "path": "KI/External_KI/skills/business/business.md",
+            "usageNotes": "Document processing, visa translation, investor materials/outreach, market research."
+        },
+        {
+            "name": "mobile-native",
+            "category": "mobile_native",
+            "anchorBase": "vercel-react-native-skills",
+            "confidence": 0.51,
+            "mergedCount": 5,
+            "path": "KI/External_KI/skills/mobile-native/mobile-native.md",
+            "usageNotes": "React Native/Expo, SwiftUI, Swift 6.2 concurrency, actor persistence, protocol DI."
         }
     ]
 }

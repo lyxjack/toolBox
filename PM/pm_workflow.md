@@ -4,6 +4,13 @@ description: 唯一入口。用户提交需求后，PM 分析需求、召回上�
 
 # /pm — 需求受理与分析
 
+## 前置约束 — PM 子门禁
+> 进入本工作流时，以下铁律自动生效（全文见 `Agent/rules/iron_laws.md`）。
+
+| 铁律 | 一句话 | 门禁效果 |
+|------|--------|---------|
+| **IL 01** | NO REQUIREMENT, NO EXECUTION | 无标准需求包不得进入实现阶段 |
+
 ## 触发条件
 用户输入 `/pm` 或任何需要进入正式开发流程的请求。
 
@@ -33,9 +40,9 @@ description: 唯一入口。用户提交需求后，PM 分析需求、召回上�
 
 ### Step 4: 召回上下文
 按优先级依次查询:
-1. **Error Book**: 读取 `d:\toolBox\KI\Error_Book\index.json`，检索与当前需求相关的历史错误模式
+1. **Error Book**: 读取 `{TOOLBOX}/KI/Error_Book/index.json`，检索与当前需求相关的历史错误模式
 2. **KI Summaries**: 检查对话中提供的 Knowledge Item 摘要，识别相关 KI
-3. **Skills Index**: 读取 `d:\toolBox\KI\External_KI\master_index.json`，在 `quickLookup` 中识别可能相关的 skill 类别（**不深入读 skill 内容，只做初步标记**）
+3. **Skills Index**: 读取 `{TOOLBOX}/KI/External_KI/master_index.json`，在 `quickLookup` 中识别可能相关的 skill 类别（**不深入读 skill 内容，只做初步标记**）
 4. **Project Rules**: 如果存在 `Agent/rules/project_rules.md`，读取项目规则
 
 ### Step 5: 分析与厘清
@@ -45,7 +52,7 @@ description: 唯一入口。用户提交需求后，PM 分析需求、召回上�
 - 确定明确的 scope 边界和 out of scope
 
 ### Step 6: 输出 requirement_package.md
-按 `d:\toolBox\PM\templates\requirement_package.tmpl.md` 模板填写，保存到 session 目录。
+按 `{TOOLBOX}/PM/templates/requirement_package.tmpl.md` 模板填写，**保存到 session 目录**（`.in-process/active/{session_id}/requirement_package.md`）。
 
 必须确保以下字段非空:
 - [ ] Clarified Intent
@@ -54,11 +61,14 @@ description: 唯一入口。用户提交需求后，PM 分析需求、召回上�
 - [ ] Constraints (至少 1 条)
 - [ ] Acceptance Criteria (至少 1 条，每条可验证)
 
+> **Iron Law: 所有工件必须写入 `.in-process/active/{session_id}/`，禁止仅在对话中输出而不落盘。**
+
 ### Step 7: Gate① 检查
 自检 requirement_package.md 完整性:
 - Scope 是否明确？
 - AC 是否可验证（不是模糊的"应该好用"）？
 - Out of Scope 是否覆盖了容易 creep 的项？
+- **requirement_package.md 是否已写入 `.in-process/active/{session_id}/`？**
 
 **通过** → 转交 CTO Planning（更新 state → `CTO_PLANNING`）
 **不通过** → 回到 Step 5 补充或向用户提问
@@ -80,3 +90,4 @@ description: 唯一入口。用户提交需求后，PM 分析需求、召回上�
 - ❌ 直接修改代码
 - ❌ 跳过 CTO 给 Execution 下指令
 - ❌ 在 QA 阶段修改需求（需走本 workflow 的返工入口）
+- ❌ 工件仅在对话中输出而不写入 `.in-process/`

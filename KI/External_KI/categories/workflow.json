@@ -1,259 +1,31 @@
-﻿{
-    "_meta":  {
-                  "category":  "workflow",
-                  "label":  "å·¥ä½œæµç¨‹ / Workflow \u0026 Process",
-                  "skillCount":  12
-              },
-    "skills":  [
-                   {
-                       "name":  "brainstorming",
-                       "description":  "MUST use before any creative work. Explores intent, requirements, design before implementation.",
-                       "path":  "superpowers/skills/brainstorming/SKILL.md",
-                       "sizeBytes":  4690,
-                       "tokenEstimate":  1400,
-                       "confidence":  0.25,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "Pre-implementation exploration",
-                                            "User intent clarification",
-                                            "Requirements gathering",
-                                            "Design before coding"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "writing-plans"
-                                                     ],
-                                        "note":  "Brainstorming is exploration; writing-plans is structured planning"
-                                    }
-                   },
-                   {
-                       "name":  "writing-plans",
-                       "description":  "Create implementation plans from specs/requirements before touching code.",
-                       "path":  "superpowers/skills/writing-plans/SKILL.md",
-                       "sizeBytes":  3266,
-                       "tokenEstimate":  960,
-                       "confidence":  0.5,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "Spec-to-plan conversion",
-                                            "Multi-step task decomposition",
-                                            "Structured plan format"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "brainstorming",
-                                                         "executing-plans"
-                                                     ],
-                                        "note":  "Planning phase. Feeds into executing-plans"
-                                    }
-                   },
-                   {
-                       "name":  "executing-plans",
-                       "description":  "Execute written plans in separate sessions with review checkpoints.",
-                       "path":  "superpowers/skills/executing-plans/SKILL.md",
-                       "sizeBytes":  2550,
-                       "tokenEstimate":  750,
-                       "confidence":  0.29,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "Plan execution with checkpoints",
-                                            "Session-based execution",
-                                            "Review gates between phases"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "writing-plans",
-                                                         "subagent-driven-development"
-                                                     ],
-                                        "note":  "Execution phase. subagent-driven-development is for parallel execution"
-                                    }
-                   },
-                   {
-                       "name":  "subagent-driven-development",
-                       "description":  "Execute implementation plans with independent parallel tasks.",
-                       "path":  "subagent-driven-development/SKILL.md",
-                       "sizeBytes":  9976,
-                       "tokenEstimate":  2900,
-                       "confidence":  0.44,
-                       "origin":  "independent",
-                       "bulletPoints":  [
-                                            "Parallel task dispatch",
-                                            "Independent task execution",
-                                            "Plan-driven implementation",
-                                            "Companion prompt files (implementer, spec-reviewer, code-quality-reviewer)"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "dispatching-parallel-agents",
-                                                         "executing-plans"
-                                                     ],
-                                        "note":  "Identical copy in superpowers/skills/. dispatching-parallel-agents has different approach"
-                                    }
-                   },
-                   {
-                       "name":  "dispatching-parallel-agents",
-                       "description":  "Use for 2+ independent tasks without shared state.",
-                       "path":  "superpowers/skills/dispatching-parallel-agents/SKILL.md",
-                       "sizeBytes":  6104,
-                       "tokenEstimate":  1800,
-                       "confidence":  0.57,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "Parallel agent dispatch patterns",
-                                            "Independence verification",
-                                            "Result aggregation",
-                                            "Error handling in parallel"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "subagent-driven-development"
-                                                     ],
-                                        "note":  "Focus on parallelism patterns. subagent-driven-development is broader"
-                                    }
-                   },
-                   {
-                       "name":  "requesting-code-review",
-                       "description":  "Use when completing tasks or before merging to verify work.",
-                       "path":  "superpowers/skills/requesting-code-review/SKILL.md",
-                       "sizeBytes":  2700,
-                       "tokenEstimate":  800,
-                       "confidence":  0.36,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "Review request formation",
-                                            "Pre-merge verification",
-                                            "Review checklist"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "receiving-code-review"
-                                                     ],
-                                        "note":  "Requesting side. receiving-code-review is the response side"
-                                    }
-                   },
-                   {
-                       "name":  "receiving-code-review",
-                       "description":  "How to respond to code review feedback with technical rigor.",
-                       "path":  "superpowers/skills/receiving-code-review/SKILL.md",
-                       "sizeBytes":  6314,
-                       "tokenEstimate":  1800,
-                       "confidence":  0.54,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "Technical verification before implementing suggestions",
-                                            "Questioning unclear feedback",
-                                            "Avoiding performative agreement",
-                                            "Evidence-based responses"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "requesting-code-review"
-                                                     ],
-                                        "note":  "Response side. Paired with requesting-code-review"
-                                    }
-                   },
-                   {
-                       "name":  "finishing-a-development-branch",
-                       "description":  "Guide completion: merge, PR, or cleanup options.",
-                       "path":  "superpowers/skills/finishing-a-development-branch/SKILL.md",
-                       "sizeBytes":  4250,
-                       "tokenEstimate":  1250,
-                       "confidence":  0.57,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "Structured completion options (merge/PR/cleanup)",
-                                            "All-tests-pass verification",
-                                            "Integration decision framework"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "using-git-worktrees"
-                                                     ],
-                                        "note":  "End of branch workflow. using-git-worktrees is for start"
-                                    }
-                   },
-                   {
-                       "name":  "using-git-worktrees",
-                       "description":  "Create isolated worktrees for feature work or plan execution.",
-                       "path":  "superpowers/skills/using-git-worktrees/SKILL.md",
-                       "sizeBytes":  5635,
-                       "tokenEstimate":  1650,
-                       "confidence":  0.55,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "Git worktree creation",
-                                            "Smart directory selection",
-                                            "Safety verification",
-                                            "Isolation from current workspace"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "finishing-a-development-branch"
-                                                     ],
-                                        "note":  "Start of isolated work. finishing at the end"
-                                    }
-                   },
-                   {
-                       "name":  "verification-before-completion",
-                       "description":  "Run verification commands before claiming work is done.",
-                       "path":  "superpowers/skills/verification-before-completion/SKILL.md",
-                       "sizeBytes":  4201,
-                       "tokenEstimate":  1200,
-                       "confidence":  0.41,
-                       "origin":  "superpowers",
-                       "bulletPoints":  [
-                                            "Evidence before assertions",
-                                            "Verification command execution",
-                                            "Success claim requirements",
-                                            "Pre-commit/PR checks"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "verification-loop"
-                                                     ],
-                                        "note":  "Workflow discipline. verification-loop is the technical implementation"
-                                    }
-                   },
-                   {
-                       "name":  "search-first",
-                       "description":  "Research-before-coding: search for existing tools/libraries/patterns first.",
-                       "path":  "everything-claude-code/skills/search-first/SKILL.md",
-                       "sizeBytes":  6847,
-                       "tokenEstimate":  2000,
-                       "confidence":  0.52,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Research workflow before implementation",
-                                            "Existing solution discovery",
-                                            "Library/tool evaluation",
-                                            "Researcher agent invocation"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-                                                         "brainstorming"
-                                                     ],
-                                        "note":  "External research focus. brainstorming is internal ideation"
-                                    }
-                   },
-                   {
-                       "name":  "strategic-compact",
-                       "description":  "Manual context compaction at logical intervals to preserve context.",
-                       "path":  "everything-claude-code/.agents/skills/strategic-compact/SKILL.md",
-                       "sizeBytes":  4146,
-                       "tokenEstimate":  1200,
-                       "confidence":  0.42,
-                       "origin":  "ECC",
-                       "bulletPoints":  [
-                                            "Phase-boundary compaction",
-                                            "Context preservation strategy",
-                                            "Avoids arbitrary auto-compaction"
-                                        ],
-                       "crossRef":  {
-                                        "overlaps":  [
-
-                                                     ],
-                                        "note":  "Unique context management skill"
-                                    }
-                   }
-               ]
+{
+    "_meta": {
+        "category": "workflow",
+        "label": "工作流程 / Workflow & Process",
+        "skillCount": 1,
+        "architecture": "anchor-based"
+    },
+    "skills": [
+        {
+            "name": "workflow",
+            "description": "Unified workflow anchor: parallel agent dispatching, git branching, worktrees, code review, search-first methodology, plan writing/execution, subagent-driven development, strategic compaction, verification-before-completion, and brainstorming.",
+            "anchorBase": "dispatching-parallel-agents",
+            "confidence": 0.57,
+            "mergedCount": 12,
+            "mergedFrom": [
+                "dispatching-parallel-agents",
+                "finishing-a-development-branch",
+                "using-git-worktrees",
+                "receiving-code-review",
+                "search-first",
+                "writing-plans",
+                "subagent-driven-development",
+                "strategic-compact",
+                "verification-before-completion",
+                "requesting-code-review",
+                "executing-plans",
+                "brainstorming"
+            ]
+        }
+    ]
 }

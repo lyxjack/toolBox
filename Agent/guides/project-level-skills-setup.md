@@ -42,7 +42,7 @@
 ## Project-Level Content
 
 ### Internal KI（项目知识库）
-- **接口契约**: `D:/toolBox/KI/Internal_KI/contract.md`
+- **接口契约**: `{TOOLBOX}/KI/Internal_KI/contract.md`
 - **路径**: `.claude/internal_ki/`
 - **索引**: `.claude/internal_ki/index.json`
 - **启用 Category**: {从 frontend, backend, data-logic, code-design 中选择}
@@ -53,7 +53,7 @@
 - **项目 Repo**: {项目的 GitHub repo 地址，如有}
 
 ## 文件治理
-本项目遵循 `D:/toolBox/Agent/rules/file_governance.md` 规范。
+本项目遵循 `{TOOLBOX}/Agent/rules/file_governance.md` 规范。
 ```
 
 ### Step 2: 创建 Internal_KI 目录结构
@@ -132,7 +132,7 @@ mkdir -p .claude/internal_ki/{frontend,backend,data-logic,code-design}
 
 Error_Book 是**全局级**的，不需要在项目中创建。
 
-- **位置**: `D:/toolBox/KI/Error_Book/`
+- **位置**: `{TOOLBOX}/KI/Error_Book/`
 - **规范**: `KI/Error_Book/contract.md`
 - **使用方式**: Agent 自动在所有项目中启用关键词召回
 
@@ -194,7 +194,7 @@ scope 为变更模块：`internal-ki`、`error-book`、`agent`、`governance` �
 
 ```
 # Format: SENSITIVE_VALUE<TAB>REPLACEMENT
-D:/toolBox/	${TOOLBOX_ROOT}/
+{TOOLBOX}/	${TOOLBOX_ROOT}/
 C:/Users/{username}/	${USER_HOME}/
 {project_path}	${PROJECT_ROOT}
 {username}	${USER}
@@ -260,7 +260,7 @@ mkdir -p .in-process/{active,archive,audit,index,scratch}
 
 ```markdown
 ### In-Process（运行期过程文件）
-- **接口契约**: `D:/toolBox/In-Process/contract.md`
+- **接口契约**: `{TOOLBOX}/In-Process/contract.md`
 - **路径**: `.in-process/`
 - **索引**: `.in-process/index/archive_manifest.json`
 ```
@@ -277,7 +277,7 @@ In-Process 中的临时文件和活跃 run 不应推送：
 
 归档和审计记录是否推送由项目决定。
 
-完整规范见 `D:/toolBox/In-Process/contract.md`。
+完整规范见 `{TOOLBOX}/In-Process/contract.md`。
 
 ## 8. 完整项目目录结构参考
 
@@ -309,5 +309,5 @@ In-Process 中的临时文件和活跃 run 不应推送：
 ```
 
 注意：
-- `error_book/` **不在项目中**，它是全局级资产，位于 `D:/toolBox/KI/Error_Book/`。
-- `.in-process/` 是项目级资产，接口契约在 `D:/toolBox/In-Process/contract.md`。
+- `error_book/` **不在项目中**，它是全局级资产，位于 `{TOOLBOX}/KI/Error_Book/`。
+- `.in-process/` 是项目级资产，接口契约在 `{TOOLBOX}/In-Process/contract.md`。
