@@ -119,4 +119,10 @@ This is entirely optional — all functionality works within the toolBox directo
 
 ## License
 
-See [LICENSE](LICENSE) for details.
+Copyright 2026 Yixin Liu
+
+Licensed under the Apache License, Version 2.0 — see [LICENSE](LICENSE) for the full text.
+
+You may use, modify, and distribute this software under the terms of the license. Contributions are welcome under the same terms.
+
+> **Note**: The `Tool/` layer contains third-party git-cloned repositories, each governed by their own respective licenses. Please review individual repository licenses before redistribution.
