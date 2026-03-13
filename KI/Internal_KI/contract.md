@@ -1,12 +1,12 @@
 # Internal_KI — 项目级知识库接口契约
 
-> **本文件是接口定义，不存放任何项目的实际 KI 内容。**
+> **本文件是接口定义,不存放任何项目的实际 KI 内容。**
 > 各项目根据本契约在自己的目录中创建 Internal_KI 实例。
 
 ## 1. 用途
 
-Internal_KI 是项目级的精华知识库，存放经过验证的、对项目开发有指导意义的规则和约定。
-每条 KI 必须是**可操作的**（actionable），而非记录性的。
+Internal_KI 是项目级的精华知识库,存放经过验证的、对项目开发有指导意义的规则和约定。
+每条 KI 必须是**可操作的**(actionable),而非记录性的。
 
 ## 2. 项目中的目录结构
 
@@ -14,8 +14,8 @@ Internal_KI 是项目级的精华知识库，存放经过验证的、对项目�
 {project}/
 └── .claude/
     └── Internal_KI/
-        ├── index.json              ← 项目级 KI 索引（必需）
-        ├── frontend/               ← 基础 category（按需启用）
+        ├── index.json              ← 项目级 KI 索引(必需)
+        ├── frontend/               ← 基础 category(按需启用)
         │   └── {slug}.md
         ├── backend/
         │   └── {slug}.md
@@ -25,7 +25,7 @@ Internal_KI 是项目级的精华知识库，存放经过验证的、对项目�
             └── {slug}.md
 ```
 
-## 3. 基础 Category（4 个）
+## 3. 基础 Category(4 个)
 
 | Category | 覆盖范围 | 启用条件 |
 |----------|---------|---------|
@@ -40,13 +40,13 @@ Internal_KI 是项目级的精华知识库，存放经过验证的、对项目�
 
 ### 目录命名
 - 使用 kebab-case
-- 仅限基础 category 名称，不自行新增
+- 仅限基础 category 名称,不自行新增
 
 ### KI 条目文件命名
 ```
 {slug}.md
 ```
-- `slug`: kebab-case，描述性短语，最长 40 字符
+- `slug`: kebab-case,描述性短语,最长 40 字符
 - 示例: `result-type-pattern.md`、`api-error-fallback.md`
 
 ### 索引文件
@@ -69,7 +69,7 @@ Internal_KI 是项目级的精华知识库，存放经过验证的、对项目�
             "id": "KI-{NNN}",
             "category": "{category_name}",
             "title": "{标题}",
-            "summary": "{一句话摘要，用于索引查询}",
+            "summary": "{一句话摘要,用于索引查询}",
             "file": "{category}/{slug}.md",
             "tags": ["{tag1}", "{tag2}"],
             "created": "YYYY-MM-DD",
@@ -95,7 +95,7 @@ Internal_KI 是项目级的精华知识库，存放经过验证的、对项目�
 {何时使用}
 
 ## 规则/模式
-{具体内容，含代码示例}
+{具体内容,含代码示例}
 
 ## 关联
 - {关联的其他 KI 条目或 Error Book 条目}
@@ -107,12 +107,12 @@ Internal_KI 是项目级的精华知识库，存放经过验证的、对项目�
 |------|---------|------|
 | **创建** | QA 通过、重大技术选择、复用模式验证后 | 写入 category 目录 + 更新 index.json |
 | **更新** | 规则变化、新证据 | 修改条目文件 + 更新 index.json 的 lastVerified |
-| **废弃** | 规则不再适用 | status 改为 deprecated，不删除文件 |
+| **废弃** | 规则不再适用 | status 改为 deprecated,不删除文件 |
 | **删除** | 项目关闭时随项目整体归档 | 不单独删除条目 |
 
 ## 7. 索引同步规则
 
-**强制约束**：任何 KI 条目的增删改，必须同步更新 `index.json`。
+**强制约束**:任何 KI 条目的增删改,必须同步更新 `index.json`。
 
 - 新增条目 → index.json 追加 entry
 - 修改条目 → index.json 更新对应 entry 的 lastVerified
@@ -120,7 +120,7 @@ Internal_KI 是项目级的精华知识库，存放经过验证的、对项目�
 
 ## 8. 全局 Skill 链接方式
 
-项目 CLAUDE.md 中必须声明 Internal_KI 路径：
+项目 CLAUDE.md 中必须声明 Internal_KI 路径:
 ```markdown
 ## Internal KI
 - **路径**: `.claude/Internal_KI/`
@@ -128,10 +128,10 @@ Internal_KI 是项目级的精华知识库，存放经过验证的、对项目�
 - **启用 Category**: frontend, backend, data-logic, code-design
 ```
 
-全局 Agent Skill 通过读取项目 CLAUDE.md 获取路径，再按需加载 index.json 和具体条目。
+全局 Agent Skill 通过读取项目 CLAUDE.md 获取路径,再按需加载 index.json 和具体条目。
 
 ## 9. Token 优化策略
 
-1. **优先 Glob**：按 category 目录定位，避免加载全量 index.json
-2. **index.json 只做路由**：summary 字段用于判断是否需要读取详情，避免全量加载
-3. **按需加载**：只读取与当前任务相关的 category 目录下的文件
+1. **优先 Glob**:按 category 目录定位,避免加载全量 index.json
+2. **index.json 只做路由**:summary 字段用于判断是否需要读取详情,避免全量加载
+3. **按需加载**:只读取与当前任务相关的 category 目录下的文件

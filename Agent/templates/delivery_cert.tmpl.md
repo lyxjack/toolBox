@@ -21,7 +21,7 @@
 - **Coverage**: {if applicable}
 
 ### Minimal Change Certification
-{确认本次修改是最小化修改，引用 execution_plan 中的论证}
+{确认本次修改是最小化修改,引用 execution_plan 中的论证}
 
 ### Approval
 - **CTO Verdict**: APPROVE / REJECT

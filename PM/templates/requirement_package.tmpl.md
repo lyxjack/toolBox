@@ -4,7 +4,7 @@
 - **Status**: DRAFT | APPROVED | SUPERSEDED
 
 ### User Request
-> {用户原始请求原文，不做修改}
+> {用户原始请求原文,不做修改}
 
 ### Clarified Intent
 {PM 理解后的结构化表述。明确"用户真正想要什么"。}
@@ -18,9 +18,9 @@
 - {防止 scope creep 的边界}
 
 ### Constraints
-- {技术约束：语言、框架、兼容性}
-- {业务约束：时间、预算、依赖}
-- {质量约束：性能、安全、测试覆盖}
+- {技术约束:语言、框架、兼容性}
+- {业务约束:时间、预算、依赖}
+- {质量约束:性能、安全、测试覆盖}
 
 ### Acceptance Criteria
 - [ ] AC-1: {可验证的陈述}
@@ -28,9 +28,9 @@
 - [ ] AC-3: {可验证的陈述}
 
 ### Referenced Context
-- **KI**: {关联的 Knowledge Item ID 列表，无则标 N/A}
+- **KI**: {关联的 Knowledge Item ID 列表,无则标 N/A}
 - **Skills**: {建议的 skill 名称列表}
-- **Failure Memory**: {历史错误模式引用，无则标 N/A}
+- **Failure Memory**: {历史错误模式引用,无则标 N/A}
 
 ### Risk Notes
-- {PM 识别的风险，无则标 None identified}
+- {PM 识别的风险,无则标 None identified}

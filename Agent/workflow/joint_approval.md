@@ -1,18 +1,18 @@
 ---
-description: CTO + PM 联合验收。双方独立出具意见，任一否决则返工。
+description: CTO + PM 联合验收。双方独立出具意见,任一否决则返工。
 ---
 
 # Joint Approval
 
 ## 触发条件
-QA 5 层全 PASS，`state.json` 的 `currentState` 为 `JOINT_APPROVAL`。
+QA 5 层全 PASS,`state.json` 的 `currentState` 为 `JOINT_APPROVAL`。
 
 ## 输入
 - `requirement_package.md`
 - `execution_plan.md`
-- `qa_report.md`（PASS 状态）
+- `qa_report.md`(PASS 状态)
 - 所有 `change_manifests/*.json`
-- 所有 `rework_orders/*.json`（如有）
+- 所有 `rework_orders/*.json`(如有)
 
 ## 步骤
 
@@ -27,7 +27,7 @@ QA 5 层全 PASS，`state.json` 的 `currentState` 为 `JOINT_APPROVAL`。
 - 每次驳回的 reason_code + 描述
 - 修复措施
 - 最终验证状态
-如无返工，填 N/A。
+如无返工,填 N/A。
 
 **1c. Test Results Summary**
 从 change_manifests 聚合 testResults。
@@ -58,17 +58,17 @@ PM 视角审查:
 ### Step 4: 最终判定
 
 **双方 APPROVE:**
-1. 完成 `delivery_cert.md`，**写入 `.in-process/active/{session_id}/`**
+1. 完成 `delivery_cert.md`,**写入 `.in-process/active/{session_id}/`**
 2. 更新 state -> `DELIVERED`
-3. 向用户交付成果，附带:
+3. 向用户交付成果,附带:
    - 需求与实现对照表
-   - 错误与修改对照表（如有）
+   - 错误与修改对照表(如有)
    - 测试结果
    - 最小化修改认证
 
 **任一 REJECT:**
 1. 在 delivery_cert 中记录否决意见
-2. 创建 rework_order（由否决方指定 reason_code 和 target）
+2. 创建 rework_order(由否决方指定 reason_code 和 target)
 3. 更新 state -> `REWORK`
 4. 路由到目标角色
 

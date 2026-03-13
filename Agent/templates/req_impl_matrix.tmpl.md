@@ -22,5 +22,5 @@
 | {Out of Scope 项} | Yes/No | {git diff 确认} |
 
 ### Scope Delta
-{如果实际实现与 requirement_package 有偏差，在此记录}
+{如果实际实现与 requirement_package 有偏差,在此记录}
 - None / {偏差描述 + 原因}

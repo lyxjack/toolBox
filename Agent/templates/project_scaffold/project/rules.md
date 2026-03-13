@@ -18,7 +18,7 @@
 - {项目特定的测试覆盖率、测试框架要求}
 
 ## 启用的 Skill 类别
-- {从 _rag_index 中启用的类别，详见 registry/skill_registry.json}
+- {从 _rag_index 中启用的类别,详见 registry/skill_registry.json}
 
 ## 项目特定 Iron Law 扩展
-- {如需在 global iron laws 基础上增加项目级约束，在此定义}
+- {如需在 global iron laws 基础上增加项目级约束,在此定义}

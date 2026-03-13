@@ -1,12 +1,12 @@
-﻿# Audit Ledger
+# Audit Ledger
 <!--
-  å‘½å: {date}__{project}__audit__{id}__{slug}.md
-  ä½ç½®: .in-process/audit/
-  çŠ¶æ€: active | pending_remediation | closed | archived
+  命名: {date}__{project}__audit__{id}__{slug}.md
+  位置: .in-process/audit/
+  状态: active | pending_remediation | closed | archived
 -->
 
 - **Audit ID**: AUDIT-{id}
-- **Run Ref**: REQ-{run_id} (å¦‚å…³è” runï¼Œå¦åˆ™ N/A)
+- **Run Ref**: REQ-{run_id} (如关联 run,否则 N/A)
 - **Created**: {ISO 8601}
 - **Status**: active
 - **Auditor**: {role}
@@ -15,10 +15,10 @@
 ---
 
 ## Audit Scope
-{æœ¬æ¬¡å®¡è®¡è¦†ç›–çš„èŒƒå›´ã€æ–‡ä»¶ã€æ¨¡å—ã€æ—¶é—´æ®µ}
+{本次审计覆盖的范围、文件、模块、时间段}
 
 ### Audit Type
-<!-- é€‰ä¸€ä¸ªæˆ–å¤šä¸ª -->
+<!-- 选一个或多个 -->
 - [ ] Code Quality
 - [ ] Architecture
 - [ ] Skill Deduplication
@@ -44,37 +44,37 @@
 
 ## Detailed Findings
 
-### F-001: {Finding æ ‡é¢˜}
+### F-001: {Finding 标题}
 - **Severity**: CRITICAL / HIGH / MEDIUM / LOW / INFO
 - **Category**: {BUILD / REQ / BHV / ISO / EVD / ARCH / SKILL}
-- **Description**: {é—®é¢˜æè¿°}
-- **Evidence**: {è¯æ®ï¼šæ–‡ä»¶è·¯å¾„ã€è¡Œå·ã€æˆªå›¾ã€å‘½ä»¤è¾“å‡º}
-- **Impact**: {å¦‚æžœä¸ä¿®å¤ä¼šæ€Žæ ·}
-- **Recommendation**: {å»ºè®®çš„ä¿®å¤æ–¹å¼}
+- **Description**: {问题描述}
+- **Evidence**: {证据:文件路径、行号、截图、命令输出}
+- **Impact**: {如果不修复会怎样}
+- **Recommendation**: {建议的修复方式}
 
 **Remediation**:
 | Status | Owner | Action | Date |
 |--------|-------|--------|------|
-| OPEN | {è§’è‰²} | {æ•´æ”¹åŠ¨ä½œ} | {æ—¥æœŸ} |
+| OPEN | {角色} | {整改动作} | {日期} |
 
 **Verification**:
-- [ ] å·²ä¿®å¤
-- [ ] å·²å¤æµ‹
-- Verification Evidence: {å¤æµ‹è¯æ®}
-- Verified By: {è§’è‰²}
-- Verified Date: {æ—¥æœŸ}
+- [ ] 已修复
+- [ ] 已复测
+- Verification Evidence: {复测证据}
+- Verified By: {角色}
+- Verified Date: {日期}
 
 ---
 
-### F-002: {Finding æ ‡é¢˜}
-<!-- é‡å¤ F-001 æ ¼å¼ -->
+### F-002: {Finding 标题}
+<!-- 重复 F-001 格式 -->
 
 ---
 
 ## Remediation Summary
 | Finding | Severity | Status | Owner | Fixed Date | Verified |
 |---------|----------|--------|-------|------------|----------|
-| F-001 | {çº§åˆ«} | OPEN/FIXED/VERIFIED/WONT_FIX/DEFERRED | {è§’è‰²} | {æ—¥æœŸ} | Yes/No |
+| F-001 | {级别} | OPEN/FIXED/VERIFIED/WONT_FIX/DEFERRED | {角色} | {日期} | Yes/No |
 
 ---
 
@@ -83,17 +83,17 @@
 ### Overall Assessment
 - **Rating**: PASS / CONDITIONAL / FAIL
 - **Critical/High Open**: {N}
-- **Recommendation**: {ç»“è®ºæ€§å»ºè®®}
+- **Recommendation**: {结论性建议}
 
 ### Lessons Learned
-- {å¯æ²‰æ·€åˆ° Error_Book çš„æ¨¡å¼}
+- {可沉淀到 Error_Book 的模式}
 
 ### Follow-up Actions
-- [ ] {åŽç»­è·Ÿè¸ªé¡¹}
+- [ ] {后续跟踪项}
 
 ---
 
 ## Cross References
-- **Plan**: {å¯¹åº” plan å·¥ä»¶ IDï¼Œæ— åˆ™ N/A}
-- **Run**: {å¯¹åº” run ID}
-- **Failure Memory**: {æ˜¯å¦å·²å†™å…¥ Error_Bookï¼Œentry ID}
+- **Plan**: {对应 plan 工件 ID,无则 N/A}
+- **Run**: {对应 run ID}
+- **Failure Memory**: {是否已写入 Error_Book,entry ID}

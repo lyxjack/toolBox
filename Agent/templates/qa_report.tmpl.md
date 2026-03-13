@@ -49,11 +49,11 @@
 
 ### Verdict
 - **Status**: PASS | REJECT
-- **Reason Code**: {仅 REJECT 时填写，如 BHV-001}
+- **Reason Code**: {仅 REJECT 时填写,如 BHV-001}
 - **Rework Target**: {PM / CTO / EXECUTION}
 - **Details**: {驳回原因详述}
 
 ### Failure Memory Candidate
 - **Eligible**: Yes / No
-- **Pattern**: {如果 Yes，描述可沉淀的错误模式}
+- **Pattern**: {如果 Yes,描述可沉淀的错误模式}
 - **Prevention**: {未来如何预防}

@@ -5,7 +5,7 @@
 
 ---
 
-## Mode 1: Serial（串行）
+## Mode 1: Serial(串行)
 
 ### 行为定义
 - 按 `task_dag.json` 的依赖关系逐个执行 task
@@ -37,10 +37,10 @@ for task in tasks:
 
 ---
 
-## Mode 2: Parallel（并发）
+## Mode 2: Parallel(并发)
 
 ### 行为定义
-- 分析 `task_dag.json` 的依赖图，识别可并行的 task 组
+- 分析 `task_dag.json` 的依赖图,识别可并行的 task 组
 - 同一组内的 task 使用 Agent tool 并行派发
 - 组间仍按依赖顺序串行
 - 每个 task 独立产出 `change_manifest` 和 `handoff`
@@ -59,11 +59,11 @@ for group in groups:
         verify(result.handoff)
 ```
 
-### 并行安全检查（CTO 必须在 planning 阶段完成）
+### 并行安全检查(CTO 必须在 planning 阶段完成)
 - [ ] 确认并行 task 间无文件写冲突
 - [ ] 确认并行 task 间无共享状态修改
 - [ ] 确认并行 task 可独立验证
-- [ ] 定义合并策略（如有输出需要汇总）
+- [ ] 定义合并策略(如有输出需要汇总)
 
 ### 适用场景
 - 独立模块开发
@@ -72,13 +72,13 @@ for group in groups:
 - 独立测试编写
 
 ### Gate③ 检查
-- 同 Serial，额外检查:
-- 并行 task 间无文件冲突（同一文件未被多个 task 修改）
+- 同 Serial,额外检查:
+- 并行 task 间无文件冲突(同一文件未被多个 task 修改)
 - 合并后的整体构建/测试通过
 
 ---
 
-## Mode 3: Swarm（蜂群）
+## Mode 3: Swarm(蜂群)
 
 ### 行为定义
 - 每个 task 作为独立探索单元并行启动
@@ -102,8 +102,8 @@ output(summary_manifest)
 ```
 
 ### 蜂群特殊要求
-- 每个 agent 独立产出分析报告（作为 change_manifest 的替代）
-- CTO 汇总时需要产出一个 `swarm_summary.md`，包含:
+- 每个 agent 独立产出分析报告(作为 change_manifest 的替代)
+- CTO 汇总时需要产出一个 `swarm_summary.md`,包含:
   - 各 agent 的关键发现
   - 对比分析
   - 最终选择及理由
@@ -111,7 +111,7 @@ output(summary_manifest)
 - 被弃用方案归入 `.in-process/scratch/`
 
 ### 适用场景
-- 大规模知识提炼（如 Tool → KI 批量提取）
+- 大规模知识提炼(如 Tool → KI 批量提取)
 - 多方案架构探索
 - 外部 skill 横向评估
 - 多角度安全审计
@@ -132,12 +132,12 @@ CTO 在 `execution_plan.md` 中使用以下格式记录:
 ## Execution Mode
 
 **Selected Mode**: parallel
-**Rationale**: 3 个独立模块无文件重叠，可并行开发。文件重叠率 < 5%。
+**Rationale**: 3 个独立模块无文件重叠,可并行开发。文件重叠率 < 5%。
 **Task Groups**:
 - Group 1 (parallel): T1, T2, T3
 - Group 2 (serial, depends on Group 1): T4
 
-**Merge Strategy**: 各 task 修改独立文件，无需合并。Gate③ 后做整体构建验证。
+**Merge Strategy**: 各 task 修改独立文件,无需合并。Gate③ 后做整体构建验证。
 ```
 
 ---

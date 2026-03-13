@@ -2,25 +2,25 @@
 
 ## Path Variable
 
-> **`{TOOLBOX}`** = 当前文件所在目录的绝对路径（即 toolBox 根目录）。
-> 所有 workflow、template、schema 文件中的 `{TOOLBOX}` 占位符，在运行时解析为此路径。
+> **`{TOOLBOX}`** = 当前文件所在目录的绝对路径(即 toolBox 根目录)。
+> 所有 workflow、template、schema 文件中的 `{TOOLBOX}` 占位符,在运行时解析为此路径。
 > - macOS 示例: `/Users/<username>/toolBox`
 > - Windows 示例: `C:\Users\<username>\toolBox`
 > - Linux 示例: `/home/<username>/toolBox`
 >
-> **解析规则**: Agent 读取 workflow 文件时，将 `{TOOLBOX}` 替换为当前 toolBox 的实际绝对路径。
+> **解析规则**: Agent 读取 workflow 文件时,将 `{TOOLBOX}` 替换为当前 toolBox 的实际绝对路径。
 
 ## Five-Layer Architecture
 
-本系统采用五层架构，每层职责单一、边界清晰。
+本系统采用五层架构,每层职责单一、边界清晰。
 
 | 层 | 位置 | 职责 |
 |----|------|------|
-| **PM** | `PM/` | 唯一入口层：需求接收、标准化、分类、路由 |
-| **Agent** | `Agent/` | 治理与编排层：角色、规则、工作流、调度策略 |
-| **KI** | `KI/` | 核心知识资产层：External_KI、Internal_KI、Error_Book |
-| **Tool** | `Tool/` | 外部原始资源层：git clone 的 skill 仓库（只读） |
-| **In-Process** | `In-Process/` | 运行期过程文件层：仅存接口契约（`contract.md`），实际数据在各项目的 `.in-process/` 中 |
+| **PM** | `PM/` | 唯一入口层:需求接收、标准化、分类、路由 |
+| **Agent** | `Agent/` | 治理与编排层:角色、规则、工作流、调度策略 |
+| **KI** | `KI/` | 核心知识资产层:External_KI、Internal_KI、Error_Book |
+| **Tool** | `Tool/` | 外部原始资源层:git clone 的 skill 仓库(只读) |
+| **In-Process** | `In-Process/` | 运行期过程文件层:仅存接口契约(`contract.md`),实际数据在各项目的 `.in-process/` 中 |
 
 ## Hard Constraint — 五层架构文件治理
 
@@ -28,16 +28,16 @@
 
 | 规则 | 描述 |
 |------|------|
-| **根目录纯净** | toolBox 根目录只允许存在 `Agent/`、`In-Process/`、`KI/`、`PM/`、`Tool/` 五个业务目录，以及 `CLAUDE.md`、`README.md` 配置/文档文件。禁止在根目录创建任何其他业务文件夹或散落文件。 |
-| **层间不越界** | 每层只存放属于该层职责的文件。PM 层不存代码，Agent 层不存原始 skill，Tool 层不存治理文档，KI 层不存过程文件，In-Process 层不存永久知识。 |
-| **写入路径白名单** | Skill 源仓库 → `Tool/`；索引与知识 → `KI/`；治理规则/模板/编排 → `Agent/`；需求入口 → `PM/`；接口契约 → `In-Process/contract.md`；运行期工件 → 各项目的 `.in-process/`。不在白名单内的路径禁止写入。 |
-| **无冗余副本** | 同一文件不得在多个层中存在副本。如需引用，使用路径引用而非复制。 |
+| **根目录纯净** | toolBox 根目录只允许存在 `Agent/`、`In-Process/`、`KI/`、`PM/`、`Tool/` 五个业务目录,以及 `CLAUDE.md`、`README.md` 配置/文档文件。禁止在根目录创建任何其他业务文件夹或散落文件。 |
+| **层间不越界** | 每层只存放属于该层职责的文件。PM 层不存代码,Agent 层不存原始 skill,Tool 层不存治理文档,KI 层不存过程文件,In-Process 层不存永久知识。 |
+| **写入路径白名单** | Skill 源仓库 → `Tool/`;索引与知识 → `KI/`;治理规则/模板/编排 → `Agent/`;需求入口 → `PM/`;接口契约 → `In-Process/contract.md`;运行期工件 → 各项目的 `.in-process/`。不在白名单内的路径禁止写入。 |
+| **无冗余副本** | 同一文件不得在多个层中存在副本。如需引用,使用路径引用而非复制。 |
 | **遗留目录禁止创建** | `AI/` 和 `external_KI/` 为已废弃的遗留目录名。禁止创建。 |
 
 ## Iron Laws — 总门禁 (Global Gate)
 
-> 以下铁律始终生效，无条件遵守。完整内容见 `Agent/rules/iron_laws.md`。
-> 子门禁铁律（IL 01-07, 11）由各工作流的「前置约束」章节按需加载。
+> 以下铁律始终生效,无条件遵守。完整内容见 `Agent/rules/iron_laws.md`。
+> 子门禁铁律(IL 01-07, 11)由各工作流的「前置约束」章节按需加载。
 
 8. **ARTIFACTS STAY CURRENT** — 工件必须与实际一致
 9. **TEMP FILES ARE MANAGED** — 临时文件纳入项目 `.in-process/scratch/` 管理
@@ -58,7 +58,7 @@
 ### PM Layer
 - Role: `PM/pm_role.md`
 - Workflow: `PM/pm_workflow.md`
-- Task Schema: `PM/schemas/task_brief.schema.json`（统一母规范）
+- Task Schema: `PM/schemas/task_brief.schema.json`(统一母规范)
 - Routing: `PM/index/task_type_routing.json`
 - Template: `PM/templates/requirement_package.tmpl.md`
 
@@ -73,20 +73,20 @@
 
 ### KI Layer
 - External_KI: `KI/External_KI/` — 88 skill 主索引 + 12 类别索引 + 质量审计 + 交叉引用
-- Internal_KI: `KI/Internal_KI/` — 项目级知识库接口契约（实际数据在各项目中）
-- Error_Book: `KI/Error_Book/` — 全局级错题本（跨项目共享，含 entries/）
+- Internal_KI: `KI/Internal_KI/` — 项目级知识库接口契约(实际数据在各项目中)
+- Error_Book: `KI/Error_Book/` — 全局级错题本(跨项目共享,含 entries/)
 - Templates: `KI/Templates/` — ki_entry, error_book_entry 模板
 
 ### Tool Layer
-- 15 个 git clone 仓库（只读）
-- 88 个去重 skill，12 个功能类别
+- 15 个 git clone 仓库(只读)
+- 88 个去重 skill,12 个功能类别
 - 查询入口: `KI/External_KI/master_index.json`
 - Skill Registry: `Agent/index/skill_registry.json`
 - Duplicate Review: `Agent/index/duplicate_review.json`
 
-### In-Process Layer（项目级）
-- **接口契约**: `In-Process/contract.md`（全局定义，不存项目数据）
-- **项目实例**: `{project}/.in-process/`（各项目独立管理）
+### In-Process Layer(项目级)
+- **接口契约**: `In-Process/contract.md`(全局定义,不存项目数据)
+- **项目实例**: `{project}/.in-process/`(各项目独立管理)
   - Active Runs: `.in-process/active/{run_id}/`
   - Audit Records: `.in-process/audit/` (永不删除)
   - Scratch: `.in-process/scratch/` (session 结束清理)
@@ -111,10 +111,10 @@
 
 ## Execution Modes
 
-CTO 在规划阶段必须选择执行模式（详见 `Agent/orchestrator/strategy.md`）：
+CTO 在规划阶段必须选择执行模式(详见 `Agent/orchestrator/strategy.md`):
 - **串行 (Serial)**: 强依赖、高耦合、核心流程改造
 - **并发 (Parallel)**: 独立、低重叠、可并行测试
 - **蜂群 (Swarm)**: 探索性、多方案对比、大规模知识提炼
 
-**强制规则**: 当 task 数 >= 3 且任务间无数据依赖时，**禁止选择串行模式**，必须使用并发或蜂群。详见 `Agent/workflow/cto_planning.md` Step 3。
+**强制规则**: 当 task 数 >= 3 且任务间无数据依赖时,**禁止选择串行模式**,必须使用并发或蜂群。详见 `Agent/workflow/cto_planning.md` Step 3。
 

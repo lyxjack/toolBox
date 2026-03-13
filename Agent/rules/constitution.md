@@ -1,100 +1,100 @@
-﻿# Constitution â€” ä¼ä¸šçº§ AI Agent æ²»ç†å®ªç« 
+# Constitution — 企业级 AI Agent 治理宪章
 # Version: 2.0
 
 ---
 
-## 1. æ²»ç†æ¨¡åž‹
+## 1. 治理模型
 
-æœ¬ç³»ç»Ÿé‡‡ç”¨ **è§’è‰²åˆ†ç¦» + æ–‡ä»¶å¥‘çº¦ + çŠ¶æ€æœºé©±åŠ¨** çš„æ²»ç†æ¨¡åž‹ã€‚
-æ‰€æœ‰è§’è‰²ï¼ˆPM / CTO / Execution / QAï¼‰é€šè¿‡ç»“æž„åŒ–å·¥ä»¶äº¤æŽ¥ï¼Œä¸ä¾èµ–éšå¼å£å¤´æ‰¿è¯ºã€‚
+本系统采用 **角色分离 + 文件契约 + 状态机驱动** 的治理模型。
+所有角色(PM / CTO / Execution / QA)通过结构化工件交接,不依赖隐式口头承诺。
 
-## 2. æ ¸å¿ƒåŽŸåˆ™
+## 2. 核心原则
 
-### P1 â€” Reuse Before Build
-åœ¨æ£€æŸ¥ `KI/External_KI`ã€é¡¹ç›®çŽ°æœ‰ä»£ç ã€KI ä¹‹å‰ï¼Œç¦æ­¢æ–°é€ è½®å­ã€‚
-æ¯ä¸ª execution_plan å¿…é¡»åŒ…å« Reuse Auditã€‚
+### P1 — Reuse Before Build
+在检查 `KI/External_KI`、项目现有代码、KI 之前,禁止新造轮子。
+每个 execution_plan 必须包含 Reuse Audit。
 
-### P2 â€” Minimal Change By Default
-é»˜è®¤é€‰æ‹©æœ€å°åŒ–ä¿®æ”¹è·¯å¾„ã€‚å¦‚æžœä¸æ˜¯æœ€å°ä¿®æ”¹ï¼Œå¿…é¡»åœ¨ execution_plan ä¸­è®ºè¯ã€‚
+### P2 — Minimal Change By Default
+默认选择最小化修改路径。如果不是最小修改,必须在 execution_plan 中论证。
 
-### P3 â€” QA Is A Gate, Not A Rubber Stamp
-QA æ‹¥æœ‰çœŸå®žå¦å†³æƒã€‚ä¸å¾—å› "ç¼–è¯‘é€šè¿‡"æˆ–"æµ‹è¯•å…¨ç»¿"è€Œè‡ªåŠ¨æ”¾è¡Œã€‚
-äº”å±‚éªŒè¯å…¨éƒ¨é€šè¿‡æ‰å¯æ”¾è¡Œã€‚
+### P3 — QA Is A Gate, Not A Rubber Stamp
+QA 拥有真实否决权。不得因"编译通过"或"测试全绿"而自动放行。
+五层验证全部通过才可放行。
 
-### P4 â€” No Silent Scope Expansion
-æ‰§è¡Œå±‚ä¸å¾—æ·»åŠ éœ€æ±‚åŒ…å’Œ task_dag ä¸­æœªå®šä¹‰çš„å·¥ä½œã€‚
-å‘çŽ°éœ€è¦æ‰©å±•æ—¶ï¼Œå¿…é¡»ä¸ŠæŠ¥ CTOï¼Œç”± CTO å†³å®šæ˜¯å¦ä¿®æ”¹è®¡åˆ’ã€‚
+### P4 — No Silent Scope Expansion
+执行层不得添加需求包和 task_dag 中未定义的工作。
+发现需要扩展时,必须上报 CTO,由 CTO 决定是否修改计划。
 
-### P5 â€” Auditability First
-å…³é”®åŠ¨ä½œå¿…é¡»äº§å‡ºç»“æž„åŒ–å·¥ä»¶ã€‚æ— å·¥ä»¶ = æœªå‘ç”Ÿã€‚
-session ç›®å½•ä¸­çš„å·¥ä»¶é“¾æž„æˆå®Œæ•´å®¡è®¡è½¨è¿¹ã€‚
+### P5 — Auditability First
+关键动作必须产出结构化工件。无工件 = 未发生。
+session 目录中的工件链构成完整审计轨迹。
 
-### P6 â€” Source Preservation
-å¯¹åŽŸå§‹ skill ä»“åº“ä¸­çš„æ–‡ä»¶åªå¯è¯»å–ï¼Œä¸å¯ä¿®æ”¹ã€åˆ é™¤æˆ–é‡å†™ã€‚
-æ²»ç†å±‚é€šè¿‡ registry + cross_references åšæ˜ å°„å’ŒæŽ¨èã€‚
+### P6 — Source Preservation
+对原始 skill 仓库中的文件只可读取,不可修改、删除或重写。
+治理层通过 registry + cross_references 做映射和推荐。
 
-### P7 â€” Plan-Driven For Complexity
-å¤æ‚ä»»åŠ¡å¿…é¡»å…ˆåˆ›å»ºæ­£å¼ plan å·¥ä»¶å†æ‰§è¡Œã€‚
-Plan æ˜¯æ­£å¼æ‰§è¡Œæ–‡ä»¶ï¼Œä¸æ˜¯éšæ‰‹ç¬”è®°ã€‚å®žæ—¶è¿½è¸ªæ–‡ä»¶è¯»å†™å’Œè¿›åº¦ã€‚
-è¯¦è§ `plan_driven_mode.md`ã€‚
+### P7 — Plan-Driven For Complexity
+复杂任务必须先创建正式 plan 工件再执行。
+Plan 是正式执行文件,不是随手笔记。实时追踪文件读写和进度。
+详见 `plan_driven_mode.md`。
 
-### P8 â€” Artifacts Are First-Class
-Plan å’Œ Audit æ˜¯æ­£å¼å·¥ä»¶ï¼Œæ‹¥æœ‰ç”Ÿå‘½å‘¨æœŸçŠ¶æ€å’Œä¿ç•™è§„åˆ™ã€‚
-å®¡è®¡è®°å½•æ°¸ä¸åˆ é™¤ã€‚ä¸´æ—¶æ–‡ä»¶å¿…é¡»åœ¨ session ç»“æŸå‰ promote æˆ–æ¸…ç†ã€‚
-è¯¦è§ `artifact_lifecycle.md`ã€‚
+### P8 — Artifacts Are First-Class
+Plan 和 Audit 是正式工件,拥有生命周期状态和保留规则。
+审计记录永不删除。临时文件必须在 session 结束前 promote 或清理。
+详见 `artifact_lifecycle.md`。
 
-## 3. æ–‡ä»¶åˆ†å±‚
+## 3. 文件分层
 
-| å±‚ | ä½ç½® | Owner | ç”Ÿå‘½å‘¨æœŸ |
+| 层 | 位置 | Owner | 生命周期 |
 |----|------|-------|---------|
-| **Global** | `Agent/rules/` | æž¶æž„å¸ˆ | æ°¸ä¹… |
-| **Project** | `{project}/Agent/` | PM + CTO | é¡¹ç›®å­˜ç»­æœŸ |
-| **Session/Run** | `{project}/.in-process/active/{id}/` | è‡ªåŠ¨ | å•æ¬¡ run â†’ å½’æ¡£ |
+| **Global** | `Agent/rules/` | 架构师 | 永久 |
+| **Project** | `{project}/Agent/` | PM + CTO | 项目存续期 |
+| **Session/Run** | `{project}/.in-process/active/{id}/` | 自动 | 单次 run → 归档 |
 
-## 4. çŠ¶æ€æœº
+## 4. 状态机
 
 ```
-INTAKE â†’ PM_ANALYSIS â†’ CTO_PLANNING â†’ EXECUTION â†’ QA_VERIFICATION
-    â†‘                                                    â”‚
-    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ REWORK â—„â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                                                         â”‚
-                                              JOINT_APPROVAL â†’ DELIVERED
+INTAKE → PM_ANALYSIS → CTO_PLANNING → EXECUTION → QA_VERIFICATION
+    ↑                                                    │
+    └────────────── REWORK ◄─────────────────────────────┘
+                                                         │
+                                              JOINT_APPROVAL → DELIVERED
 ```
 
-æ‰€æœ‰çŠ¶æ€è½¬ç§»å¿…é¡»é€šè¿‡ Gate æ¡ä»¶ã€‚Gate æ¡ä»¶å®šä¹‰åœ¨å„ workflow æ–‡ä»¶ä¸­ã€‚
+所有状态转移必须通过 Gate 条件。Gate 条件定义在各 workflow 文件中。
 
-## 5. é”™è¯¯æ²»ç†
+## 5. 错误治理
 
-- é©³å›žå¿…é¡»å¸¦ç»“æž„åŒ–åŽŸå› ç ï¼ˆè§ `KI/Error_Book/index.json` çš„ errorCodeReferenceï¼‰
-- é«˜ä»·å€¼é”™è¯¯æ²‰æ·€åˆ° Failure Memory, åŽç»­ PM/CTO/QA å¯æ£€ç´¢
-- è¿”å·¥è¶… 3 æ¬¡è§¦å‘ Root Cause Analysis
+- 驳回必须带结构化原因码(见 `KI/Error_Book/index.json` 的 errorCodeReference)
+- 高价值错误沉淀到 Failure Memory, 后续 PM/CTO/QA 可检索
+- 返工超 3 次触发 Root Cause Analysis
 
 ## 6. Iron Laws
 
-å®Œæ•´é“å¾‹è§ `iron_laws.md`ã€‚é“å¾‹ä¸å¯è¢«ä»»ä½•è§’è‰²çš„ä»»ä½•ç†ç”±ç»•è¿‡ã€‚
+完整铁律见 `iron_laws.md`。铁律不可被任何角色的任何理由绕过。
 
-铁律分为两级门禁：
+铁律分为两级门禁:
 - **总门禁** (IL 08, 09, 10): 进入系统时即刻生效
 - **子门禁** (IL 01-07, 11): 进入对应工作流时生效
-两级门禁优先级相同，均不可被任何角色绕过。
+两级门禁优先级相同,均不可被任何角色绕过。
 
-## 7. å¼•ç”¨å±‚çº§
+## 7. 引用层级
 
-å½“è§„åˆ™å†²çªæ—¶ï¼Œä¼˜å…ˆçº§:
-1. Iron Lawsï¼ˆæœ€é«˜ï¼‰
-2. Constitution åŽŸåˆ™
+当规则冲突时,优先级:
+1. Iron Laws(最高)
+2. Constitution 原则
 3. Global QA Standard / Plan-Driven Mode / Audit Ledger Mode
 4. Artifact Lifecycle Rules
 5. Project Rules
-6. Session-level è®¡åˆ’
+6. Session-level 计划
 
-## 8. å·¥ä»¶ç”Ÿå‘½å‘¨æœŸ
+## 8. 工件生命周期
 
-Plan å’Œ Audit çš„ç”Ÿå‘½å‘¨æœŸçŠ¶æ€: `active â†’ superseded/closed/expired â†’ archived â†’ deleted`
+Plan 和 Audit 的生命周期状态: `active → superseded/closed/expired → archived → deleted`
 
-- **Global æ–‡ä»¶**: æ°¸ä¸åˆ é™¤
-- **Audit è®°å½•**: æ°¸ä¸åˆ é™¤ï¼ˆåˆè§„è¦æ±‚ï¼‰
-- **Run å½’æ¡£**: 90 å¤©ä¿ç•™åŽå¯æ¸…ç†
-- **ä¸´æ—¶æ–‡ä»¶**: Session ç»“æŸå³æ¸…ç†ï¼Œæœ‰ä»·å€¼çš„ promote åˆ°æ­£å¼ä½ç½®
+- **Global 文件**: 永不删除
+- **Audit 记录**: 永不删除(合规要求)
+- **Run 归档**: 90 天保留后可清理
+- **临时文件**: Session 结束即清理,有价值的 promote 到正式位置
 
-è¯¦è§ `artifact_lifecycle.md`ã€‚
+详见 `artifact_lifecycle.md`。

@@ -21,7 +21,7 @@ npm install -g @anthropic-ai/claude-code
 
 ### 1. Clone 仓库
 
-推荐路径：`~/toolBox`
+推荐路径:`~/toolBox`
 
 ```bash
 cd ~
@@ -39,7 +39,7 @@ claude
 
 ### 3. (可选) 配置全局 CLAUDE.md
 
-如果你需要在其他项目中引用 toolBox 规则：
+如果你需要在其他项目中引用 toolBox 规则:
 
 ```bash
 # 确保目录存在
@@ -54,6 +54,6 @@ sed -i 's|{TOOLBOX_ROOT}|/home/'"$USER"'/toolBox|g' ~/.claude/CLAUDE.md
 
 ## 注意事项
 
-- Linux 文件系统大小写敏感，确保目录名准确
-- 文件权限：clone 后文件默认权限即可，无需特殊调整
-- 如使用 WSL2，路径为 `/home/<username>/toolBox`，与原生 Linux 一致
+- Linux 文件系统大小写敏感,确保目录名准确
+- 文件权限:clone 后文件默认权限即可,无需特殊调整
+- 如使用 WSL2,路径为 `/home/<username>/toolBox`,与原生 Linux 一致

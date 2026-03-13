@@ -14,7 +14,7 @@
    ```
 
 3. **项目级命令自动可用**
-   - `/pm` — 提交开发需求，触发完整工作流
+   - `/pm` — 提交开发需求,触发完整工作流
    - `/find` — 搜索、学习、入库外部 Skill
    - `/init` — 为目标项目初始化 Agent Skills 目录结构
 
@@ -22,13 +22,13 @@
 
 ## (可选) 全局配置
 
-如果你希望在 **其他项目目录** 中也能使用 toolBox 的治理规则：
+如果你希望在 **其他项目目录** 中也能使用 toolBox 的治理规则:
 
-1. 复制模板：`Agent/templates/global_claude_md.md`
+1. 复制模板:`Agent/templates/global_claude_md.md`
 2. 将 `{TOOLBOX_ROOT}` 替换为你的 toolBox 实际绝对路径
 3. 保存到 `~/.claude/CLAUDE.md`
 
-详见各平台指南：
+详见各平台指南:
 
 - [macOS](./macos.md)
 - [Windows](./windows.md)
@@ -41,7 +41,7 @@ toolBox/
 ├── PM/           ← 需求入口层
 ├── Agent/        ← 治理与编排层
 ├── KI/           ← 核心知识资产层
-├── Tool/         ← 外部 Skill 源仓库（只读）
+├── Tool/         ← 外部 Skill 源仓库(只读)
 ├── In-Process/   ← 运行期接口契约
 ├── CLAUDE.md     ← 项目配置入口
 └── .claude/

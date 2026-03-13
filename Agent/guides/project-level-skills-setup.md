@@ -1,7 +1,7 @@
 # 项目级 Agent Skills 设置指南
 
 > **本文件是全局级 Agent Skills 对项目级内容的完整指导。**
-> 当一个项目引用全局 Agent Skills 并需要建立自己的项目级 Skills 时，必须按照本指南操作。
+> 当一个项目引用全局 Agent Skills 并需要建立自己的项目级 Skills 时,必须按照本指南操作。
 > 保证所有项目的一致性、可解读性和准确性。
 
 ## 1. 架构总览
@@ -21,15 +21,15 @@
 ```
 
 ### 关键原则
-- **全局级**定义能力和规范（做饭），**不存放**任何项目的实际数据
-- **项目级**存放具体实现（菜谱），**跟项目走**，存入项目 repo
-- **Error_Book 是例外**：全局级共享，跨所有项目，不跟项目走
+- **全局级**定义能力和规范(做饭),**不存放**任何项目的实际数据
+- **项目级**存放具体实现(菜谱),**跟项目走**,存入项目 repo
+- **Error_Book 是例外**:全局级共享,跨所有项目,不跟项目走
 
 ## 2. 项目初始化步骤
 
 ### Step 1: 创建项目 CLAUDE.md
 
-在项目根目录创建 `CLAUDE.md`，声明所有项目级内容：
+在项目根目录创建 `CLAUDE.md`,声明所有项目级内容:
 
 ```markdown
 # {项目名} — {一句话描述}
@@ -41,7 +41,7 @@
 
 ## Project-Level Content
 
-### Internal KI（项目知识库）
+### Internal KI(项目知识库)
 - **接口契约**: `{TOOLBOX}/KI/Internal_KI/contract.md`
 - **路径**: `.claude/Internal_KI/`
 - **索引**: `.claude/Internal_KI/index.json`
@@ -50,7 +50,7 @@
 开发前必须查询 Internal KI 中与当前任务相关的知识条目。
 
 ## Git
-- **项目 Repo**: {项目的 GitHub repo 地址，如有}
+- **项目 Repo**: {项目的 GitHub repo 地址,如有}
 
 ## 文件治理
 本项目遵循 `{TOOLBOX}/Agent/rules/file_governance.md` 规范。
@@ -66,7 +66,7 @@ mkdir -p .claude/Internal_KI/{frontend,backend,data-logic,code-design}
 
 ### Step 3: 初始化 Internal_KI 索引
 
-创建 `.claude/Internal_KI/index.json`：
+创建 `.claude/Internal_KI/index.json`:
 
 ```json
 {
@@ -83,7 +83,7 @@ mkdir -p .claude/Internal_KI/{frontend,backend,data-logic,code-design}
 
 ### Step 4: 配置 .gitignore
 
-确保脱敏相关文件不被推送：
+确保脱敏相关文件不被推送:
 
 ```gitignore
 # Sanitization (contains sensitive mappings)
@@ -91,9 +91,9 @@ mkdir -p .claude/Internal_KI/{frontend,backend,data-logic,code-design}
 .claude/.backup-pre-push/
 ```
 
-### Step 5: 配置脱敏映射（如项目有 repo）
+### Step 5: 配置脱敏映射(如项目有 repo)
 
-创建 `.claude/sanitize.map`（参见 §6 脱敏原则）。
+创建 `.claude/sanitize.map`(参见 §6 脱敏原则)。
 
 ## 3. Internal_KI 条目管理
 
@@ -108,11 +108,11 @@ mkdir -p .claude/Internal_KI/{frontend,backend,data-logic,code-design}
 
 ### 3.2 创建流程
 
-1. **确定 category**：条目属于 frontend / backend / data-logic / code-design 中的哪个
-2. **命名文件**：`{slug}.md`，kebab-case，最长 40 字符
-3. **填写内容**：按 `KI/Internal_KI/contract.md` §5 的 .md 格式
-4. **更新索引**：在 `index.json` 的 `entries` 数组中追加条目
-5. **校验**：
+1. **确定 category**:条目属于 frontend / backend / data-logic / code-design 中的哪个
+2. **命名文件**:`{slug}.md`,kebab-case,最长 40 字符
+3. **填写内容**:按 `KI/Internal_KI/contract.md` §5 的 .md 格式
+4. **更新索引**:在 `index.json` 的 `entries` 数组中追加条目
+5. **校验**:
    - [ ] 文件名 kebab-case
    - [ ] 放在正确的 category 目录下
    - [ ] index.json 已同步
@@ -126,11 +126,11 @@ mkdir -p .claude/Internal_KI/{frontend,backend,data-logic,code-design}
 | API 设计、服务层、中间件、后端错误 fallback | `backend` |
 | DTO、Schema、数据校验、数据库、数据流转 | `data-logic` |
 | 设计模式、架构规则、命名约定、复用模式 | `code-design` |
-| 跨领域的通用规则 | `code-design`（默认） |
+| 跨领域的通用规则 | `code-design`(默认) |
 
 ## 4. Error_Book 使用说明
 
-Error_Book 是**全局级**的，不需要在项目中创建。
+Error_Book 是**全局级**的,不需要在项目中创建。
 
 - **位置**: `{TOOLBOX}/KI/Error_Book/`
 - **规范**: `KI/Error_Book/contract.md`
@@ -138,12 +138,12 @@ Error_Book 是**全局级**的，不需要在项目中创建。
 
 ### 何时添加错题
 
-当 Agent 犯了一个错误，用户希望 Agent 不再犯同样的错时：
+当 Agent 犯了一个错误,用户希望 Agent 不再犯同样的错时:
 1. 用户告知 Agent 这是一个错误
 2. Agent 按 `KI/Error_Book/contract.md` §4 格式创建条目
 3. 写入 `KI/Error_Book/entries/ERR-{NNN}__{slug}.md`
 4. 更新 `KI/Error_Book/index.json`
-5. keywords 字段必须填写，用于后续自动召回
+5. keywords 字段必须填写,用于后续自动召回
 
 ## 5. 项目级 Git 推送规则
 
@@ -157,40 +157,40 @@ Error_Book 是**全局级**的，不需要在项目中创建。
 
 ### 5.2 Commit Message 格式
 
-Conventional Commits：`{type}({scope}): {description}`
+Conventional Commits:`{type}({scope}): {description}`
 
 | type | 用途 |
 |------|------|
 | `feat` | 新增功能/条目 |
 | `fix` | 修复 |
-| `refactor` | 重构（不改变行为） |
+| `refactor` | 重构(不改变行为) |
 | `docs` | 文档变更 |
-| `chore` | 杂项（.gitignore 等） |
+| `chore` | 杂项(.gitignore 等) |
 
-scope 为变更模块：`internal-ki`、`error-book`、`agent`、`governance` 等。
+scope 为变更模块:`internal-ki`、`error-book`、`agent`、`governance` 等。
 
 ### 5.3 Agent 文件与项目文件分开 commit
 
-同一次操作涉及 Agent 文件和项目文件时，必须分开 commit：
-- Agent 文件：`.claude/` 目录、`CLAUDE.md`
-- 项目文件：`src/`、配置文件等
+同一次操作涉及 Agent 文件和项目文件时,必须分开 commit:
+- Agent 文件:`.claude/` 目录、`CLAUDE.md`
+- 项目文件:`src/`、配置文件等
 
-## 6. 脱敏原则（全局级和项目级共用）
+## 6. 脱敏原则(全局级和项目级共用)
 
 ### 6.1 脱敏范围
 
 | 敏感类型 | 替换为 |
 |----------|--------|
-| 本地绝对路径（toolBox） | `${TOOLBOX_ROOT}/` |
+| 本地绝对路径(toolBox) | `${TOOLBOX_ROOT}/` |
 | 用户主目录路径 | `${USER_HOME}/` |
 | 项目绝对路径 | `${PROJECT_ROOT}` |
 | 用户名 | `${USER}` |
 | GitHub 用户名 | `${GITHUB_USER}` |
-| 硬编码数值（端口、密钥等） | `${对应占位符}` |
+| 硬编码数值(端口、密钥等) | `${对应占位符}` |
 
 ### 6.2 脱敏配置文件
 
-每个有 repo 的项目/workspace 维护一个 `.claude/sanitize.map`：
+每个有 repo 的项目/workspace 维护一个 `.claude/sanitize.map`:
 
 ```
 # Format: SENSITIVE_VALUE<TAB>REPLACEMENT
@@ -200,7 +200,7 @@ C:/Users/{username}/	${USER_HOME}/
 {username}	${USER}
 ```
 
-此文件**必须在 .gitignore 中排除**，不得推送。
+此文件**必须在 .gitignore 中排除**,不得推送。
 
 ### 6.3 脱敏执行流程
 
@@ -209,9 +209,9 @@ C:/Users/{username}/	${USER_HOME}/
 3. Commit & push 脱敏后的版本
 4. 恢复原文件
 
-### 6.4 脱敏报告（必须输出）
+### 6.4 脱敏报告(必须输出)
 
-每次脱敏推送后，必须输出脱敏细则报告：
+每次脱敏推送后,必须输出脱敏细则报告:
 
 ```
 === 脱敏报告 ===
@@ -223,9 +223,9 @@ C:/Users/{username}/	${USER_HOME}/
 未脱敏文件: {不含敏感内容的文件列表}
 ```
 
-## 7. In-Process 初始化（运行期过程文件）
+## 7. In-Process 初始化(运行期过程文件)
 
-In-Process 是项目级的运行期过程文件层。当项目需要走 PM → CTO → Execution → QA → Joint Approval 闭环时，必须初始化 In-Process。
+In-Process 是项目级的运行期过程文件层。当项目需要走 PM → CTO → Execution → QA → Joint Approval 闭环时,必须初始化 In-Process。
 
 ### Step 1: 创建 In-Process 目录结构
 
@@ -235,7 +235,7 @@ mkdir -p .in-process/{active,archive,audit,index,scratch}
 
 ### Step 2: 初始化 archive_manifest.json
 
-创建 `.in-process/index/archive_manifest.json`：
+创建 `.in-process/index/archive_manifest.json`:
 
 ```json
 {
@@ -259,7 +259,7 @@ mkdir -p .in-process/{active,archive,audit,index,scratch}
 ### Step 3: 在项目 CLAUDE.md 中声明
 
 ```markdown
-### In-Process（运行期过程文件）
+### In-Process(运行期过程文件)
 - **接口契约**: `{TOOLBOX}/In-Process/contract.md`
 - **路径**: `.in-process/`
 - **索引**: `.in-process/index/archive_manifest.json`
@@ -267,7 +267,7 @@ mkdir -p .in-process/{active,archive,audit,index,scratch}
 
 ### Step 4: 配置 .gitignore
 
-In-Process 中的临时文件和活跃 run 不应推送：
+In-Process 中的临时文件和活跃 run 不应推送:
 
 ```gitignore
 # In-Process runtime files
@@ -283,10 +283,10 @@ In-Process 中的临时文件和活跃 run 不应推送：
 
 ```
 {project}/
-├── CLAUDE.md                          ← 项目入口（必需）
+├── CLAUDE.md                          ← 项目入口(必需)
 ├── .gitignore                         ← 排除 sanitize.map 等
 ├── .claude/
-│   ├── sanitize.map                   ← 脱敏映射（不推送）
+│   ├── sanitize.map                   ← 脱敏映射(不推送)
 │   ├── scripts/
 │   │   └── sanitize-push.sh           ← 脱敏推送脚本
 │   ├── Internal_KI/                   ← 项目知识库
@@ -295,19 +295,19 @@ In-Process 中的临时文件和活跃 run 不应推送：
 │   │   ├── backend/
 │   │   ├── data-logic/
 │   │   └── code-design/
-│   └── skills/                        ← 项目级技能（按需）
+│   └── skills/                        ← 项目级技能(按需)
 │       └── {skill-name}/
 │           └── SKILL.md
 ├── .in-process/                       ← 运行期过程文件
 │   ├── active/                        ← 当前活跃 run
-│   ├── archive/                       ← 已完成 run（90 天保留）
-│   ├── audit/                         ← 审计记录（永久）
+│   ├── archive/                       ← 已完成 run(90 天保留)
+│   ├── audit/                         ← 审计记录(永久)
 │   ├── index/
 │   │   └── archive_manifest.json      ← 归档索引
-│   └── scratch/                       ← 临时文件（session 清理）
+│   └── scratch/                       ← 临时文件(session 清理)
 └── src/                               ← 项目源码
 ```
 
-注意：
-- `error_book/` **不在项目中**，它是全局级资产，位于 `{TOOLBOX}/KI/Error_Book/`。
-- `.in-process/` 是项目级资产，接口契约在 `{TOOLBOX}/In-Process/contract.md`。
+注意:
+- `error_book/` **不在项目中**,它是全局级资产,位于 `{TOOLBOX}/KI/Error_Book/`。
+- `.in-process/` 是项目级资产,接口契约在 `{TOOLBOX}/In-Process/contract.md`。

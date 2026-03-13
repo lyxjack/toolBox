@@ -2,13 +2,13 @@
 
 > **Purpose**: Self-contained operations manual for any LLM agent to understand and operate within the toolBox framework.
 > **Version**: 2.0 | **Date**: 2026-03-09
-> **Mission**: 读完本文档，任何具备文件读写能力的 AI Agent 都能正确初始化项目并按规范操作。
+> **Mission**: 读完本文档,任何具备文件读写能力的 AI Agent 都能正确初始化项目并按规范操作。
 
 ---
 
 ## §1 Minimum Agent Capability Requirements
 
-### 必须能力（无则无法执行）
+### 必须能力(无则无法执行)
 
 | 能力 | 用途 |
 |------|------|
@@ -17,7 +17,7 @@
 | 目录创建 | 初始化项目目录结构 |
 | Shell 命令执行 | `mkdir -p`、`git` 操作 |
 
-### 推荐能力（有则效率更高）
+### 推荐能力(有则效率更高)
 
 | 能力 | 用途 |
 |------|------|
@@ -27,16 +27,16 @@
 
 ### 降级模式
 
-如果不具备文件写入能力：进入 **只读引用模式**。可以读取知识库、查询 Skill，但不能初始化项目或创建 KI 条目。所有写入操作需委托给具备写入能力的 Agent。
+如果不具备文件写入能力:进入 **只读引用模式**。可以读取知识库、查询 Skill,但不能初始化项目或创建 KI 条目。所有写入操作需委托给具备写入能力的 Agent。
 
 ### 平台适配
 
 | 平台 | 路径格式 | 示例 |
 |------|---------|------|
-| Windows | 正斜杠或反斜杠均可，推荐正斜杠 | `D:/toolBox/Agent/` |
+| Windows | 正斜杠或反斜杠均可,推荐正斜杠 | `D:/toolBox/Agent/` |
 | macOS/Linux | 正斜杠 | `/Users/{user}/toolBox/Agent/` |
 
-toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义）。Agent 运行时根据当前操作系统解析为实际绝对路径。
+toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`(同义)。Agent 运行时根据当前操作系统解析为实际绝对路径。
 
 ---
 
@@ -44,17 +44,17 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 
 ### 两层心智模型
 
-对外部 Agent 而言，关键区分是 **全局共享** vs **项目私有**。
+对外部 Agent 而言,关键区分是 **全局共享** vs **项目私有**。
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Global Tier（全局共享）                     │
+│                    Global Tier(全局共享)                     │
 │  治理规则 · External Skills · Error Book · 接口契约            │
-│  存放在 {TOOLBOX_ROOT}，跨所有项目生效                         │
+│  存放在 {TOOLBOX_ROOT},跨所有项目生效                         │
 ├─────────────────────────────────────────────────────────────┤
-│                    Project Tier（项目私有）                    │
+│                    Project Tier(项目私有)                    │
 │  CLAUDE.md · Internal KI · In-Process · Project Skills      │
-│  存放在 {project}/，跟项目走，存入项目 repo                    │
+│  存放在 {project}/,跟项目走,存入项目 repo                    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -65,27 +65,27 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 | 治理规则 | `Agent/rules/` | 铁律、宪法、QA 标准、文件治理——不可违反 |
 | 角色与工作流 | `Agent/roles/`, `Agent/workflow/` | PM、CTO、QA 角色定义和状态机 |
 | External Skills 索引 | `KI/External_KI/` | 88 个 Skill 的索引、类别、质量审计 |
-| Skill 源仓库 | `Tool/` | 15 个 git clone 仓库（**只读**） |
+| Skill 源仓库 | `Tool/` | 15 个 git clone 仓库(**只读**) |
 | Error Book | `KI/Error_Book/` | 全局错题本——跨项目共享的负向知识 |
 | 接口契约 | `KI/Internal_KI/contract.md`, `In-Process/contract.md` | 定义项目级目录的标准结构 |
 | Skill Registry | `Agent/index/skill_registry.json` | 全局技能注册和启用状态 |
 
 ### Project Tier — 项目私有资产
 
-| 资产 | 路径（相对项目根） | 职责 |
+| 资产 | 路径(相对项目根) | 职责 |
 |------|-------------------|------|
 | 项目规则 | `CLAUDE.md` | 项目入口——技术栈、启用的 KI 类别、路径声明 |
-| Internal KI | `.claude/Internal_KI/` | 项目级正向知识（应该怎么做） |
-| In-Process | `.in-process/` | 运行期工件（需求包、执行计划、QA 报告等） |
-| Project Skills | `.claude/skills/` | 项目级自定义技能（按需） |
+| Internal KI | `.claude/Internal_KI/` | 项目级正向知识(应该怎么做) |
+| In-Process | `.in-process/` | 运行期工件(需求包、执行计划、QA 报告等) |
+| Project Skills | `.claude/skills/` | 项目级自定义技能(按需) |
 
 ### Golden Rule
 
-> **全局定义契约，项目创建实例。**
+> **全局定义契约,项目创建实例。**
 >
 > - 全局层的 `contract.md` 定义"长什么样"
 > - 项目层按契约创建实际数据
-> - Error Book 是例外：数据直接存全局，跨项目共享
+> - Error Book 是例外:数据直接存全局,跨项目共享
 
 ---
 
@@ -95,14 +95,14 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 
 | 规则 | 要求 |
 |------|------|
-| 格式 | kebab-case，全小写 |
+| 格式 | kebab-case,全小写 |
 | 字符集 | `[a-z0-9-]` |
 | 长度 | 最长 30 字符 |
 | 禁止 | 空格、下划线、大写字母、中文 |
 
 ### 固定名文件
 
-这些文件名不可更改：`index.json`、`CLAUDE.md`、`SKILL.md`、`contract.md`
+这些文件名不可更改:`index.json`、`CLAUDE.md`、`SKILL.md`、`contract.md`
 
 ### 条目命名
 
@@ -110,17 +110,17 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 |------|---------|------|
 | KI 条目 | `{slug}.md` | `result-type-pattern.md` |
 | Error Book 条目 | `ERR-{NNN}__{slug}.md` | `ERR-001__unhandled-rejection.md` |
-| slug 格式 | kebab-case，最长 40 字符 | — |
-| ID 格式 | `KI-{NNN}` 或 `ERR-{NNN}`（三位数） | `KI-003`, `ERR-012` |
+| slug 格式 | kebab-case,最长 40 字符 | — |
+| ID 格式 | `KI-{NNN}` 或 `ERR-{NNN}`(三位数) | `KI-003`, `ERR-012` |
 | 分隔符 | 双下划线 `__` | — |
 
 ### 索引同步铁律
 
-> **任何文件的增删改，必须同步更新对应的 index.json。违反此规则的操作无效。**
+> **任何文件的增删改,必须同步更新对应的 index.json。违反此规则的操作无效。**
 
 ### 边界执行表
 
-写文件前查此表确认：
+写文件前查此表确认:
 
 | 想写什么 | 放到哪里 | 禁止放到 |
 |---------|---------|---------|
@@ -140,11 +140,11 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 
 ```
 {project}/
-├── CLAUDE.md                              ← 项目入口（必需）
+├── CLAUDE.md                              ← 项目入口(必需)
 ├── .gitignore
 ├── .claude/
 │   ├── Internal_KI/                       ← 项目知识库
-│   │   ├── index.json                     ← KI 索引（必需）
+│   │   ├── index.json                     ← KI 索引(必需)
 │   │   ├── frontend/                      ← 按需启用
 │   │   │   └── {slug}.md
 │   │   ├── backend/
@@ -153,17 +153,17 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 │   │   │   └── {slug}.md
 │   │   └── code-design/
 │   │       └── {slug}.md
-│   └── skills/                            ← 项目级技能（按需）
+│   └── skills/                            ← 项目级技能(按需)
 │       └── {skill-name}/
 │           └── SKILL.md
 ├── .in-process/                           ← 运行期过程文件
-│   ├── active/                            ← 当前活跃 run（最多 1 个）
+│   ├── active/                            ← 当前活跃 run(最多 1 个)
 │   │   └── {YYYYMMDD-HHMMSS}/
-│   ├── archive/                           ← 已完成 run（90 天保留）
-│   ├── audit/                             ← 审计记录（永不删除）
+│   ├── archive/                           ← 已完成 run(90 天保留)
+│   ├── audit/                             ← 审计记录(永不删除)
 │   ├── index/
 │   │   └── archive_manifest.json          ← 归档索引
-│   └── scratch/                           ← 临时文件（session 结束清理）
+│   └── scratch/                           ← 临时文件(session 结束清理)
 └── src/                                   ← 项目源码
 ```
 
@@ -174,7 +174,7 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 | `frontend` | UI 组件、样式、前端交互规则 | 项目含前端代码 |
 | `backend` | API、服务层、中间件、错误 fallback | 项目含后端代码 |
 | `data-logic` | DTO、Schema、数据校验、数据库 | 项目含数据处理 |
-| `code-design` | 设计模式、架构规则、命名约定 | 所有项目（默认启用） |
+| `code-design` | 设计模式、架构规则、命名约定 | 所有项目(默认启用) |
 
 仅创建项目需要的 category 目录。不启用的不创建。
 
@@ -184,13 +184,13 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 
 ### 前置条件
 
-- [ ] Agent 具备文件写入和目录创建能力（见 §1）
+- [ ] Agent 具备文件写入和目录创建能力(见 §1)
 - [ ] 已确定项目名称、绝对路径、技术栈
 - [ ] 已确定需要启用哪些 Internal KI category
 
 ### Step 1: 创建 CLAUDE.md
 
-在项目根目录创建 `CLAUDE.md`：
+在项目根目录创建 `CLAUDE.md`:
 
 ```markdown
 # {项目名} — {一句话描述}
@@ -202,7 +202,7 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 
 ## Project-Level Content
 
-### Internal KI（项目知识库）
+### Internal KI(项目知识库)
 - **接口契约**: `{TOOLBOX_ROOT}/KI/Internal_KI/contract.md`
 - **路径**: `.claude/Internal_KI/`
 - **索引**: `.claude/Internal_KI/index.json`
@@ -210,13 +210,13 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 
 开发前必须查询 Internal KI 中与当前任务相关的知识条目。
 
-### In-Process（运行期过程文件）
+### In-Process(运行期过程文件)
 - **接口契约**: `{TOOLBOX_ROOT}/In-Process/contract.md`
 - **路径**: `.in-process/`
 - **索引**: `.in-process/index/archive_manifest.json`
 
 ## Git
-- **项目 Repo**: {GitHub repo 地址，如有}
+- **项目 Repo**: {GitHub repo 地址,如有}
 
 ## 文件治理
 本项目遵循 `{TOOLBOX_ROOT}/Agent/rules/file_governance.md` 规范。
@@ -224,13 +224,13 @@ toolBox 根目录在本文档中记为 `{TOOLBOX}` 或 `{TOOLBOX_ROOT}`（同义
 
 ### Step 2: 创建 Internal KI 目录 + index.json
 
-创建目录（仅启用需要的 category）：
+创建目录(仅启用需要的 category):
 
 ```bash
 mkdir -p .claude/Internal_KI/{frontend,backend,data-logic,code-design}
 ```
 
-创建 `.claude/Internal_KI/index.json`：
+创建 `.claude/Internal_KI/index.json`:
 
 ```json
 {
@@ -251,7 +251,7 @@ mkdir -p .claude/Internal_KI/{frontend,backend,data-logic,code-design}
 mkdir -p .in-process/{active,archive,audit,index,scratch}
 ```
 
-创建 `.in-process/index/archive_manifest.json`：
+创建 `.in-process/index/archive_manifest.json`:
 
 ```json
 {
@@ -274,7 +274,7 @@ mkdir -p .in-process/{active,archive,audit,index,scratch}
 
 ### Step 4: 配置 .gitignore
 
-追加以下规则到 `.gitignore`：
+追加以下规则到 `.gitignore`:
 
 ```gitignore
 # Agent Skills — sensitive files
@@ -297,7 +297,7 @@ mkdir -p .in-process/{active,archive,audit,index,scratch}
 
 ### Step 6: 输出报告
 
-Init 完成后，向用户输出：
+Init 完成后,向用户输出:
 
 ```
 === Project Init Report ===
@@ -346,7 +346,7 @@ PM_ANALYSIS ──Gate1──▶ CTO_PLANNING ──Gate2──▶ EXECUTION ─
 |------|---------|------|
 | **串行 (Serial)** | 强依赖、高耦合、核心流程改造 | 按依赖顺序逐个执行 |
 | **并发 (Parallel)** | 独立模块、低重叠 | 多任务同时执行 |
-| **蜂群 (Swarm)** | 探索性、多方案对比 | 多 Agent 独立探索，合并最优 |
+| **蜂群 (Swarm)** | 探索性、多方案对比 | 多 Agent 独立探索,合并最优 |
 
 CTO 在 CTO_PLANNING 阶段选择执行模式。详见 `Agent/orchestrator/strategy.md`。
 
@@ -361,7 +361,7 @@ CTO 在 CTO_PLANNING 阶段选择执行模式。详见 `Agent/orchestrator/strat
 | 1 | NO REQUIREMENT, NO EXECUTION | 无需求包不得实现 |
 | 2 | NO PLAN, NO CODE | 无计划不得写代码 |
 | 3 | REUSE BEFORE BUILD | 先查已有能力再新建 |
-| 4 | SOURCE PRESERVATION | `Tool/` 只读，严禁修改 |
+| 4 | SOURCE PRESERVATION | `Tool/` 只读,严禁修改 |
 | 5 | QA IS A GATE | 无 QA 证据不得声称完成 |
 | 6 | NO CI-ONLY APPROVAL | 不得仅凭编译通过放行 |
 | 7 | REJECTION REQUIRES REASON CODE | QA 驳回必须带原因码 |
@@ -374,7 +374,7 @@ CTO 在 CTO_PLANNING 阶段选择执行模式。详见 `Agent/orchestrator/strat
 
 ## §8 Knowledge Cycle
 
-### Internal KI — 项目级正向知识（应该怎么做）
+### Internal KI — 项目级正向知识(应该怎么做)
 
 | 维度 | 说明 |
 |------|------|
@@ -382,14 +382,14 @@ CTO 在 CTO_PLANNING 阶段选择执行模式。详见 `Agent/orchestrator/strat
 | **在哪里** | `{project}/.claude/Internal_KI/{category}/{slug}.md` |
 | **索引** | `{project}/.claude/Internal_KI/index.json` |
 | **何时创建** | QA 通过后、重大技术选型确定后、高频复用模式验证后 |
-| **生命周期** | 跟项目走，status: active → deprecated，不物理删除 |
+| **生命周期** | 跟项目走,status: active → deprecated,不物理删除 |
 | **接口契约** | `KI/Internal_KI/contract.md` |
 
-### Error Book — 全局级负向知识（不应该怎么做）
+### Error Book — 全局级负向知识(不应该怎么做)
 
 | 维度 | 说明 |
 |------|------|
-| **是什么** | Agent 犯过的错误记录，含根因、修复方案、预防规则 |
+| **是什么** | Agent 犯过的错误记录,含根因、修复方案、预防规则 |
 | **在哪里** | `KI/Error_Book/entries/ERR-{NNN}__{slug}.md` |
 | **索引** | `KI/Error_Book/index.json` |
 | **优先级** | Error Book 召回 **优先于** Internal KI 查询 |
@@ -401,9 +401,9 @@ CTO 在 CTO_PLANNING 阶段选择执行模式。详见 `Agent/orchestrator/strat
 ```
 项目执行
   │
-  ├── 正向经验 ──▶ Internal KI（项目级，跟项目走）
+  ├── 正向经验 ──▶ Internal KI(项目级,跟项目走)
   │
-  └── 负向教训 ──▶ Error Book（全局级，跨项目共享）
+  └── 负向教训 ──▶ Error Book(全局级,跨项目共享)
                        │
                        ▼
                  下一个项目自动召回
@@ -426,16 +426,16 @@ CTO 在 CTO_PLANNING 阶段选择执行模式。详见 `Agent/orchestrator/strat
 
 | 时机 | 操作 |
 |------|------|
-| Session 开始 | 检查 `scratch/` 残留 → 清理或 promote；检查 `active/` 旧 run → 归档 |
-| Run 完成 | `active/{id}/` → `archive/{id}/`；更新 `archive_manifest.json` |
-| Session 结束 | 清空 `scratch/`（已 promote 的除外） |
-| 定期维护 | 清理 `archive/` 中超 90 天的 run；导出关键 findings 到 Internal KI |
+| Session 开始 | 检查 `scratch/` 残留 → 清理或 promote;检查 `active/` 旧 run → 归档 |
+| Run 完成 | `active/{id}/` → `archive/{id}/`;更新 `archive_manifest.json` |
+| Session 结束 | 清空 `scratch/`(已 promote 的除外) |
+| 定期维护 | 清理 `archive/` 中超 90 天的 run;导出关键 findings 到 Internal KI |
 
 ---
 
 ## §10 Quick Reference — Key File Paths
 
-### 全局级（相对 `{TOOLBOX_ROOT}`）
+### 全局级(相对 `{TOOLBOX_ROOT}`)
 
 | 文件 | 路径 |
 |------|------|
@@ -457,7 +457,7 @@ CTO 在 CTO_PLANNING 阶段选择执行模式。详见 `Agent/orchestrator/strat
 | 项目初始化指南 | `Agent/guides/project-level-skills-setup.md` |
 | 本文档 | `Agent/templates/architecture_overview.md` |
 
-### 项目级（相对项目根）
+### 项目级(相对项目根)
 
 | 文件 | 路径 |
 |------|------|

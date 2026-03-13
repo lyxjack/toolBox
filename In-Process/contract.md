@@ -1,25 +1,25 @@
 # In-Process — 项目级运行期过程文件接口契约
 
-> **本文件是接口定义，不存放任何项目的实际过程数据。**
+> **本文件是接口定义,不存放任何项目的实际过程数据。**
 > 各项目根据本契约在自己的目录中创建 In-Process 实例。
 
 ## 1. 用途
 
-In-Process 是项目级的运行期过程文件层，存放任务执行过程中产生的全部工件：
+In-Process 是项目级的运行期过程文件层,存放任务执行过程中产生的全部工件:
 状态机、执行计划、变更清单、QA 报告、审计记录、临时文件等。
 
-每个项目独立管理自己的 In-Process 实例，项目间互不干扰。
+每个项目独立管理自己的 In-Process 实例,项目间互不干扰。
 
-与 Internal_KI 的区别：
-- Internal_KI = 项目级正向知识（长期保留，跨 session 复用）
-- In-Process = 项目级运行期工件（随 run 生命周期流转，最终归档或清理）
+与 Internal_KI 的区别:
+- Internal_KI = 项目级正向知识(长期保留,跨 session 复用)
+- In-Process = 项目级运行期工件(随 run 生命周期流转,最终归档或清理)
 
 ## 2. 项目中的目录结构
 
 ```
 {project}/
 └── .in-process/
-    ├── active/                    ← 当前活跃 run（最多 1 个）
+    ├── active/                    ← 当前活跃 run(最多 1 个)
     │   └── {run_id}/
     │       ├── state.json
     │       ├── requirement_package.md
@@ -34,13 +34,13 @@ In-Process 是项目级的运行期过程文件层，存放任务执行过程中
     │       ├── qa_report.md
     │       ├── req_impl_matrix.md
     │       └── delivery_cert.md
-    ├── archive/                   ← 已完成 run（90 天保留）
+    ├── archive/                   ← 已完成 run(90 天保留)
     │   └── {run_id}/
-    ├── audit/                     ← 审计记录（永不删除）
+    ├── audit/                     ← 审计记录(永不删除)
     │   └── {date}__{project}__audit__{id}__{slug}.md
-    ├── index/                     ← 归档索引（永久）
+    ├── index/                     ← 归档索引(永久)
     │   └── archive_manifest.json
-    └── scratch/                   ← 临时文件（session 结束清理）
+    └── scratch/                   ← 临时文件(session 结束清理)
         └── _*.{ext}
 ```
 
@@ -48,9 +48,9 @@ In-Process 是项目级的运行期过程文件层，存放任务执行过程中
 
 | 子目录 | 职责 | 保留策略 | 可删除 |
 |--------|------|---------|--------|
-| `active/` | 当前活跃 run 的工作空间（最多 1 个） | 直到 DELIVERED → 移至 archive/ | 归档后移除 |
+| `active/` | 当前活跃 run 的工作空间(最多 1 个) | 直到 DELIVERED → 移至 archive/ | 归档后移除 |
 | `archive/{run_id}/` | 已完成 run 的全套工件 | **90 天** | 90 天后可清理 |
-| `audit/` | 永久审计记录（合规要求） | **永久** | 永不删除 |
+| `audit/` | 永久审计记录(合规要求) | **永久** | 永不删除 |
 | `index/` | archive_manifest.json 索引 | **永久** | 永不删除 |
 | `scratch/` | session 范围的临时文件 | **session** | session 结束即清理 |
 
@@ -58,7 +58,7 @@ In-Process 是项目级的运行期过程文件层，存放任务执行过程中
 
 ### 4.1 state.json — 状态机
 
-记录 run 在生命周期中的状态转移：
+记录 run 在生命周期中的状态转移:
 
 ```
 INTAKE → PM_ANALYSIS → CTO_PLANNING → EXECUTION → QA_VERIFICATION
@@ -68,7 +68,7 @@ INTAKE → PM_ANALYSIS → CTO_PLANNING → EXECUTION → QA_VERIFICATION
                                               JOINT_APPROVAL → DELIVERED
 ```
 
-每次状态转移对应一个 Gate：
+每次状态转移对应一个 Gate:
 - **Gate1** (PM_ANALYSIS → CTO_PLANNING): 需求包完整性
 - **Gate2** (CTO_PLANNING → EXECUTION): 计划 + DAG 批准
 - **Gate3** (EXECUTION → QA_VERIFICATION): 所有 manifest 已提交
@@ -125,15 +125,15 @@ _*.{ext}    (下划线前缀标识临时文件)
 - [ ] 检查 `.in-process/active/` 是否有未归档的旧 run → 归档到 archive/
 
 ### 6.2 Session/Run 结束时
-- [ ] 清空 `.in-process/scratch/`（已 promote 的除外，promote 后再删除原件）
+- [ ] 清空 `.in-process/scratch/`(已 promote 的除外,promote 后再删除原件)
 - [ ] 将 `.in-process/active/{id}/` 移到 `.in-process/archive/{id}/`
 - [ ] 更新 `.in-process/index/archive_manifest.json`
 
-### 6.3 定期维护（建议每月或每 10 个 run）
+### 6.3 定期维护(建议每月或每 10 个 run)
 - [ ] 检查 `.in-process/archive/` 中超过 90 天的 run → 可清理
 - [ ] 清理前建议导出关键 findings 到 Internal_KI
 
-## 7. Promotion 流程（临时 → 正式）
+## 7. Promotion 流程(临时 → 正式)
 
 ```
 .in-process/scratch/_analysis.md
@@ -189,7 +189,7 @@ _*.{ext}    (下划线前缀标识临时文件)
 
 ## 9. 索引同步规则
 
-**强制约束**：run 完成归档时，必须同步更新 `archive_manifest.json`。
+**强制约束**:run 完成归档时,必须同步更新 `archive_manifest.json`。
 
 - 新 run 归档 → entries 追加 entry
 - kiRefback 记录从本次 run 提炼到 Internal_KI / Error_Book 的条目
@@ -197,19 +197,19 @@ _*.{ext}    (下划线前缀标识临时文件)
 
 ## 10. 全局 Agent Skill 链接方式
 
-项目 CLAUDE.md 中必须声明 In-Process 路径：
+项目 CLAUDE.md 中必须声明 In-Process 路径:
 
 ```markdown
-## In-Process（运行期过程文件）
+## In-Process(运行期过程文件)
 - **接口契约**: `{TOOLBOX}/In-Process/contract.md`
 - **路径**: `.in-process/`
 - **索引**: `.in-process/index/archive_manifest.json`
 ```
 
-全局 Agent Skill 通过读取项目 CLAUDE.md 获取路径，再按需读写过程文件。
+全局 Agent Skill 通过读取项目 CLAUDE.md 获取路径,再按需读写过程文件。
 
 ## 11. Token 优化策略
 
-1. **不预加载**: In-Process 文件仅在 run 执行时读写，非 run 状态不加载
-2. **state.json 做路由**: 通过 state.json 判断当前阶段，只加载当前阶段需要的工件
+1. **不预加载**: In-Process 文件仅在 run 执行时读写,非 run 状态不加载
+2. **state.json 做路由**: 通过 state.json 判断当前阶段,只加载当前阶段需要的工件
 3. **archive 不加载**: 归档的 run 仅在明确需要回溯时读取

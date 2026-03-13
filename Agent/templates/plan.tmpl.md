@@ -1,8 +1,8 @@
-﻿# Execution Plan
+# Execution Plan
 <!-- 
-  å‘½å: {date}__{project}__plan__{id}__{slug}.md
-  ä½ç½®: .in-process/active/{run_id}/
-  çŠ¶æ€: active | superseded | closed | archived
+  命名: {date}__{project}__plan__{id}__{slug}.md
+  位置: .in-process/active/{run_id}/
+  状态: active | superseded | closed | archived
 -->
 
 - **Plan ID**: PLAN-{id}
@@ -14,79 +14,79 @@
 ---
 
 ## Objective
-{ä¸€å¥è¯æè¿°æœ¬æ¬¡æ‰§è¡Œçš„ç›®æ ‡}
+{一句话描述本次执行的目标}
 
 ## Scope
-- **In**: {åŒ…å«çš„èŒƒå›´}
-- **Out**: {æŽ’é™¤çš„èŒƒå›´}
+- **In**: {包含的范围}
+- **Out**: {排除的范围}
 
 ## Constraints
-- {æŠ€æœ¯çº¦æŸ}
-- {ä¸šåŠ¡çº¦æŸ}
-- {è´¨é‡çº¦æŸ}
+- {技术约束}
+- {业务约束}
+- {质量约束}
 
 ---
 
 ## File Tracking
 
 ### Files Read
-<!-- æ¯è¯»ä¸€ä¸ªæ–°æ–‡ä»¶æ—¶è¿½åŠ ã€‚æ ¼å¼: - [x] path (è¡Œå·èŒƒå›´/ç›®çš„) -->
-- [ ] {path/to/file} â€” {è¯»å–ç›®çš„}
+<!-- 每读一个新文件时追加。格式: - [x] path (行号范围/目的) -->
+- [ ] {path/to/file} — {读取目的}
 
 ### Files To Modify (Planned)
-<!-- è§„åˆ’é˜¶æ®µå¡«å†™ã€‚å¦‚æ–°å¢žè®¡åˆ’å¤–æ–‡ä»¶éœ€ CTO æ‰¹å‡†å¹¶è®° Status Log -->
-- [ ] {path/to/file} â€” {ä¿®æ”¹ç›®çš„}
+<!-- 规划阶段填写。如新增计划外文件需 CTO 批准并记 Status Log -->
+- [ ] {path/to/file} — {修改目的}
 
 ### Files Actually Modified
-<!-- å®žé™…ä¿®æ”¹åŽè¿½åŠ ã€‚QA ä¼šå¯¹ç…§æ­¤åˆ—è¡¨ä¸Ž change_manifest -->
-- [ ] {path/to/file} â€” {+N/-M lines} â€” {ä¿®æ”¹å†…å®¹}
+<!-- 实际修改后追加。QA 会对照此列表与 change_manifest -->
+- [ ] {path/to/file} — {+N/-M lines} — {修改内容}
 
 ---
 
 ## Steps
 
-### Phase 1: {é˜¶æ®µå}
-- [ ] Step 1.1: {å…·ä½“åŠ¨ä½œ}
-- [ ] Step 1.2: {å…·ä½“åŠ¨ä½œ}
+### Phase 1: {阶段名}
+- [ ] Step 1.1: {具体动作}
+- [ ] Step 1.2: {具体动作}
 
-### Phase 2: {é˜¶æ®µå}
-- [ ] Step 2.1: {å…·ä½“åŠ¨ä½œ}
-- [ ] Step 2.2: {å…·ä½“åŠ¨ä½œ}
+### Phase 2: {阶段名}
+- [ ] Step 2.1: {具体动作}
+- [ ] Step 2.2: {具体动作}
 
 ---
 
 ## Findings
-<!-- æ‰§è¡Œè¿‡ç¨‹ä¸­çš„é‡è¦å‘çŽ°ã€‚å¦‚éœ€æ•´æ”¹ï¼Œåˆ›å»ºç‹¬ç«‹ audit å·¥ä»¶ -->
+<!-- 执行过程中的重要发现。如需整改,创建独立 audit 工件 -->
 | # | Finding | Impact | Action |
 |---|---------|--------|--------|
-| F1 | {å‘çŽ°} | {å½±å“} | {å¤„ç†æ–¹å¼} |
+| F1 | {发现} | {影响} | {处理方式} |
 
 ## Risks
 | # | Risk | Probability | Impact | Mitigation |
 |---|------|-------------|--------|------------|
-| R1 | {é£Žé™©} | H/M/L | H/M/L | {ç¼“è§£æŽªæ–½} |
+| R1 | {风险} | H/M/L | H/M/L | {缓解措施} |
 
 ## Blockers
-<!-- é˜»å¡žé¡¹ã€‚å‘çŽ°æ—¶ç«‹å³è®°å½• -->
+<!-- 阻塞项。发现时立即记录 -->
 | # | Blocker | Reported | Resolution | Resolved |
 |---|---------|----------|------------|----------|
-| B1 | {æè¿°} | {æ—¶é—´} | {æ–¹æ¡ˆ} | Yes/No |
+| B1 | {描述} | {时间} | {方案} | Yes/No |
 
 ---
 
 ## Status Log
-<!-- å…³é”®èŠ‚ç‚¹çš„æ—¶é—´çº¿ã€‚æœ€æ–°åœ¨æœ€ä¸Š -->
+<!-- 关键节点的时间线。最新在最上 -->
 | Timestamp | Event | Notes |
 |-----------|-------|-------|
-| {time} | Plan created | â€” |
+| {time} | Plan created | — |
 
 ## Next Actions
-<!-- å½“å‰åº”è¯¥åšä»€ä¹ˆã€‚æ¯ä¸ª step å®ŒæˆåŽæ›´æ–° -->
-1. {ä¸‹ä¸€æ­¥åŠ¨ä½œ}
+<!-- 当前应该做什么。每个 step 完成后更新 -->
+1. {下一步动作}
 
 ---
 
 ## Cross References
-- **Audit**: {å¯¹åº” audit å·¥ä»¶ IDï¼Œæ— åˆ™ N/A}
+- **Audit**: {对应 audit 工件 ID,无则 N/A}
 - **Upstream**: {requirement_package.md}
 - **Downstream**: {task_dag.json, change_manifests/}

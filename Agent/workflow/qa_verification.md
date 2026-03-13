@@ -5,7 +5,7 @@ description: 五层验证。有真实否决权。驳回必须带原因码和返�
 # QA Verification
 
 ## 前置约束 — QA 子门禁
-> 进入本工作流时，以下铁律自动生效（全文见 `Agent/rules/iron_laws.md`）。
+> 进入本工作流时,以下铁律自动生效(全文见 `Agent/rules/iron_laws.md`)。
 
 | 铁律 | 一句话 | 门禁效果 |
 |------|--------|---------|
@@ -14,7 +14,7 @@ description: 五层验证。有真实否决权。驳回必须带原因码和返�
 | **IL 07** | REJECTION REQUIRES REASON CODE | 驳回必须带原因码和 rework_order |
 
 ## 触发条件
-Execution 完成 Gate③ 后交接，`state.json` 的 `currentState` 为 `QA_VERIFICATION`。
+Execution 完成 Gate③ 后交接,`state.json` 的 `currentState` 为 `QA_VERIFICATION`。
 
 ## 输入
 - `requirement_package.md`
@@ -22,7 +22,7 @@ Execution 完成 Gate③ 后交接，`state.json` 的 `currentState` 为 `QA_VER
 - `task_dag.json`
 - `change_manifests/*.json`
 - `handoffs/*.json`
-- 实际代码变更（git diff 或文件对比）
+- 实际代码变更(git diff 或文件对比)
 
 ## 步骤
 
@@ -36,8 +36,8 @@ Execution 完成 Gate③ 后交接，`state.json` 的 `currentState` 为 `QA_VER
 执行构建和测试:
 ```
 - 运行项目构建命令
-- 运行类型检查（如适用）
-- 运行 linter（确认无新增 error）
+- 运行类型检查(如适用)
+- 运行 linter(确认无新增 error)
 - 运行完整测试套件
 ```
 记录每项的命令、exit code、输出。
@@ -69,7 +69,7 @@ Execution 完成 Gate③ 后交接，`state.json` 的 `currentState` 为 `QA_VER
 ### Step 5: Layer 4 — Change Isolation
 ```
 1. 聚合所有 change_manifest 中的文件列表
-2. 对比实际文件变更（git diff 或手动确认）
+2. 对比实际文件变更(git diff 或手动确认)
 3. 确认无计划外文件被修改
 4. 确认 Tool/ 中原始 skill 源文件未被动过
 5. 确认无全局状态被意外修改
@@ -97,8 +97,8 @@ Execution 完成 Gate③ 后交接，`state.json` 的 `currentState` 为 `QA_VER
 
 **如果 5 层全 PASS:**
 1. Verdict = PASS
-2. 评估是否有 Failure Memory Candidate（本次过程中发现的可沉淀模式）
-3. 如果有 → 追加到 `KI/Error_Book/index.json` 的 entries 数组，格式:
+2. 评估是否有 Failure Memory Candidate(本次过程中发现的可沉淀模式)
+3. 如果有 → 追加到 `KI/Error_Book/index.json` 的 entries 数组,格式:
    ```json
    {
      "id": "ERR-{NNN}",
@@ -111,7 +111,7 @@ Execution 完成 Gate③ 后交接，`state.json` 的 `currentState` 为 `QA_VER
      "status": "resolved"
    }
    ```
-4. 评估是否有可沉淀的 Internal_KI（可复用的决策/经验/模式）
+4. 评估是否有可沉淀的 Internal_KI(可复用的决策/经验/模式)
 5. 如果有 → 追加到 `KI/Internal_KI/index.json`
 6. 更新 state → `JOINT_APPROVAL`
 7. 交接 Joint Approval
@@ -119,22 +119,22 @@ Execution 完成 Gate③ 后交接，`state.json` 的 `currentState` 为 `QA_VER
 **如果任何层 FAIL:**
 1. Verdict = REJECT
 2. 确定 reason_code
-3. 确定 rework_target（参照错误码路由表）
-4. 创建 `rework_orders/rework_{iteration}.json`，参考 schema:
+3. 确定 rework_target(参照错误码路由表)
+4. 创建 `rework_orders/rework_{iteration}.json`,参考 schema:
    `Agent/schemas/rework_order.schema.json`
 5. 判断是否为 Failure Memory Candidate:
-   - 同类错误重复出现？→ Yes
-   - 根因可预防？→ Yes
-   - 如果 Yes，追加到 `KI/Error_Book/index.json`
-   - 同时在 `KI/Error_Book/entries/` 中创建详细 md（使用 `KI/Templates/error_book_entry.tmpl.md`）
+   - 同类错误重复出现?→ Yes
+   - 根因可预防?→ Yes
+   - 如果 Yes,追加到 `KI/Error_Book/index.json`
+   - 同时在 `KI/Error_Book/entries/` 中创建详细 md(使用 `KI/Templates/error_book_entry.tmpl.md`)
 6. 更新 state → `REWORK`
 7. state.json 的 `reworkCount` += 1
 8. 如果 `reworkCount >= 3` → 在 qa_report 中增加 **Root Cause Analysis** 章节
 9. 按 rework_target 路由到对应 workflow
 
 ## 禁止行为
-- ❌ 仅凭 "编译通过" 或 "测试全绿" 就判 PASS（Iron Law 06）
+- ❌ 仅凭 "编译通过" 或 "测试全绿" 就判 PASS(Iron Law 06)
 - ❌ 自行修改代码来"修复"问题
 - ❌ 修改需求或计划
 - ❌ 放行无 change_manifest 或无 handoff 的交付
-- ❌ 驳回时不带 reason_code（Iron Law 07）
+- ❌ 驳回时不带 reason_code(Iron Law 07)

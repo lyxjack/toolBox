@@ -1,21 +1,21 @@
-﻿# Project Rules â€” toolBox
+# Project Rules — toolBox
 # Version: 1.0
 
 ---
 
-## é¡¹ç›®ä¿¡æ¯
-- **é¡¹ç›®å**: toolBox
-- **åˆ›å»ºæ—¥æœŸ**: 2026-03-07
-- **é¡¹ç›®å®šä½**: ä¼ä¸šçº§ AI Agent Skills ä¸­å¿ƒâ€”â€”æ”¶é›†ã€ç´¢å¼•ã€æ²»ç†ã€è°ƒåº¦å¼€æº skills
-- **æŠ€æœ¯æ ˆ**: PowerShell (è„šæœ¬), JSON (æ•°æ®), Markdown (æ–‡æ¡£/è§„åˆ™), Claude Code (runtime)
+## 项目信息
+- **项目名**: toolBox
+- **创建日期**: 2026-03-07
+- **项目定位**: 企业级 AI Agent Skills 中心——收集、索引、治理、调度开源 skills
+- **技术栈**: PowerShell (脚本), JSON (数据), Markdown (文档/规则), Claude Code (runtime)
 
-## é¡¹ç›®ç‰¹æ®Šçº¦æŸ
+## 项目特殊约束
 
-### C1 â€” æºæ–‡ä»¶åªè¯»
-toolBox ä¸‹çš„ 16 ä¸ª skill ä»“åº“å‡ä¸º `git clone` çš„å¼€æºé¡¹ç›®ã€‚
-æ‰€æœ‰åŽŸå§‹ SKILL.md åŠå…¶ companion æ–‡ä»¶**åªå¯è¯»å–**ï¼Œæ²»ç†å±‚é€šè¿‡ registry å’Œ review åšæ˜ å°„æŽ¨èã€‚
+### C1 — 源文件只读
+toolBox 下的 16 个 skill 仓库均为 `git clone` 的开源项目。
+所有原始 SKILL.md 及其 companion 文件**只可读取**,治理层通过 registry 和 review 做映射推荐。
 
-**åªè¯»ä»“åº“æ¸…å•**:
+**只读仓库清单**:
 - everything-claude-code/
 - superpowers/
 - ui-ux-pro-max-skill/
@@ -31,29 +31,29 @@ toolBox ä¸‹çš„ 16 ä¸ª skill ä»“åº“å‡ä¸º `git clone` �
 - composition-patterns/
 - react-native-skills/
 
-### C2 â€” ç´¢å¼•ç³»ç»Ÿå·²å»ºæˆ
-`KI/External_KI/` å·²åŒ…å«å®Œæ•´çš„ä¸¤çº§ç´¢å¼•ç³»ç»Ÿï¼Œä¸éœ€è¦é‡å»ºã€‚
-å˜æ›´ç´¢å¼•æ—¶å¿…é¡»åŒæ­¥æ›´æ–° master_index.json å’Œå¯¹åº” category JSONã€‚
+### C2 — 索引系统已建成
+`KI/External_KI/` 已包含完整的两级索引系统,不需要重建。
+变更索引时必须同步更新 master_index.json 和对应 category JSON。
 
-### C3 â€” ç½®ä¿¡åº¦æ•°æ®å·²å®¡è®¡
-`KI/External_KI/_quality_audit_results.json` å’Œ `KI/External_KI/_quality_audit_corrected.json` åŒ…å«åŸºäºŽ 20 ä¸ªå®¢è§‚ä¿¡å·çš„ç½®ä¿¡åº¦è¯„åˆ†ã€‚
-åŽç»­ skill è¯„ä¼°å¿…é¡»å¼•ç”¨è¿™äº›æ•°æ®ï¼Œä¸å¯å†é ä¸»è§‚ä¼°å€¼ã€‚
+### C3 — 置信度数据已审计
+`KI/External_KI/_quality_audit_results.json` 和 `KI/External_KI/_quality_audit_corrected.json` 包含基于 20 个客观信号的置信度评分。
+后续 skill 评估必须引用这些数据,不可再靠主观估值。
 
-### C4 â€” é¡¹ç›®æ— ä¸šåŠ¡ä»£ç 
-toolBox ä¸åŒ…å«åº”ç”¨ä»£ç ã€‚å®ƒæ˜¯ä¸€ä¸ª skill èµ„äº§ç®¡ç†é¡¹ç›®ã€‚
-å› æ­¤ QA çš„ Layer 1ï¼ˆBuild Correctnessï¼‰ä¸»è¦æ£€æŸ¥ JSON åˆæ³•æ€§å’Œæ–‡æ¡£æ ¼å¼ã€‚
+### C4 — 项目无业务代码
+toolBox 不包含应用代码。它是一个 skill 资产管理项目。
+因此 QA 的 Layer 1(Build Correctness)主要检查 JSON 合法性和文档格式。
 
-## å¯ç”¨çš„åŠŸèƒ½ç±»åˆ«
-åŸºäºŽ `KI/External_KI/master_index.json` çš„ 12 ä¸ªç±»åˆ«å…¨éƒ¨ä¸Žæœ¬é¡¹ç›®ç›¸å…³:
+## 启用的功能类别
+基于 `KI/External_KI/master_index.json` 的 12 个类别全部与本项目相关:
 frontend, backend, testing, security, devops, ai_agent, content, language_specific, mobile_native, workflow, meta_tooling, business
 
-## é¡¹ç›®çº§ Iron Law æ‰©å±•
+## 项目级 Iron Law 扩展
 
-### C-IL-01 â€” ç´¢å¼•ä¸€è‡´æ€§
-ä¿®æ”¹ä»»ä½• skill ç´¢å¼•æ•°æ®æ—¶ï¼Œmaster_index.json å’Œå¯¹åº” category JSON å¿…é¡»åŒæ­¥æ›´æ–°ã€‚
+### C-IL-01 — 索引一致性
+修改任何 skill 索引数据时,master_index.json 和对应 category JSON 必须同步更新。
 
-### C-IL-02 â€” å®¡è®¡æ•°æ®å¼•ç”¨
-Skill Governance çš„ä»»ä½•æŽ¨è/è¯„çº§å¿…é¡»å¼•ç”¨ `KI/External_KI/_quality_audit_corrected.json` ä¸­çš„å®¢è§‚æ•°æ®ã€‚
+### C-IL-02 — 审计数据引用
+Skill Governance 的任何推荐/评级必须引用 `KI/External_KI/_quality_audit_corrected.json` 中的客观数据。
 
-### C-IL-03 â€” ä»“åº“ä¸æ±¡æŸ“
-ä¸å¾—åœ¨åªè¯»ä»“åº“ç›®å½•ä¸‹åˆ›å»ºä»»ä½•æ–°æ–‡ä»¶ã€‚æ²»ç†æ–‡ä»¶åªæ”¾åœ¨ `Agent/rules/` å’Œ `Agent/` ä¸‹ã€‚
+### C-IL-03 — 仓库不污染
+不得在只读仓库目录下创建任何新文件。治理文件只放在 `Agent/rules/` 和 `Agent/` 下。

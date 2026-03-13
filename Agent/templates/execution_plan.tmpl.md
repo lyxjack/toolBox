@@ -4,15 +4,15 @@
 - **Status**: DRAFT | APPROVED | AMENDED
 
 ### Architecture Decision
-{方案概述：用什么技术路线，为什么。}
+{方案概述:用什么技术路线,为什么。}
 
 ### Reuse Audit
-| 已有能力 | 路径 / Skill | 可复用？ | 决定 |
+| 已有能力 | 路径 / Skill | 可复用? | 决定 |
 |----------|-------------|---------|------|
 | {能力1} | {path} | Yes/Partial/No | 复用 / 改造 / 不用 |
 | {能力2} | {path} | ... | ... |
 
-**结论**: {复用了 X 个现有 skill/code，新建了 Y 个}
+**结论**: {复用了 X 个现有 skill/code,新建了 Y 个}
 
 ### Skill Mapping
 | Task ID | Skill | 加载路径 | 置信度 |
@@ -34,4 +34,4 @@
 - [ ] VP-2: {验证点}
 
 ### Minimal Change Rationale
-{论证为什么当前方案是最小化修改。如果不是最小修改，说明原因。}
+{论证为什么当前方案是最小化修改。如果不是最小修改,说明原因。}

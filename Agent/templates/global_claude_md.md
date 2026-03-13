@@ -1,32 +1,32 @@
 # Global — toolBox Enterprise AI Agent Workspace
 
 > **使用说明**: 此为全局 `~/.claude/CLAUDE.md` 模板。
-> 将 `{TOOLBOX_ROOT}` 替换为你的 toolBox 实际绝对路径后，保存到 `~/.claude/CLAUDE.md`。
+> 将 `{TOOLBOX_ROOT}` 替换为你的 toolBox 实际绝对路径后,保存到 `~/.claude/CLAUDE.md`。
 >
 > **路径示例**:
 > - macOS: `/Users/<username>/toolBox`
 > - Windows: `C:\Users\<username>\toolBox`
 > - Linux: `/home/<username>/toolBox`
 >
-> **注意**: 全局 CLAUDE.md 是可选配置。如果你只在 toolBox 目录内使用 Claude Code，
-> 项目级 `CLAUDE.md` 和 `.claude/commands/` 已提供全部能力，无需配置全局文件。
+> **注意**: 全局 CLAUDE.md 是可选配置。如果你只在 toolBox 目录内使用 Claude Code,
+> 项目级 `CLAUDE.md` 和 `.claude/commands/` 已提供全部能力,无需配置全局文件。
 > 全局 CLAUDE.md 的作用是让你在 **其他项目目录** 中也能引用 toolBox 的治理规则和工作流。
 
 > **toolBox 根目录**: `{TOOLBOX_ROOT}/`
-> 本文件为全局规则，在任何工作目录下的 Claude Code 会话中均生效。
+> 本文件为全局规则,在任何工作目录下的 Claude Code 会话中均生效。
 > 所有路径均为绝对路径。
 
 ## Five-Layer Architecture
 
-本系统采用五层架构，每层职责单一、边界清晰。
+本系统采用五层架构,每层职责单一、边界清晰。
 
 | 层 | 绝对路径 | 职责 |
 |----|----------|------|
-| **PM** | `{TOOLBOX_ROOT}/PM/` | 唯一入口层：需求接收、标准化、分类、路由 |
-| **Agent** | `{TOOLBOX_ROOT}/Agent/` | 治理与编排层：角色、规则、工作流、调度策略 |
-| **KI** | `{TOOLBOX_ROOT}/KI/` | 核心知识资产层：External_KI、Internal_KI、Error_Book |
-| **Tool** | `{TOOLBOX_ROOT}/Tool/` | 外部原始资源层：git clone 的 skill 仓库（只读） |
-| **In-Process** | `{TOOLBOX_ROOT}/In-Process/` | 运行期过程文件层：仅存接口契约（`contract.md`），实际数据在各项目的 `.in-process/` 中 |
+| **PM** | `{TOOLBOX_ROOT}/PM/` | 唯一入口层:需求接收、标准化、分类、路由 |
+| **Agent** | `{TOOLBOX_ROOT}/Agent/` | 治理与编排层:角色、规则、工作流、调度策略 |
+| **KI** | `{TOOLBOX_ROOT}/KI/` | 核心知识资产层:External_KI、Internal_KI、Error_Book |
+| **Tool** | `{TOOLBOX_ROOT}/Tool/` | 外部原始资源层:git clone 的 skill 仓库(只读) |
+| **In-Process** | `{TOOLBOX_ROOT}/In-Process/` | 运行期过程文件层:仅存接口契约(`contract.md`),实际数据在各项目的 `.in-process/` 中 |
 
 ## Hard Constraint — 五层架构文件治理
 
@@ -34,10 +34,10 @@
 
 | 规则 | 描述 |
 |------|------|
-| **根目录纯净** | `{TOOLBOX_ROOT}/` 根目录只允许存在 `Agent/`、`In-Process/`、`KI/`、`PM/`、`Tool/` 五个业务目录，以及 `CLAUDE.md`、`README.md` 配置/文档文件。禁止创建任何其他业务文件夹或散落文件。 |
-| **层间不越界** | 每层只存放属于该层职责的文件。PM 层不存代码，Agent 层不存原始 skill，Tool 层不存治理文档，KI 层不存过程文件，In-Process 层不存永久知识。 |
-| **写入路径白名单** | Skill 源仓库 → `Tool/`；索引与知识 → `KI/`；治理规则/模板/编排 → `Agent/`；需求入口 → `PM/`；接口契约 → `In-Process/contract.md`；运行期工件 → 各项目的 `.in-process/`。不在白名单内的路径禁止写入。 |
-| **无冗余副本** | 同一文件不得在多个层中存在副本。如需引用，使用路径引用而非复制。 |
+| **根目录纯净** | `{TOOLBOX_ROOT}/` 根目录只允许存在 `Agent/`、`In-Process/`、`KI/`、`PM/`、`Tool/` 五个业务目录,以及 `CLAUDE.md`、`README.md` 配置/文档文件。禁止创建任何其他业务文件夹或散落文件。 |
+| **层间不越界** | 每层只存放属于该层职责的文件。PM 层不存代码,Agent 层不存原始 skill,Tool 层不存治理文档,KI 层不存过程文件,In-Process 层不存永久知识。 |
+| **写入路径白名单** | Skill 源仓库 → `Tool/`;索引与知识 → `KI/`;治理规则/模板/编排 → `Agent/`;需求入口 → `PM/`;接口契约 → `In-Process/contract.md`;运行期工件 → 各项目的 `.in-process/`。不在白名单内的路径禁止写入。 |
+| **无冗余副本** | 同一文件不得在多个层中存在副本。如需引用,使用路径引用而非复制。 |
 | **遗留目录禁止创建** | `AI/` 和 `external_KI/` 为已废弃的遗留目录名。禁止创建。 |
 
 ## Iron Laws (不可违反)
@@ -79,7 +79,7 @@
 
 ## Execution Modes
 
-CTO 在规划阶段必须选择执行模式（详见 `{TOOLBOX_ROOT}/Agent/orchestrator/strategy.md`）：
+CTO 在规划阶段必须选择执行模式(详见 `{TOOLBOX_ROOT}/Agent/orchestrator/strategy.md`):
 - **串行 (Serial)**: 强依赖、高耦合、核心流程改造
 - **并发 (Parallel)**: 独立、低重叠、可并行测试
 - **蜂群 (Swarm)**: 探索性、多方案对比、大规模知识提炼

@@ -10,18 +10,18 @@
 - **Status**: resolved
 
 ## 错误现象
-Agent 生成的 async 函数缺少 try-catch 包裹，导致 Promise rejection 未被捕获，进程崩溃。
+Agent 生成的 async 函数缺少 try-catch 包裹,导致 Promise rejection 未被捕获,进程崩溃。
 
 ## 根因分析
-Agent 在快速生成代码时倾向于写"happy path"，忽略错误路径处理。
+Agent 在快速生成代码时倾向于写"happy path",忽略错误路径处理。
 
 ## 解决方案
 1. 所有 async 函数必须使用 try-catch
-2. 优先使用 Result 类型模式（见 KI-001）
+2. 优先使用 Result 类型模式(见 KI-001)
 3. API 层使用统一错误处理中间件
 
 ## 预防规则
-当用户要求写 async 函数时，Agent 必须：
+当用户要求写 async 函数时,Agent 必须:
 1. 先检查 KI-001 (Result Type Pattern)
 2. 函数返回值包装为 Result<T>
 3. 不使用裸 throw
