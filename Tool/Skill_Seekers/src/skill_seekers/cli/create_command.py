@@ -134,10 +134,32 @@ class CreateCommand:
             return self._route_pdf()
         elif self.source_info.type == "word":
             return self._route_word()
+        elif self.source_info.type == "epub":
+            return self._route_epub()
         elif self.source_info.type == "video":
             return self._route_video()
         elif self.source_info.type == "config":
             return self._route_config()
+        elif self.source_info.type == "jupyter":
+            return self._route_generic("jupyter_scraper", "--notebook")
+        elif self.source_info.type == "html":
+            return self._route_generic("html_scraper", "--html-path")
+        elif self.source_info.type == "openapi":
+            return self._route_generic("openapi_scraper", "--spec")
+        elif self.source_info.type == "asciidoc":
+            return self._route_generic("asciidoc_scraper", "--asciidoc-path")
+        elif self.source_info.type == "pptx":
+            return self._route_generic("pptx_scraper", "--pptx")
+        elif self.source_info.type == "rss":
+            return self._route_generic("rss_scraper", "--feed-path")
+        elif self.source_info.type == "manpage":
+            return self._route_generic("man_scraper", "--man-path")
+        elif self.source_info.type == "confluence":
+            return self._route_generic("confluence_scraper", "--export-path")
+        elif self.source_info.type == "notion":
+            return self._route_generic("notion_scraper", "--export-path")
+        elif self.source_info.type == "chat":
+            return self._route_generic("chat_scraper", "--export-path")
         else:
             logger.error(f"Unknown source type: {self.source_info.type}")
             return 1
@@ -351,6 +373,29 @@ class CreateCommand:
         finally:
             sys.argv = original_argv
 
+    def _route_epub(self) -> int:
+        """Route to EPUB scraper (epub_scraper.py)."""
+        from skill_seekers.cli import epub_scraper
+
+        # Reconstruct argv for epub_scraper
+        argv = ["epub_scraper"]
+
+        # Add EPUB file
+        file_path = self.source_info.parsed["file_path"]
+        argv.extend(["--epub", file_path])
+
+        # Add universal arguments
+        self._add_common_args(argv)
+
+        # Call epub_scraper with modified argv
+        logger.debug(f"Calling epub_scraper with argv: {argv}")
+        original_argv = sys.argv
+        try:
+            sys.argv = argv
+            return epub_scraper.main()
+        finally:
+            sys.argv = original_argv
+
     def _route_video(self) -> int:
         """Route to video scraper (video_scraper.py)."""
         from skill_seekers.cli import video_scraper
@@ -460,6 +505,40 @@ class CreateCommand:
         finally:
             sys.argv = original_argv
 
+    def _route_generic(self, module_name: str, file_flag: str) -> int:
+        """Generic routing for new source types.
+
+        Most new source types (jupyter, html, openapi, asciidoc, pptx, rss,
+        manpage, confluence, notion, chat) follow the same pattern:
+        import module, build argv with --flag <file_path>, add common args, call main().
+
+        Args:
+            module_name: Python module name under skill_seekers.cli (e.g., "jupyter_scraper")
+            file_flag: CLI flag for the source file (e.g., "--notebook")
+
+        Returns:
+            Exit code from scraper
+        """
+        import importlib
+
+        module = importlib.import_module(f"skill_seekers.cli.{module_name}")
+
+        argv = [module_name]
+
+        file_path = self.source_info.parsed.get("file_path", "")
+        if file_path:
+            argv.extend([file_flag, file_path])
+
+        self._add_common_args(argv)
+
+        logger.debug(f"Calling {module_name} with argv: {argv}")
+        original_argv = sys.argv
+        try:
+            sys.argv = argv
+            return module.main()
+        finally:
+            sys.argv = original_argv
+
     def _add_common_args(self, argv: list[str]) -> None:
         """Add truly universal arguments to argv list.
 
@@ -541,25 +620,28 @@ Examples:
   Local:    skill-seekers create ./my-project -p comprehensive
   PDF:      skill-seekers create tutorial.pdf --ocr
   DOCX:     skill-seekers create document.docx
+  EPUB:     skill-seekers create ebook.epub
   Video:    skill-seekers create https://youtube.com/watch?v=...
   Video:    skill-seekers create recording.mp4
   Config:   skill-seekers create configs/react.json
 
 Source Auto-Detection:
-  • URLs/domains → web scraping
-  • owner/repo → GitHub analysis
-  • ./path → local codebase
-  • file.pdf → PDF extraction
-  • file.docx → Word document extraction
-  • youtube.com/... → Video transcript extraction
-  • file.mp4 → Video file extraction
-  • file.json → multi-source config
+  URLs/domains -> web scraping
+  owner/repo -> GitHub analysis
+  ./path -> local codebase
+  file.pdf -> PDF extraction
+  file.docx -> Word document extraction
+  file.epub -> EPUB extraction
+  youtube.com/... -> Video transcript extraction
+  file.mp4 -> Video file extraction
+  file.json -> multi-source config
 
-Progressive Help (13 → 120+ flags):
+Progressive Help (13 -> 120+ flags):
   --help-web       Web scraping options
   --help-github    GitHub repository options
   --help-local     Local codebase analysis
   --help-pdf       PDF extraction options
+  --help-epub      EPUB extraction options
   --help-video     Video extraction options
   --help-advanced  Rare/advanced options
   --help-all       All options + compatibility
@@ -590,6 +672,9 @@ Common Workflows:
     parser.add_argument("--help-pdf", action="store_true", help=argparse.SUPPRESS, dest="_help_pdf")
     parser.add_argument(
         "--help-word", action="store_true", help=argparse.SUPPRESS, dest="_help_word"
+    )
+    parser.add_argument(
+        "--help-epub", action="store_true", help=argparse.SUPPRESS, dest="_help_epub"
     )
     parser.add_argument(
         "--help-video", action="store_true", help=argparse.SUPPRESS, dest="_help_video"
@@ -651,6 +736,15 @@ Common Workflows:
         )
         add_create_arguments(parser_word, mode="word")
         parser_word.print_help()
+        return 0
+    elif args._help_epub:
+        parser_epub = argparse.ArgumentParser(
+            prog="skill-seekers create",
+            description="Create skill from EPUB e-book (.epub)",
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+        )
+        add_create_arguments(parser_epub, mode="epub")
+        parser_epub.print_help()
         return 0
     elif args._help_video:
         parser_video = argparse.ArgumentParser(

@@ -8,9 +8,10 @@
 #       project-specific observations into project-scoped instincts.
 #
 # Usage:
-#   start-observer.sh        # Start observer for current project (or global)
-#   start-observer.sh stop   # Stop running observer
-#   start-observer.sh status # Check if observer is running
+#   start-observer.sh              # Start observer for current project (or global)
+#   start-observer.sh --reset      # Clear lock and restart observer for current project
+#   start-observer.sh stop         # Stop running observer
+#   start-observer.sh status       # Check if observer is running
 
 set -e
 
@@ -28,6 +29,7 @@ OBSERVER_LOOP_SCRIPT="${SCRIPT_DIR}/observer-loop.sh"
 # Source shared project detection helper
 # This sets: PROJECT_ID, PROJECT_NAME, PROJECT_ROOT, PROJECT_DIR
 source "${SKILL_ROOT}/scripts/detect-project.sh"
+PYTHON_CMD="${CLV2_PYTHON_CMD:-}"
 
 # ─────────────────────────────────────────────
 # Configuration
@@ -40,13 +42,41 @@ PID_FILE="${PROJECT_DIR}/.observer.pid"
 LOG_FILE="${PROJECT_DIR}/observer.log"
 OBSERVATIONS_FILE="${PROJECT_DIR}/observations.jsonl"
 INSTINCTS_DIR="${PROJECT_DIR}/instincts/personal"
+SENTINEL_FILE="${CLV2_OBSERVER_SENTINEL_FILE:-${PROJECT_ROOT:-$PROJECT_DIR}/.observer.lock}"
+
+write_guard_sentinel() {
+  printf '%s\n' 'observer paused: confirmation or permission prompt detected; rerun start-observer.sh --reset after reviewing observer.log' > "$SENTINEL_FILE"
+}
+
+stop_observer_if_running() {
+  if [ -f "$PID_FILE" ]; then
+    pid=$(cat "$PID_FILE")
+    if kill -0 "$pid" 2>/dev/null; then
+      echo "Stopping observer for ${PROJECT_NAME} (PID: $pid)..."
+      kill "$pid"
+      rm -f "$PID_FILE"
+      echo "Observer stopped."
+      return 0
+    fi
+
+    echo "Observer not running (stale PID file)."
+    rm -f "$PID_FILE"
+    return 1
+  fi
+
+  echo "Observer not running."
+  return 1
+}
 
 # Read config values from config.json
 OBSERVER_INTERVAL_MINUTES=5
 MIN_OBSERVATIONS=20
 OBSERVER_ENABLED=false
 if [ -f "$CONFIG_FILE" ]; then
-  _config=$(CLV2_CONFIG="$CONFIG_FILE" python3 -c "
+  if [ -z "$PYTHON_CMD" ]; then
+    echo "No python interpreter found; using built-in observer defaults." >&2
+  else
+    _config=$(CLV2_CONFIG="$CONFIG_FILE" "$PYTHON_CMD" -c "
 import json, os
 with open(os.environ['CLV2_CONFIG']) as f:
     cfg = json.load(f)
@@ -57,17 +87,18 @@ print(str(obs.get('enabled', False)).lower())
 " 2>/dev/null || echo "5
 20
 false")
-  _interval=$(echo "$_config" | sed -n '1p')
-  _min_obs=$(echo "$_config" | sed -n '2p')
-  _enabled=$(echo "$_config" | sed -n '3p')
-  if [ "$_interval" -gt 0 ] 2>/dev/null; then
-    OBSERVER_INTERVAL_MINUTES="$_interval"
-  fi
-  if [ "$_min_obs" -gt 0 ] 2>/dev/null; then
-    MIN_OBSERVATIONS="$_min_obs"
-  fi
-  if [ "$_enabled" = "true" ]; then
-    OBSERVER_ENABLED=true
+    _interval=$(echo "$_config" | sed -n '1p')
+    _min_obs=$(echo "$_config" | sed -n '2p')
+    _enabled=$(echo "$_config" | sed -n '3p')
+    if [ "$_interval" -gt 0 ] 2>/dev/null; then
+      OBSERVER_INTERVAL_MINUTES="$_interval"
+    fi
+    if [ "$_min_obs" -gt 0 ] 2>/dev/null; then
+      MIN_OBSERVATIONS="$_min_obs"
+    fi
+    if [ "$_enabled" = "true" ]; then
+      OBSERVER_ENABLED=true
+    fi
   fi
 fi
 OBSERVER_INTERVAL_SECONDS=$((OBSERVER_INTERVAL_MINUTES * 60))
@@ -82,22 +113,31 @@ case "$UNAME_LOWER" in
   *mingw*|*msys*|*cygwin*) IS_WINDOWS=true ;;
 esac
 
-case "${1:-start}" in
+ACTION="start"
+RESET_OBSERVER=false
+
+for arg in "$@"; do
+  case "$arg" in
+    start|stop|status)
+      ACTION="$arg"
+      ;;
+    --reset)
+      RESET_OBSERVER=true
+      ;;
+    *)
+      echo "Usage: $0 [start|stop|status] [--reset]"
+      exit 1
+      ;;
+  esac
+done
+
+if [ "$RESET_OBSERVER" = "true" ]; then
+  rm -f "$SENTINEL_FILE"
+fi
+
+case "$ACTION" in
   stop)
-    if [ -f "$PID_FILE" ]; then
-      pid=$(cat "$PID_FILE")
-      if kill -0 "$pid" 2>/dev/null; then
-        echo "Stopping observer for ${PROJECT_NAME} (PID: $pid)..."
-        kill "$pid"
-        rm -f "$PID_FILE"
-        echo "Observer stopped."
-      else
-        echo "Observer not running (stale PID file)."
-        rm -f "$PID_FILE"
-      fi
-    else
-      echo "Observer not running."
-    fi
+    stop_observer_if_running || true
     exit 0
     ;;
 
@@ -148,8 +188,10 @@ case "${1:-start}" in
       exit 1
     fi
 
-    # The observer loop — fully detached with nohup, IO redirected to log.
-    # Variables are passed via env; observer-loop.sh handles analysis/retry flow.
+    mkdir -p "$PROJECT_DIR"
+    touch "$LOG_FILE"
+    start_line=$(wc -l < "$LOG_FILE" 2>/dev/null || echo 0)
+
     nohup env \
       CONFIG_DIR="$CONFIG_DIR" \
       PID_FILE="$PID_FILE" \
@@ -162,10 +204,19 @@ case "${1:-start}" in
       MIN_OBSERVATIONS="$MIN_OBSERVATIONS" \
       OBSERVER_INTERVAL_SECONDS="$OBSERVER_INTERVAL_SECONDS" \
       CLV2_IS_WINDOWS="$IS_WINDOWS" \
+      CLV2_OBSERVER_PROMPT_PATTERN="$CLV2_OBSERVER_PROMPT_PATTERN" \
       "$OBSERVER_LOOP_SCRIPT" >> "$LOG_FILE" 2>&1 &
 
     # Wait for PID file
     sleep 2
+
+    # Check for confirmation-seeking output in the observer log
+    if tail -n +"$((start_line + 1))" "$LOG_FILE" 2>/dev/null | grep -E -i -q "$CLV2_OBSERVER_PROMPT_PATTERN"; then
+      echo "OBSERVER_ABORT: Confirmation or permission prompt detected in observer output. Failing closed."
+      stop_observer_if_running >/dev/null 2>&1 || true
+      write_guard_sentinel
+      exit 2
+    fi
 
     if [ -f "$PID_FILE" ]; then
       pid=$(cat "$PID_FILE")
@@ -183,7 +234,7 @@ case "${1:-start}" in
     ;;
 
   *)
-    echo "Usage: $0 {start|stop|status}"
+    echo "Usage: $0 [start|stop|status] [--reset]"
     exit 1
     ;;
 esac

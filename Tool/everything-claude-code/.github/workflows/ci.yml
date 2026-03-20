@@ -156,6 +156,9 @@ jobs:
         with:
           node-version: '20.x'
 
+      - name: Install validation dependencies
+        run: npm ci --ignore-scripts
+
       - name: Validate agents
         run: node scripts/ci/validate-agents.js
         continue-on-error: false
@@ -174,6 +177,10 @@ jobs:
 
       - name: Validate rules
         run: node scripts/ci/validate-rules.js
+        continue-on-error: false
+
+      - name: Validate catalog counts
+        run: node scripts/ci/catalog.js --text
         continue-on-error: false
 
   security:

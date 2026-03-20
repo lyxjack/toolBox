@@ -13,6 +13,7 @@ from .scrape_parser import ScrapeParser
 from .github_parser import GitHubParser
 from .pdf_parser import PDFParser
 from .word_parser import WordParser
+from .epub_parser import EpubParser
 from .video_parser import VideoParser
 from .unified_parser import UnifiedParser
 from .enhance_parser import EnhanceParser
@@ -30,6 +31,19 @@ from .update_parser import UpdateParser
 from .multilang_parser import MultilangParser
 from .quality_parser import QualityParser
 from .workflows_parser import WorkflowsParser
+from .sync_config_parser import SyncConfigParser
+
+# New source type parsers (v3.2.0+)
+from .jupyter_parser import JupyterParser
+from .html_parser import HtmlParser
+from .openapi_parser import OpenAPIParser
+from .asciidoc_parser import AsciiDocParser
+from .pptx_parser import PptxParser
+from .rss_parser import RssParser
+from .manpage_parser import ManPageParser
+from .confluence_parser import ConfluenceParser
+from .notion_parser import NotionParser
+from .chat_parser import ChatParser
 
 # Registry of all parsers (in order of usage frequency)
 PARSERS = [
@@ -44,6 +58,7 @@ PARSERS = [
     EnhanceStatusParser(),
     PDFParser(),
     WordParser(),
+    EpubParser(),
     VideoParser(),
     UnifiedParser(),
     EstimateParser(),
@@ -56,6 +71,18 @@ PARSERS = [
     MultilangParser(),
     QualityParser(),
     WorkflowsParser(),
+    SyncConfigParser(),
+    # New source types (v3.2.0+)
+    JupyterParser(),
+    HtmlParser(),
+    OpenAPIParser(),
+    AsciiDocParser(),
+    PptxParser(),
+    RssParser(),
+    ManPageParser(),
+    ConfluenceParser(),
+    NotionParser(),
+    ChatParser(),
 ]
 
 

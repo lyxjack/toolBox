@@ -28,6 +28,7 @@ import argparse
 import json
 import logging
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -380,8 +381,6 @@ def extract_markdown_structure(content: str) -> dict[str, Any]:
     Returns:
         Dictionary with extracted structure
     """
-    import re
-
     structure = {
         "title": None,
         "headers": [],
@@ -526,8 +525,6 @@ def extract_rst_structure(content: str) -> dict[str, Any]:
         logger.warning(f"Enhanced RST parser failed: {e}, using basic parser")
 
     # Legacy basic extraction (fallback)
-    import re
-
     structure = {
         "title": None,
         "headers": [],
@@ -679,6 +676,14 @@ def process_markdown_docs(
     processed_docs = []
     categories = {}
 
+    # Pre-import parsers once outside the loop
+    try:
+        from skill_seekers.cli.parsers.extractors import RstParser, MarkdownParser
+    except ImportError:
+        RstParser = None  # type: ignore[assignment,misc]
+        MarkdownParser = None  # type: ignore[assignment,misc]
+        logger.debug("Unified parsers not available, using legacy parsers")
+
     for md_path in md_files:
         try:
             content = md_path.read_text(encoding="utf-8", errors="ignore")
@@ -701,7 +706,8 @@ def process_markdown_docs(
                 parsed_doc = None
 
                 try:
-                    from skill_seekers.cli.parsers.extractors import RstParser, MarkdownParser
+                    if RstParser is None or MarkdownParser is None:
+                        raise ImportError("Parsers not available")
 
                     # Use appropriate unified parser based on file extension
                     if md_path.suffix.lower() in RST_EXTENSIONS:
@@ -957,8 +963,6 @@ Return JSON with format:
 
             # Parse response and merge enhancements
             try:
-                import re
-
                 json_match = re.search(r"\{.*\}", response.content[0].text, re.DOTALL)
                 if json_match:
                     enhancements = json.loads(json_match.group())
@@ -1022,8 +1026,6 @@ Output JSON only:
         os.unlink(prompt_file)
 
         if result.returncode == 0 and result.stdout:
-            import re
-
             json_match = re.search(r"\{.*\}", result.stdout, re.DOTALL)
             if json_match:
                 enhancements = json.loads(json_match.group())

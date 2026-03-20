@@ -32,7 +32,16 @@ Add to your `opencode.json`:
   "plugin": ["ecc-universal"]
 }
 ```
-After installation, the `ecc-install` CLI becomes available:
+
+This loads the ECC OpenCode plugin module from npm:
+- hook/event integrations
+- bundled custom tools exported by the plugin
+
+It does **not** auto-register the full ECC command/agent/instruction catalog in your project config. For the full OpenCode setup, either:
+- run OpenCode inside this repository, or
+- copy the relevant `.opencode/commands/`, `.opencode/prompts/`, `.opencode/instructions/`, and the `instructions`, `agent`, and `command` config entries into your own project
+
+After installation, the `ecc-install` CLI is also available:
 
 ```bash
 npx ecc-install typescript
@@ -180,7 +189,7 @@ Full configuration in `opencode.json`:
   "$schema": "https://opencode.ai/config.json",
   "model": "anthropic/claude-sonnet-4-5",
   "small_model": "anthropic/claude-haiku-4-5",
-  "plugin": ["./.opencode/plugins"],
+  "plugin": ["./plugins"],
   "instructions": [
     "skills/tdd-workflow/SKILL.md",
     "skills/security-review/SKILL.md"

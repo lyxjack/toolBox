@@ -3,16 +3,16 @@
 Skill Seeker MCP Server (FastMCP Implementation)
 
 Modern, decorator-based MCP server using FastMCP for simplified tool registration.
-Provides 33 tools for generating Claude AI skills from documentation.
+Provides 34 tools for generating Claude AI skills from documentation.
 
 This is a streamlined alternative to server.py (2200 lines → 708 lines, 68% reduction).
 All tool implementations are delegated to modular tool files in tools/ directory.
 
 **Architecture:**
 - FastMCP server with decorator-based tool registration
-- 33 tools organized into 7 categories:
+- 34 tools organized into 7 categories:
   * Config tools (3): generate_config, list_configs, validate_config
-  * Scraping tools (10): estimate_pages, scrape_docs, scrape_github, scrape_pdf, scrape_video, scrape_codebase, detect_patterns, extract_test_examples, build_how_to_guides, extract_config_patterns
+  * Scraping tools (11): estimate_pages, scrape_docs, scrape_github, scrape_pdf, scrape_video, scrape_codebase, detect_patterns, extract_test_examples, build_how_to_guides, extract_config_patterns, scrape_generic
   * Packaging tools (4): package_skill, upload_skill, enhance_skill, install_skill
   * Splitting tools (2): split_config, generate_router
   * Source tools (5): fetch_config, submit_config, add_config_source, list_config_sources, remove_config_source
@@ -97,12 +97,15 @@ try:
         remove_config_source_impl,
         scrape_codebase_impl,
         scrape_docs_impl,
+        scrape_generic_impl,
         scrape_github_impl,
         scrape_pdf_impl,
         scrape_video_impl,
         # Splitting tools
         split_config_impl,
         submit_config_impl,
+        # Sync config tools
+        sync_config_impl,
         upload_skill_impl,
         validate_config_impl,
         # Workflow tools
@@ -139,11 +142,13 @@ except ImportError:
         remove_config_source_impl,
         scrape_codebase_impl,
         scrape_docs_impl,
+        scrape_generic_impl,
         scrape_github_impl,
         scrape_pdf_impl,
         scrape_video_impl,
         split_config_impl,
         submit_config_impl,
+        sync_config_impl,
         upload_skill_impl,
         validate_config_impl,
         list_workflows_impl,
@@ -252,7 +257,53 @@ async def validate_config(config_path: str) -> str:
 
 
 # ============================================================================
-# SCRAPING TOOLS (10 tools)
+# SYNC CONFIG TOOLS (1 tool)
+# ============================================================================
+
+
+@safe_tool_decorator(description="Sync a config's start_urls against what's live on the docs site.")
+async def sync_config(
+    config_path: str,
+    apply: bool = False,
+    depth: int = 2,
+    max_pages: int = 500,
+    rate_limit: float | None = None,
+    source_index: int = 0,
+) -> str:
+    """
+    Sync a config file's start_urls against the live docs site.
+
+    Crawls seed/nav pages, discovers internal links, and diffs against the
+    config's existing start_urls. Optionally writes the update with apply=True.
+
+    Args:
+        config_path: Path to the config JSON file.
+        apply: Write changes back to the config file (default: False).
+        depth: BFS crawl depth from seed pages (default: 2).
+        max_pages: Maximum URLs to discover (default: 500).
+        rate_limit: Override config rate limit (seconds between requests).
+        source_index: Index of the documentation source to sync (default: 0).
+
+    Returns:
+        Report of added/removed URLs.
+    """
+    result = await sync_config_impl(
+        {
+            "config_path": config_path,
+            "apply": apply,
+            "depth": depth,
+            "max_pages": max_pages,
+            "rate_limit": rate_limit,
+            "source_index": source_index,
+        }
+    )
+    if isinstance(result, list) and result:
+        return result[0].text if hasattr(result[0], "text") else str(result[0])
+    return str(result)
+
+
+# ============================================================================
+# SCRAPING TOOLS (11 tools)
 # ============================================================================
 
 
@@ -769,6 +820,50 @@ async def extract_config_patterns(
     }
 
     result = await extract_config_patterns_impl(args)
+    if isinstance(result, list) and result:
+        return result[0].text if hasattr(result[0], "text") else str(result[0])
+    return str(result)
+
+
+@safe_tool_decorator(
+    description="Scrape content from new source types: jupyter, html, openapi, asciidoc, pptx, confluence, notion, rss, manpage, chat. A generic entry point that delegates to the appropriate CLI scraper module."
+)
+async def scrape_generic(
+    source_type: str,
+    name: str,
+    path: str | None = None,
+    url: str | None = None,
+) -> str:
+    """
+    Scrape content from various source types and build a skill.
+
+    A generic scraper that supports 10 new source types. It delegates to the
+    corresponding CLI scraper module (e.g., skill_seekers.cli.jupyter_scraper).
+
+    File-based types (jupyter, html, openapi, asciidoc, pptx, manpage, chat)
+    typically use the 'path' parameter. URL-based types (confluence, notion, rss)
+    typically use the 'url' parameter.
+
+    Args:
+        source_type: Source type to scrape. One of: jupyter, html, openapi,
+            asciidoc, pptx, confluence, notion, rss, manpage, chat.
+        name: Skill name for the output
+        path: File or directory path (for file-based sources like jupyter, html, pptx)
+        url: URL (for URL-based sources like confluence, notion, rss)
+
+    Returns:
+        Scraping results with file paths and statistics.
+    """
+    args = {
+        "source_type": source_type,
+        "name": name,
+    }
+    if path:
+        args["path"] = path
+    if url:
+        args["url"] = url
+
+    result = await scrape_generic_impl(args)
     if isinstance(result, list) and result:
         return result[0].text if hasattr(result[0], "text") else str(result[0])
     return str(result)

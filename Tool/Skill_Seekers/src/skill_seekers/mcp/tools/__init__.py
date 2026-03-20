@@ -64,6 +64,9 @@ from .scraping_tools import (
     scrape_pdf_tool as scrape_pdf_impl,
 )
 from .scraping_tools import (
+    scrape_generic_tool as scrape_generic_impl,
+)
+from .scraping_tools import (
     scrape_video_tool as scrape_video_impl,
 )
 from .source_tools import (
@@ -99,6 +102,9 @@ from .vector_db_tools import (
 from .vector_db_tools import (
     export_to_weaviate_impl,
 )
+from .sync_config_tools import (
+    sync_config_tool as sync_config_impl,
+)
 from .workflow_tools import (
     create_workflow_tool as create_workflow_impl,
 )
@@ -132,6 +138,7 @@ __all__ = [
     "extract_test_examples_impl",
     "build_how_to_guides_impl",
     "extract_config_patterns_impl",
+    "scrape_generic_impl",
     # Packaging tools
     "package_skill_impl",
     "upload_skill_impl",
@@ -151,6 +158,8 @@ __all__ = [
     "export_to_chroma_impl",
     "export_to_faiss_impl",
     "export_to_qdrant_impl",
+    # Sync config tools
+    "sync_config_impl",
     # Workflow tools
     "list_workflows_impl",
     "get_workflow_impl",

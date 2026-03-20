@@ -46,6 +46,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from skill_seekers.cli.utils import build_line_index, offset_to_line
+
 try:
     import networkx as nx
 
@@ -95,6 +97,11 @@ class DependencyAnalyzer:
         self.graph = nx.DiGraph()  # Directed graph for dependencies
         self.file_dependencies: dict[str, list[DependencyInfo]] = {}
         self.file_nodes: dict[str, FileNode] = {}
+        self._newline_offsets: list[int] = []
+
+    def _offset_to_line(self, offset: int) -> int:
+        """Convert a character offset to a 1-based line number using bisect."""
+        return offset_to_line(self._newline_offsets, offset)
 
     def analyze_file(self, file_path: str, content: str, language: str) -> list[DependencyInfo]:
         """
@@ -109,6 +116,9 @@ class DependencyAnalyzer:
         Returns:
             List of DependencyInfo objects
         """
+        # Build line index once for O(log n) lookups in all extractors
+        self._newline_offsets = build_line_index(content)
+
         if language == "Python":
             deps = self._extract_python_imports(content, file_path)
         elif language == "GDScript":
@@ -216,7 +226,7 @@ class DependencyAnalyzer:
         preload_pattern = r'(?:const|var)\s+\w+\s*=\s*preload\("(.+?)"\)'
         for match in re.finditer(preload_pattern, content):
             resource_path = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             # Convert res:// paths to relative
             if resource_path.startswith("res://"):
@@ -236,7 +246,7 @@ class DependencyAnalyzer:
         load_pattern = r'(?:const|var)\s+\w+\s*=\s*load\("(.+?)"\)'
         for match in re.finditer(load_pattern, content):
             resource_path = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             if resource_path.startswith("res://"):
                 resource_path = resource_path[6:]
@@ -255,7 +265,7 @@ class DependencyAnalyzer:
         extends_path_pattern = r'extends\s+"(.+?)"'
         for match in re.finditer(extends_path_pattern, content):
             resource_path = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             if resource_path.startswith("res://"):
                 resource_path = resource_path[6:]
@@ -275,7 +285,7 @@ class DependencyAnalyzer:
         extends_class_pattern = r"extends\s+([A-Z]\w+)"
         for match in re.finditer(extends_class_pattern, content):
             class_name = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             # Skip built-in Godot classes (Node, Resource, etc.)
             if class_name not in (
@@ -334,7 +344,7 @@ class DependencyAnalyzer:
         import_pattern = r"import\s+(?:[\w\s{},*]+\s+from\s+)?['\"]([^'\"]+)['\"]"
         for match in re.finditer(import_pattern, content):
             module = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
             is_relative = module.startswith(".") or module.startswith("/")
 
             deps.append(
@@ -351,7 +361,7 @@ class DependencyAnalyzer:
         require_pattern = r"require\s*\(['\"]([^'\"]+)['\"]\)"
         for match in re.finditer(require_pattern, content):
             module = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
             is_relative = module.startswith(".") or module.startswith("/")
 
             deps.append(
@@ -380,7 +390,7 @@ class DependencyAnalyzer:
         include_pattern = r'#include\s+[<"]([^>"]+)[>"]'
         for match in re.finditer(include_pattern, content):
             header = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             # Headers with "" are usually local, <> are system headers
             is_relative = '"' in match.group(0)
@@ -417,7 +427,7 @@ class DependencyAnalyzer:
         for match in re.finditer(using_pattern, content):
             alias = match.group(1)  # Optional alias
             namespace = match.group(2)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             # Skip 'using' statements for IDisposable (using var x = ...)
             if "=" in match.group(0) and not alias:
@@ -454,7 +464,7 @@ class DependencyAnalyzer:
         for match in re.finditer(single_import_pattern, content):
             match.group(1)  # Optional alias
             package = match.group(2)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             # Check if relative (starts with ./ or ../)
             is_relative = package.startswith("./")
@@ -516,7 +526,7 @@ class DependencyAnalyzer:
         use_pattern = r"use\s+([\w:{}]+(?:\s*,\s*[\w:{}]+)*|[\w:]+::\{[^}]+\})\s*;"
         for match in re.finditer(use_pattern, content):
             module_path = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             # Determine if relative
             is_relative = module_path.startswith(("self::", "super::"))
@@ -571,7 +581,7 @@ class DependencyAnalyzer:
         import_pattern = r"import\s+(?:static\s+)?([A-Za-z_][\w.]*(?:\.\*)?)\s*;"
         for match in re.finditer(import_pattern, content):
             import_path = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             deps.append(
                 DependencyInfo(
@@ -603,7 +613,7 @@ class DependencyAnalyzer:
         require_pattern = r"require\s+['\"]([^'\"]+)['\"]"
         for match in re.finditer(require_pattern, content):
             module = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             deps.append(
                 DependencyInfo(
@@ -619,7 +629,7 @@ class DependencyAnalyzer:
         require_relative_pattern = r"require_relative\s+['\"]([^'\"]+)['\"]"
         for match in re.finditer(require_relative_pattern, content):
             module = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             deps.append(
                 DependencyInfo(
@@ -635,7 +645,7 @@ class DependencyAnalyzer:
         load_pattern = r"load\s+['\"]([^'\"]+)['\"]"
         for match in re.finditer(load_pattern, content):
             module = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             deps.append(
                 DependencyInfo(
@@ -669,7 +679,7 @@ class DependencyAnalyzer:
         require_pattern = r"(?:require|include)(?:_once)?\s+['\"]([^'\"]+)['\"]"
         for match in re.finditer(require_pattern, content):
             module = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             # Determine import type
             import_type = "require" if "require" in match.group(0) else "include"
@@ -691,7 +701,7 @@ class DependencyAnalyzer:
         use_pattern = r"use\s+([A-Za-z_][\w\\]*)\s*(?:as\s+\w+)?\s*;"
         for match in re.finditer(use_pattern, content):
             namespace = match.group(1)
-            line_num = content[: match.start()].count("\n") + 1
+            line_num = self._offset_to_line(match.start())
 
             deps.append(
                 DependencyInfo(
@@ -908,7 +918,7 @@ class DependencyAnalyzer:
                     source_file=file_path,
                     imported_module=resource_path,
                     import_type="ext_resource",
-                    line_number=content[: match.start()].count("\n") + 1,
+                    line_number=self._offset_to_line(match.start()),
                 )
             )
 
@@ -924,7 +934,7 @@ class DependencyAnalyzer:
                     source_file=file_path,
                     imported_module=resource_path,
                     import_type="preload",
-                    line_number=content[: match.start()].count("\n") + 1,
+                    line_number=self._offset_to_line(match.start()),
                 )
             )
 
