@@ -3,7 +3,7 @@
         "description": "Cross-reference mapping for anchor-based architecture. Intra-category overlaps eliminated by merge. Only inter-category references remain.",
         "architecture": "anchor-based",
         "totalAnchors": 12,
-        "lastUpdated": "2026-03-11"
+        "lastUpdated": "2026-03-19"
     },
     "interCategoryReferences": [
         {
@@ -45,6 +45,11 @@
             "anchor": "meta-tooling",
             "relatedAnchors": ["ai-agent", "workflow"],
             "note": "Skill creation/auditing relates to ai-agent evaluation. Configuration relates to workflow setup."
+        },
+        {
+            "anchor": "content",
+            "relatedAnchors": ["frontend", "backend"],
+            "note": "Content CMS modules (Sanity/Contentful/Strapi) relate to frontend framework integration (Next.js, Astro) and backend API delivery patterns."
         }
     ],
     "superseded": [

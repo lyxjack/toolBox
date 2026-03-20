@@ -92,10 +92,11 @@
             "name": "content",
             "category": "content",
             "anchorBase": "content-strategy",
-            "confidence": 0.55,
+            "confidence": 0.58,
             "mergedCount": 5,
             "path": "KI/External_KI/skills/content/content.md",
-            "usageNotes": "Content strategy, article writing, social media, presentations."
+            "lastUpdated": "2026-03-19",
+            "usageNotes": "Content strategy, article writing, social media, presentations, headless CMS selection and modeling."
         },
         {
             "name": "business",

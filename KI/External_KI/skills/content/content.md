@@ -2,14 +2,16 @@
 name: content
 category: content
 type: anchor
-confidence: 0.55
+confidence: 0.58
 anchor_base: content-strategy
 created: 2026-03-11
-lastUpdated: 2026-03-11
+lastUpdated: 2026-03-19
 merged_from:
   - name: content-strategy
-    confidence: 0.55
+    confidence: 0.58
     origin: independent
+    updated: 2026-03-19
+    note: "v1.1.0 → v1.4.0, added headless CMS modules"
   - name: frontend-slides
     confidence: 0.48
     origin: ECC
@@ -248,6 +250,110 @@ When creating a content strategy, provide:
 1. **Content Pillars** — 3-5 pillars with rationale, subtopic clusters, product connection
 2. **Priority Topics** — topic/title, searchable/shareable, content type, target keyword and buyer stage, customer research backing
 3. **Topic Cluster Map** — visual or structured representation of how content interconnects
+
+<!-- incremental-update: content-strategy, v1.1.0 → v1.4.0, 2026-03-19 -->
+### Headless CMS for Content Strategy
+
+When selecting a CMS for marketing content, choosing between headless and traditional architectures is a foundational decision.
+
+#### Headless vs Traditional CMS
+
+A headless CMS separates content management from presentation. Content is stored in a structured backend and delivered via API to any frontend.
+
+**When Headless Makes Sense:**
+- Multiple frontends consume the same content (web, mobile, email)
+- Developers want full control over the frontend stack
+- Content needs to be reused across channels
+- Building with modern frameworks (Next.js, Remix, Astro)
+- Marketing needs structured, reusable content blocks
+
+**When Traditional Works Better:**
+- Small team with no dedicated developers
+- Simple blog or brochure site
+- WYSIWYG editing is a hard requirement
+- Budget is tight and WordPress/Webflow does the job
+
+| Factor | Headless | Traditional |
+|--------|----------|-------------|
+| Multi-channel delivery | Yes | Limited |
+| Developer control | Full | Constrained |
+| Non-technical editing | Requires setup | Built-in |
+| Time to launch | Longer | Faster |
+| Content reuse | Native | Manual |
+| Hosting flexibility | Any frontend | Platform-dependent |
+
+#### Content Modeling for Marketing
+
+Core principles:
+1. **Think in types, not pages.** A "Landing Page" is a content type with fields, not an HTML file.
+2. **Separate content from presentation.** Store the headline text, not the styled headline.
+3. **Design for reuse.** If testimonials appear on 5 pages, create a Testimonial type and reference it.
+4. **Keep models flat.** Deeply nested structures are hard to query and maintain.
+
+Common marketing content types:
+
+| Type | Key Fields | Notes |
+|------|-----------|-------|
+| **Landing Page** | title, slug, hero, sections[], seo | Modular sections for flexibility |
+| **Blog Post** | title, slug, body, author, category, tags, publishedAt, seo | Rich text body |
+| **Case Study** | title, customer, challenge, solution, results, metrics[] | Link to related products |
+| **Testimonial** | quote, author, role, company, avatar, rating | Reference from landing pages |
+| **FAQ** | question, answer, category | Group by category for programmatic pages |
+| **CTA Block** | heading, body, buttonText, buttonUrl, variant | Reusable across pages |
+
+SEO fields every page-level content type needs: `metaTitle` (50-60 chars), `metaDescription` (150-160 chars), `ogImage` (1200x630px), `slug`, `canonicalUrl`, `noIndex`, `structuredData`.
+
+#### Editorial Workflows
+
+**Draft -> Review -> Publish Cycle:**
+1. Draft -- Author creates or edits content
+2. Review -- Editor reviews for accuracy, brand voice, SEO
+3. Approve -- Stakeholder signs off
+4. Schedule -- Set publish date/time
+5. Publish -- Content goes live via API
+
+**Preview APIs by Platform:**
+- **Sanity**: Real-time preview with `useLiveQuery` or Presentation tool
+- **Contentful**: Preview API (`preview.contentful.com`) with separate access token
+- **Strapi**: Draft & Publish system with `status=draft` query parameter (v5)
+
+| Role | Can Create | Can Edit | Can Publish | Can Delete |
+|------|:----------:|:--------:|:-----------:|:----------:|
+| Author | Yes | Own | No | Own drafts |
+| Editor | Yes | All | Yes | Drafts |
+| Admin | Yes | All | Yes | All |
+
+#### Platform Comparison
+
+| Feature | Sanity | Contentful | Strapi |
+|---------|--------|------------|--------|
+| Hosting | Cloud (managed) | Cloud (managed) | Self-hosted or Cloud |
+| Query Language | GROQ | REST / GraphQL | REST / GraphQL |
+| Free Tier | Generous | Limited | Open source (free) |
+| Real-time Collab | Yes (built-in) | Limited | No |
+| Best For | Developer flexibility | Enterprise multi-locale | Budget / self-hosted |
+| Content Modeling | Schema-as-code | Web UI | Web UI or code |
+| Media Handling | Built-in DAM | Built-in | Plugin-based |
+
+**Sanity** -- Best when developers and marketers collaborate closely. GROQ is powerful and flexible. Schema defined in code (version-controlled). Steeper learning curve.
+
+**Contentful** -- Best for enterprises with multi-market content needs. Excellent multi-locale support. Pricing scales with content types and locales.
+
+**Strapi** -- Best for teams with DevOps capability who want full control and no vendor lock-in. Open source, self-hosted option.
+
+**Others worth knowing:** Hygraph (GraphQL-native), Keystatic (Git-based), Payload (TypeScript-first), Builder.io (visual editor), Prismic (slice-based).
+
+#### CMS Implementation Checklist
+
+- [ ] Define content types based on page types and reusable blocks
+- [ ] Add SEO fields to every page-level content type
+- [ ] Set up preview/draft mode in frontend
+- [ ] Configure roles and permissions for team
+- [ ] Create sample content for each type before building frontend
+- [ ] Set up webhook notifications for content changes (rebuild triggers)
+- [ ] Document content guidelines for editors (field descriptions, character limits)
+- [ ] Test content delivery performance (CDN, caching, ISR)
+- [ ] Plan migration strategy if moving from existing CMS
 
 ---
 

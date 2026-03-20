@@ -3,7 +3,7 @@
         "description": "Duplicate skill governance for toolBox. Anchor-based architecture — all intra-category duplicates resolved by merge into anchors.",
         "version": "2.0",
         "architecture": "anchor-based",
-        "lastUpdated": "2026-03-11",
+        "lastUpdated": "2026-03-19",
         "totalAnchors": 12,
         "totalOriginalSkills": 84,
         "migrationDate": "2026-03-11",
@@ -159,11 +159,20 @@
             "mergedCount": 5,
             "anchorBase": "content-strategy",
             "mergedSkills": [
-                "content-strategy (0.55)",
+                "content-strategy (0.58, updated 2026-03-19 v1.1.0→v1.4.0)",
                 "frontend-slides (0.48)",
                 "social-content (0.43)",
                 "article-writing (0.37)",
                 "content-engine (0.37)"
+            ],
+            "incrementalUpdates": [
+                {
+                    "date": "2026-03-19",
+                    "source": "content-strategy v1.4.0 via /find-update",
+                    "modulesAdded": ["headless-cms-decision", "content-modeling", "editorial-workflows", "platform-comparison", "cms-implementation-checklist"],
+                    "modulesSkipped": ["cross-skill-references (no substance)"],
+                    "linesAdded": 106
+                }
             ]
         },
         {

@@ -1,0 +1,213 @@
+{
+    "_meta": {
+        "description": "Tool/ 外部库溯源与更新追踪。/find-update 工作流的核心数据源。",
+        "version": "1.0",
+        "lastFullScan": "2026-03-19",
+        "totalDirs": 15,
+        "totalUpstreams": 8
+    },
+    "upstreams": [
+        {
+            "id": "anthropics-skills",
+            "github": "https://github.com/anthropics/skills",
+            "type": "monorepo",
+            "extractPattern": "skills/{skillDir}/",
+            "trackMethod": "commits",
+            "dirs": ["canvas-design", "find-skills", "skill-creator"]
+        },
+        {
+            "id": "anthropics-claude-code",
+            "github": "https://github.com/anthropics/claude-code",
+            "type": "monorepo",
+            "extractPattern": "plugins/frontend-design/skills/frontend-design/",
+            "trackMethod": "commits",
+            "dirs": ["frontend-design"]
+        },
+        {
+            "id": "obra-superpowers",
+            "github": "https://github.com/obra/superpowers",
+            "type": "monorepo",
+            "extractPattern": "skills/{skillDir}/",
+            "rootSkill": "superpowers",
+            "trackMethod": "releases+commits",
+            "dirs": ["superpowers", "subagent-driven-development", "systematic-debugging", "test-driven-development"]
+        },
+        {
+            "id": "vercel-agent-skills",
+            "github": "https://github.com/vercel-labs/agent-skills",
+            "type": "monorepo",
+            "extractPattern": "skills/{skillDir}/",
+            "trackMethod": "commits",
+            "dirs": ["composition-patterns", "react-native-skills"]
+        },
+        {
+            "id": "coreyhaines-marketingskills",
+            "github": "https://github.com/coreyhaines31/marketingskills",
+            "type": "monorepo",
+            "extractPattern": "skills/{skillDir}/",
+            "trackMethod": "releases+commits",
+            "dirs": ["content-strategy", "social-content"]
+        },
+        {
+            "id": "affaan-ecc",
+            "github": "https://github.com/affaan-m/everything-claude-code",
+            "type": "standalone",
+            "extractPattern": "/",
+            "trackMethod": "releases+commits",
+            "dirs": ["everything-claude-code"]
+        },
+        {
+            "id": "yusuf-skill-seekers",
+            "github": "https://github.com/yusufkaraaslan/Skill_Seekers",
+            "type": "standalone",
+            "extractPattern": "/",
+            "trackMethod": "releases+commits",
+            "dirs": ["Skill_Seekers"]
+        },
+        {
+            "id": "nextlevel-ui-ux",
+            "github": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+            "type": "standalone",
+            "extractPattern": "/",
+            "trackMethod": "releases+commits",
+            "dirs": ["ui-ux-pro-max-skill"]
+        }
+    ],
+    "repos": [
+        {
+            "dir": "canvas-design",
+            "upstream": "anthropics-skills",
+            "subpath": "skills/canvas-design",
+            "currentVersion": null,
+            "lastCommitHash": null,
+            "lastChecked": "2026-03-19",
+            "notes": "No changes since 2025-12. Skipped."
+        },
+        {
+            "dir": "composition-patterns",
+            "upstream": "vercel-agent-skills",
+            "subpath": "skills/composition-patterns",
+            "currentVersion": "1.0.0",
+            "lastCommitHash": null,
+            "lastChecked": "2026-03-19",
+            "notes": "No file changes vs upstream. Skipped."
+        },
+        {
+            "dir": "content-strategy",
+            "upstream": "coreyhaines-marketingskills",
+            "subpath": "skills/content-strategy",
+            "currentVersion": "1.4.0",
+            "lastCommitHash": "9d4d29a",
+            "lastChecked": "2026-03-19",
+            "notes": "Updated earlier this session from v1.1.0 to v1.4.0."
+        },
+        {
+            "dir": "everything-claude-code",
+            "upstream": "affaan-ecc",
+            "subpath": "/",
+            "currentVersion": "1.8.0+",
+            "lastCommitHash": "1b21e08",
+            "lastChecked": "2026-03-19",
+            "notes": "Updated. 397 files changed. 12+ new skills (claude-api, deep-research, mcp-server-patterns, etc)."
+        },
+        {
+            "dir": "find-skills",
+            "upstream": "anthropics-skills",
+            "subpath": "skills/find-skills",
+            "currentVersion": null,
+            "lastCommitHash": null,
+            "lastChecked": "2026-03-19",
+            "notes": "No subpath commits found. Skipped."
+        },
+        {
+            "dir": "frontend-design",
+            "upstream": "anthropics-claude-code",
+            "subpath": "plugins/frontend-design/skills/frontend-design",
+            "currentVersion": null,
+            "lastCommitHash": null,
+            "lastChecked": "2026-03-19",
+            "notes": "No changes since 2025-11. Skipped."
+        },
+        {
+            "dir": "react-native-skills",
+            "upstream": "vercel-agent-skills",
+            "subpath": "skills/react-native-skills",
+            "currentVersion": "1.0.0",
+            "lastCommitHash": null,
+            "lastChecked": "2026-03-19",
+            "notes": "No file changes vs upstream. Skipped."
+        },
+        {
+            "dir": "Skill_Seekers",
+            "upstream": "yusuf-skill-seekers",
+            "subpath": "/",
+            "currentVersion": "3.3.0",
+            "lastCommitHash": "37a23e6",
+            "lastChecked": "2026-03-19",
+            "notes": "Updated from v3.2.0 to v3.3.0. Win compat, CLI fixes, distribution files, multi-lang READMEs."
+        },
+        {
+            "dir": "skill-creator",
+            "upstream": "anthropics-skills",
+            "subpath": "skills/skill-creator",
+            "currentVersion": null,
+            "lastCommitHash": null,
+            "lastChecked": "2026-03-19",
+            "notes": "No file changes vs upstream. Skipped."
+        },
+        {
+            "dir": "social-content",
+            "upstream": "coreyhaines-marketingskills",
+            "subpath": "skills/social-content",
+            "currentVersion": "1.1.0",
+            "lastCommitHash": null,
+            "lastChecked": "2026-03-19",
+            "notes": "No file changes vs upstream. Skipped."
+        },
+        {
+            "dir": "subagent-driven-development",
+            "upstream": "obra-superpowers",
+            "subpath": "skills/subagent-driven-development",
+            "currentVersion": "5.0.5",
+            "lastCommitHash": "8ea3981",
+            "lastChecked": "2026-03-19",
+            "notes": "Updated. 3 files changed: model selection, implementer status handling, context isolation."
+        },
+        {
+            "dir": "superpowers",
+            "upstream": "obra-superpowers",
+            "subpath": "/",
+            "currentVersion": "5.0.5",
+            "lastCommitHash": "8ea3981",
+            "lastChecked": "2026-03-19",
+            "notes": "Updated. 68 files changed. v5.0.2→v5.0.5. Multi-platform fixes, review loop optimization, Cursor support."
+        },
+        {
+            "dir": "systematic-debugging",
+            "upstream": "obra-superpowers",
+            "subpath": "skills/systematic-debugging",
+            "currentVersion": "5.0.5",
+            "lastCommitHash": "8ea3981",
+            "lastChecked": "2026-03-19",
+            "notes": "No file changes vs upstream. Skipped."
+        },
+        {
+            "dir": "test-driven-development",
+            "upstream": "obra-superpowers",
+            "subpath": "skills/test-driven-development",
+            "currentVersion": "5.0.5",
+            "lastCommitHash": "8ea3981",
+            "lastChecked": "2026-03-19",
+            "notes": "No file changes vs upstream. Skipped."
+        },
+        {
+            "dir": "ui-ux-pro-max-skill",
+            "upstream": "nextlevel-ui-ux",
+            "subpath": "/",
+            "currentVersion": "2.5.0",
+            "lastCommitHash": "07f4ef3",
+            "lastChecked": "2026-03-19",
+            "notes": "Updated. 72 files changed. v2.5.0: 6 new skills (banner-design, slides, brand, design, design-system, ui-styling)."
+        }
+    ]
+}

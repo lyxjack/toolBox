@@ -10,7 +10,7 @@
             "name": "content",
             "description": "Unified content anchor: content strategy, presentation slides, social media content, article writing, and content engine automation.",
             "anchorBase": "content-strategy",
-            "confidence": 0.55,
+            "confidence": 0.58,
             "mergedCount": 5,
             "mergedFrom": [
                 "content-strategy",

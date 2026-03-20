@@ -266,15 +266,15 @@
   {
     "path": "KI/External_KI/skills/content/content.md",
     "name": "content",
-    "totalLines": 580,
-    "sizeBytes": 22052,
+    "totalLines": 686,
+    "sizeBytes": 27244,
     "h2Count": 7,
-    "h3Count": 34,
+    "h3Count": 38,
     "codeBlocks": 0,
     "codeLanguages": "",
     "hasFrontmatter": true,
     "hasWhenToUse": false,
-    "hasChecklist": false,
+    "hasChecklist": true,
     "hasGoodBad": true,
     "hasAntiPatterns": true,
     "hasTables": true,
@@ -282,9 +282,11 @@
     "isDeprecated": false,
     "companionFiles": 0,
     "companionDirs": 0,
-    "bulletCount": 147,
-    "rawScore": 45,
-    "confidence": 0.45,
-    "breakdown": "frontmatter:4 | name:2 | desc:0 | whenToUse:0 | headings5+:4 | h3depth:4 | code8+:0 | goodBad:5 | multiLang:0 | examples:3 | checklist:0 | bash:0 | tables:4 | bullets20+:4 | antiPatterns:3 | lines300+:8 | companions:0 | companionDirs:0 | references:4"
+    "bulletCount": 175,
+    "rawScore": 50,
+    "confidence": 0.50,
+    "breakdown": "frontmatter:4 | name:2 | desc:0 | whenToUse:0 | headings5+:4 | h3depth:4 | code8+:0 | goodBad:5 | multiLang:0 | examples:3 | checklist:5 | bash:0 | tables:4 | bullets20+:4 | antiPatterns:3 | lines300+:8 | companions:0 | companionDirs:0 | references:4",
+    "lastAuditUpdate": "2026-03-19",
+    "updateNote": "Incremental update via /find-update: +106 lines (headless CMS modules from content-strategy v1.4.0)"
   }
 ]

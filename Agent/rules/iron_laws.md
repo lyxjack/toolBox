@@ -62,6 +62,16 @@ QA 驳回必须带结构化原因码 (`{CATEGORY}-{SUBCATEGORY}`)。
 原始 skill 仓库中的文件只可读取,不得修改、删除或重写。
 治理层只做映射、评级、推荐。违规触发 ISO-002。
 
+> **例外 — `/find-update` 版本替换授权**
+> 当且仅当通过 `/find-update` 工作流(见 `Agent/workflow/find_update.md`)执行时,
+> 允许对 `Tool/` 中的外部库目录执行**整目录替换**操作(删除旧版本 → 写入新版本)。
+> 前置条件:
+> 1. 上游仓库确认存在更新(通过 `source_registry.json` 追踪)
+> 2. 新旧版本已完成内容对比,模型判定更新有实质价值
+> 3. 替换后必须触发 skill_ingestion.md Phase 2-6 重新入库
+>
+> 此例外不授权任何其他工作流修改 Tool/ 内容。
+
 #### IRON LAW 11 — SKILL FILE GOVERNANCE
 Agent Skills 的增删改必须遵守以下治理流程,违反触发 ISO-003。
 

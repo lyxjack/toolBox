@@ -48,6 +48,13 @@
       "planningRequired": false,
       "defaultMode": "swarm",
       "description": "KI 维护任务，适合蜂群式探索"
+    },
+    "skill-update": {
+      "targetRole": "CTO",
+      "planningRequired": false,
+      "defaultMode": "serial",
+      "workflow": "Agent/workflow/find_update.md",
+      "description": "外部库版本更新。扫描 Tool/ 上游仓库变更，对比后替换并重新入库。触发: /find-update"
     }
   }
 }

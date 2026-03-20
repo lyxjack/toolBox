@@ -177,3 +177,10 @@ git clone <repo-url>
 - 修改或删除 Tool/ 中的源文件(Iron Law 04)
 - 替换 Anchor 文件(Anchor 铁律)
 - 写入与 Anchor 已有内容语义重复的内容
+
+## 关联工作流
+
+- **`/find-update`** — 外部库版本更新工作流(见 `{TOOLBOX}/Agent/workflow/find_update.md`)
+  - `/find` 负责从无到有的 skill 发现与入库
+  - `/find-update` 负责已有 skill 的版本检测与更新入库
+  - 两者共享 `skill_ingestion.md` Phase 2-6 的增量入库管线
