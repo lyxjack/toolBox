@@ -1,10 +1,10 @@
 {
     "_meta": {
         "version": "2.0.0",
-        "generated": "2026-03-19",
+        "generated": "2026-03-21",
         "architecture": "anchor-based",
-        "totalSkills": 12,
-        "totalCategories": 12,
+        "totalSkills": 13,
+        "totalCategories": 13,
         "description": "Each category has exactly ONE anchor md file. Anchors are immutable — only incremental additions allowed.",
         "loadStrategy": "Load master_index.json first (~1500 tokens), then load specific anchor on demand",
         "maxSingleLoadTokens": 7500
@@ -142,6 +142,17 @@
             "anchorBase": "nutrient-document-processing",
             "confidence": 0.53,
             "mergedCount": 5
+        },
+        {
+            "id": "game_development",
+            "label": "游戏开发 / Game Development",
+            "description": "Game loops, physics, collision, rendering, controls, audio, ECS architecture, engine-specific standards (Cocos Creator, Unity, Godot)",
+            "indexFile": "KI/External_KI/categories/game_development.json",
+            "anchor": "game-development",
+            "anchorFile": "KI/External_KI/skills/game-development/game-development.md",
+            "anchorBase": "theone-cocos-standards",
+            "confidence": 0.72,
+            "mergedCount": 2
         }
     ],
     "quickLookup": {
@@ -156,6 +167,7 @@
         "mobile-native": "mobile_native",
         "workflow": "workflow",
         "meta-tooling": "meta_tooling",
-        "business": "business"
+        "business": "business",
+        "game-development": "game_development"
     }
 }

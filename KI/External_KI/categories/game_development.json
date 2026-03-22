@@ -1,0 +1,21 @@
+{
+    "_meta": {
+        "category": "game_development",
+        "label": "游戏开发 / Game Development",
+        "skillCount": 1,
+        "architecture": "anchor-based"
+    },
+    "skills": [
+        {
+            "name": "game-development",
+            "description": "Unified game development anchor: universal fundamentals (game loops, physics, collision, rendering, controls, audio, ECS, publishing) plus engine-specific standards (Cocos Creator 3.x TypeScript). Extensible for Unity, Godot, Unreal.",
+            "anchorBase": "theone-cocos-standards",
+            "confidence": 0.72,
+            "mergedCount": 2,
+            "mergedFrom": [
+                "theone-cocos-standards",
+                "game-engine"
+            ]
+        }
+    ]
+}

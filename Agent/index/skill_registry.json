@@ -1,10 +1,10 @@
 {
     "_meta": {
-        "description": "toolBox skill registry. Anchor-based architecture — 12 anchors, one per category.",
+        "description": "toolBox skill registry. Anchor-based architecture — 13 anchors, one per category.",
         "version": "2.0",
         "architecture": "anchor-based",
-        "lastUpdated": "2026-03-11",
-        "totalAnchors": 12
+        "lastUpdated": "2026-03-21",
+        "totalAnchors": 13
     },
     "anchors": [
         {
@@ -115,6 +115,15 @@
             "mergedCount": 5,
             "path": "KI/External_KI/skills/mobile-native/mobile-native.md",
             "usageNotes": "React Native/Expo, SwiftUI, Swift 6.2 concurrency, actor persistence, protocol DI."
+        },
+        {
+            "name": "game-development",
+            "category": "game_development",
+            "anchorBase": "theone-cocos-standards",
+            "confidence": 0.72,
+            "mergedCount": 2,
+            "path": "KI/External_KI/skills/game-development/game-development.md",
+            "usageNotes": "Universal game dev fundamentals (loops, physics, collision, ECS, rendering, controls) + Cocos Creator 3.x TypeScript standards. Extensible for Unity/Godot/Unreal."
         }
     ]
 }

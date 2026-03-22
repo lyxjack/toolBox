@@ -2,8 +2,8 @@
     "_meta": {
         "description": "Cross-reference mapping for anchor-based architecture. Intra-category overlaps eliminated by merge. Only inter-category references remain.",
         "architecture": "anchor-based",
-        "totalAnchors": 12,
-        "lastUpdated": "2026-03-19"
+        "totalAnchors": 13,
+        "lastUpdated": "2026-03-21"
     },
     "interCategoryReferences": [
         {
@@ -50,6 +50,11 @@
             "anchor": "content",
             "relatedAnchors": ["frontend", "backend"],
             "note": "Content CMS modules (Sanity/Contentful/Strapi) relate to frontend framework integration (Next.js, Astro) and backend API delivery patterns."
+        },
+        {
+            "anchor": "game-development",
+            "relatedAnchors": ["frontend", "language-specific", "mobile-native"],
+            "note": "Web game rendering relates to frontend Canvas/WebGL. Cocos Creator TypeScript patterns relate to language-specific TS standards. Mobile game distribution relates to mobile-native."
         }
     ],
     "superseded": [

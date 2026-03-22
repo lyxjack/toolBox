@@ -3,9 +3,9 @@
         "description": "Duplicate skill governance for toolBox. Anchor-based architecture — all intra-category duplicates resolved by merge into anchors.",
         "version": "2.0",
         "architecture": "anchor-based",
-        "lastUpdated": "2026-03-19",
-        "totalAnchors": 12,
-        "totalOriginalSkills": 84,
+        "lastUpdated": "2026-03-21",
+        "totalAnchors": 13,
+        "totalOriginalSkills": 86,
         "migrationDate": "2026-03-11",
         "migrationNote": "All 84 individual skills merged into 12 category anchors. Intra-category dedup is now inherent in the anchor structure."
     },
@@ -198,6 +198,17 @@
                 "investor-outreach (0.30)",
                 "market-research (0.30)"
             ]
+        },
+        {
+            "anchor": "game-development",
+            "mergedCount": 2,
+            "anchorBase": "theone-cocos-standards",
+            "mergedSkills": [
+                "theone-cocos-standards (0.72)",
+                "game-engine (0.40)"
+            ],
+            "preMergeDedup": {},
+            "notes": "New category created 2026-03-21. theone-cocos-standards as anchor base (higher confidence). game-engine incremental merge: universal game fundamentals (loops, physics, collision, rendering, controls). No content overlap between the two sources."
         }
     ]
 }

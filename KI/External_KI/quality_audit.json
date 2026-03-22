@@ -288,5 +288,32 @@
     "breakdown": "frontmatter:4 | name:2 | desc:0 | whenToUse:0 | headings5+:4 | h3depth:4 | code8+:0 | goodBad:5 | multiLang:0 | examples:3 | checklist:5 | bash:0 | tables:4 | bullets20+:4 | antiPatterns:3 | lines300+:8 | companions:0 | companionDirs:0 | references:4",
     "lastAuditUpdate": "2026-03-19",
     "updateNote": "Incremental update via /find-update: +106 lines (headless CMS modules from content-strategy v1.4.0)"
+  },
+  {
+    "path": "KI/External_KI/skills/game-development/game-development.md",
+    "name": "game-development",
+    "totalLines": 403,
+    "sizeBytes": 14582,
+    "h2Count": 13,
+    "h3Count": 14,
+    "codeBlocks": 10,
+    "codeLanguages": "typescript",
+    "hasFrontmatter": true,
+    "hasWhenToUse": true,
+    "hasChecklist": true,
+    "hasGoodBad": true,
+    "hasAntiPatterns": true,
+    "hasTables": true,
+    "hasExamples": true,
+    "isDeprecated": false,
+    "companionFiles": 0,
+    "companionDirs": 0,
+    "bulletCount": 60,
+    "rawScore": 72,
+    "confidence": 0.72,
+    "breakdown": "frontmatter:4 | name:2 | desc:2 | whenToUse:4 | headings5+:4 | h3depth:4 | code8+:12 | goodBad:5 | multiLang:0 | examples:3 | checklist:5 | bash:0 | tables:4 | bullets20+:4 | antiPatterns:3 | lines300+:8 | companions:0 | companionDirs:0 | references:0",
+    "mergedFrom": ["theone-cocos-standards (0.72)", "game-engine (0.40)"],
+    "auditDate": "2026-03-21",
+    "updateNote": "New category: game_development. Anchor created from theone-cocos-standards (base) + game-engine (incremental: universal game dev fundamentals)"
   }
 ]
