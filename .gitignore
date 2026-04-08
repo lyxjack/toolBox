@@ -1,3 +1,6 @@
+# In-Process layer: runtime artifacts, not versioned
+.in-process/
+
 # Local settings
 .claude/settings.local.json
 
