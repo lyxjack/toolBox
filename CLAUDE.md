@@ -28,7 +28,7 @@
 
 | 规则 | 描述 |
 |------|------|
-| **根目录纯净** | toolBox 根目录只允许存在 `Agent/`、`In-Process/`、`KI/`、`PM/`、`Tool/` 五个业务目录,以及 `CLAUDE.md`、`README.md` 配置/文档文件。禁止在根目录创建任何其他业务文件夹或散落文件。 |
+| **根目录纯净** | toolBox 根目录只允许存在 `Agent/`、`In-Process/`、`KI/`、`PM/`、`Tool/` 五个业务目录,以及以下配置/文档/基础设施文件: `CLAUDE.md`、`README.md`、`LICENSE`、`package.json`、`.gitignore`、`VERSION`、`CHANGELOG.md`、`bootstrap.sh`。禁止在根目录创建任何其他业务文件夹或散落文件。 |
 | **层间不越界** | 每层只存放属于该层职责的文件。PM 层不存代码,Agent 层不存原始 skill,Tool 层不存治理文档,KI 层不存过程文件,In-Process 层不存永久知识。 |
 | **写入路径白名单** | Skill 源仓库 → `Tool/`;索引与知识 → `KI/`;治理规则/模板/编排 → `Agent/`;需求入口 → `PM/`;接口契约 → `In-Process/contract.md`;运行期工件 → 各项目的 `.in-process/`。不在白名单内的路径禁止写入。 |
 | **无冗余副本** | 同一文件不得在多个层中存在副本。如需引用,使用路径引用而非复制。 |
@@ -49,9 +49,10 @@
 > - QA 子门禁 (IL 05, 06, 07): `Agent/workflow/qa_verification.md`
 > - Skill/KI 子门禁 (IL 04, 11): `Agent/workflow/skill_ingestion.md`
 
-## Workflow Entry Point
+## Workflow Entry Points
 
 - `/pm` — 所有正式开发请求的唯一入口。触发 PM → CTO → Execution → QA → Joint Approval 闭环。
+- `/init` — toolBox bootstrap & update 统一入口。新用户全量初始化,老用户增量迁移。终端等价命令: `bash bootstrap.sh`。
 
 ## Layer Details
 

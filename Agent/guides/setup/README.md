@@ -8,21 +8,36 @@
    cd toolBox
    ```
 
-2. **用 Claude Code 打开 toolBox 目录**
+2. **运行 Bootstrap**
+   ```bash
+   bash bootstrap.sh
+   ```
+   或在 Claude Code 内输入 `/init`。
+
+   Bootstrap 会自动:
+   - 检查前置依赖 (git, Node.js >= 18, Claude Code CLI)
+   - 验证五层目录结构
+   - 配置 Claude Code hooks
+   - 引导 Obsidian 安装和 MCP 注册 (或选择传统索引模式)
+   - 可选配置全局 CLAUDE.md
+
+3. **启动 Claude Code**
    ```bash
    claude
    ```
 
-3. **项目级命令自动可用**
+4. **可用命令**
+   - `/init` — Bootstrap 或增量更新 toolBox
    - `/pm` — 提交开发需求,触发完整工作流
    - `/find` — 搜索、学习、入库外部 Skill
-   - `/init` — 为目标项目初始化 Agent Skills 目录结构
 
-无需任何额外配置。`CLAUDE.md` 和 `.claude/commands/` 已包含所有必要指令。
+## 更新 toolBox
 
-4. **首次启动时 Claude 会自动检测 Obsidian MCP 状态**
-   - 如果未注册，Claude 会引导你完成 Obsidian 安装和 MCP 注册
-   - 详细步骤见 [Obsidian KI 设置指南](../obsidian-ki-setup.md)
+```bash
+cd toolBox
+git pull
+bash bootstrap.sh    # 自动检测版本差异,执行增量迁移
+```
 
 ## (可选) 全局配置
 

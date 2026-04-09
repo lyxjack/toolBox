@@ -11,19 +11,30 @@ git clone <repo-url> toolBox
 # 2. Enter directory
 cd toolBox
 
-# 3. Launch Claude Code
+# 3. Bootstrap (installs dependencies, configures Obsidian, sets up hooks)
+bash bootstrap.sh
+# Or, inside Claude Code: /init
+
+# 4. Launch Claude Code
 claude
 ```
 
-That's it. All commands are available immediately — no global configuration needed.
+## Updating
+
+```bash
+cd toolBox
+git pull
+bash bootstrap.sh    # auto-detects version diff, runs incremental migrations
+# Or, inside Claude Code: /init
+```
 
 ## Core Commands
 
 | Command | Description |
 |---------|-------------|
+| `/init` | Bootstrap & update toolBox. Auto-detects new user (full setup) or existing user (incremental migration). |
 | `/pm` | Submit a development request. Triggers the full PM → CTO → Execution → QA → Joint Approval workflow. |
 | `/find` | Discover, learn, classify, and ingest external Skills into the knowledge base. |
-| `/init` | Initialize a target project with Agent Skills directory structure and configuration. |
 
 ## Architecture
 
