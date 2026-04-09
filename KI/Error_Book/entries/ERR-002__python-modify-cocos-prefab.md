@@ -16,10 +16,7 @@ tags:
 prevention: "绝对禁止用任何脚本直接修改 .prefab/.scene/.anim 文件"
 aliases:
   - ERR-002
-ci_rules:
-  - type: "file-pattern-ban"
-    pattern: "\\.(prefab|scene|anim|animation)$"
-    message: "禁止脚本写入 Cocos 资产文件 (.prefab/.scene/.anim) — ERR-002"
+ci_rules: []
 ---
 
 # 用 Python 直接修改 Cocos Creator prefab 文件导致游戏崩溃

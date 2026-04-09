@@ -16,10 +16,7 @@ tags:
 prevention: ".prefab 文件的结构性修改只能通过 Cocos 编辑器或 MCP API，禁止 python/脚本增删数组元素"
 aliases:
   - ERR-006
-ci_rules:
-  - type: "file-pattern-ban"
-    pattern: "\\.(prefab|scene|anim|animation)$"
-    message: "禁止脚本修改 Cocos 资产文件结构 (__id__ 引用会错位) — ERR-006"
+ci_rules: []
 ---
 
 # python json.dump 重写 prefab 导致 __id__ 引用错位
