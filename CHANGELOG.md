@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-04-09
+
+### Added
+- `Agent/lint/prefab-write-guard.mjs` — prefab 写入拦截独立 lint 模块（从 ERR-002/ERR-006 ci_rules 提取）
+- `KI/Error_Book/entries/ERR-010` — push 前未确认版号更新的错题记录
+
+### Changed
+- ERR-002 / ERR-006 — ci_rules 清空，拦截逻辑迁移至独立 lint 模块
+
 ## [1.0.0] - 2026-04-09
 
 ### Added
@@ -28,5 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Removed
 - Old project-level `/init` behavior (project dirs are now created on-demand by workflows)
 
-[Unreleased]: https://github.com/YixinLiu-Lulu/toolBox/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/YixinLiu-Lulu/toolBox/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/YixinLiu-Lulu/toolBox/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/YixinLiu-Lulu/toolBox/releases/tag/v1.0.0
