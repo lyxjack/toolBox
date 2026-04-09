@@ -2,7 +2,9 @@
     "_meta": {
         "description": "全局 Error Book 索引。Agent 错误记录，跨项目共享。用户手动添加，关键词召回。",
         "version": "3.0",
-        "lastUpdated": "2026-04-06",
+        "frozen": true,
+        "frozenNote": "已迁移至 Obsidian MCP 召回。本文件为历史快照，不再更新。",
+        "lastUpdated": "2026-04-08",
         "entryTemplate": "KI/Templates/error_book_entry.tmpl.md",
         "detailDir": "KI/Error_Book/entries/",
         "contract": "KI/Error_Book/contract.md"
@@ -28,8 +30,8 @@
             "keywords": ["prefab", "json.dump", "python", "cocos", ".prefab", ".scene", "序列化", "格式", "modify prefab", "write prefab"],
             "prevention": "绝对禁止用脚本写入 Cocos 资产文件（.prefab/.scene/.anim），只能通过编辑器操作",
             "severity": "critical",
-            "status": "resolved",
-            "recurrence": 0,
+            "status": "recurring",
+            "recurrence": 2,
             "relatedTasks": ["REQ-20260406-213536"],
             "file": "entries/ERR-002__python-modify-cocos-prefab.md",
             "firstSeen": "2026-04-06"
@@ -46,6 +48,71 @@
             "relatedTasks": ["REQ-20260406-221209"],
             "file": "entries/ERR-003__buyview-mask-debug-failure.md",
             "firstSeen": "2026-04-06"
+        },
+        {
+            "id": "ERR-004",
+            "errorCode": "BHV-001",
+            "pattern": "MCP 创建的 Cocos 节点 layer 不是 UI_2D（33554432），运行时不可见",
+            "keywords": ["MCP", "prefab", "layer", "UI_2D", "不可见", "invisible", "node_create_node", "33554432", "camera"],
+            "prevention": "MCP 创建 UI 节点后必须设置 layer=33554432；排查 UI 不可见时第一时间检查 layer",
+            "severity": "critical",
+            "status": "recurring",
+            "recurrence": 2,
+            "relatedTasks": [],
+            "file": "entries/ERR-004__mcp-prefab-layer-ui2d.md",
+            "firstSeen": "2026-04-07"
+        },
+        {
+            "id": "ERR-005",
+            "errorCode": "BHV-001",
+            "pattern": "MCP 修改 prefab 后只调用 prefab_update_prefab 不调用 scene_save_scene，导致静默保存失败",
+            "keywords": ["MCP", "prefab", "save", "scene_save_scene", "prefab_update_prefab", "保存失败", "写入磁盘"],
+            "prevention": "MCP 修改 prefab 必须先 scene_save_scene 再 prefab_update_prefab，保存后 grep 验证",
+            "severity": "high",
+            "status": "resolved",
+            "recurrence": 5,
+            "relatedTasks": [],
+            "file": "entries/ERR-005__mcp-prefab-save-two-steps.md",
+            "firstSeen": "2026-04-07"
+        },
+        {
+            "id": "ERR-006",
+            "errorCode": "ISO-003",
+            "pattern": "python json.dump 重写 prefab 文件插入新条目导致 __id__ 索引错位，所有节点引用断裂",
+            "keywords": ["python", "json.dump", "prefab", "__id__", "错位", "损坏", "corrupt", "json", "insert"],
+            "prevention": "ERR-002 铁律：.prefab 结构性修改只能通过编辑器或 MCP，不能用脚本增删条目",
+            "severity": "critical",
+            "status": "resolved",
+            "recurrence": 1,
+            "relatedTasks": [],
+            "file": "entries/ERR-006__python-json-dump-prefab-id-shift.md",
+            "firstSeen": "2026-04-07"
+        },
+        {
+            "id": "ERR-007",
+            "errorCode": "ISO-003",
+            "pattern": "MCP prefab_instantiate_prefab 调试后未清理场景残留节点",
+            "keywords": ["MCP", "scene", "cleanup", "残留", "instantiate", "场景污染"],
+            "prevention": "每次 MCP prefab 操作后必须 node_delete_node + node_find_nodes 验证无残留",
+            "severity": "high",
+            "status": "resolved",
+            "recurrence": 1,
+            "relatedTasks": [],
+            "file": "entries/ERR-007__mcp-cleanup-scene-nodes.md",
+            "firstSeen": "2026-04-07"
+        },
+        {
+            "id": "ERR-008",
+            "errorCode": "BHV-001",
+            "pattern": "MCP 端口配置在 3000/3001 之间反复切换导致连接混乱",
+            "keywords": ["MCP", "port", "端口", "3000", "3001", "冲突", "EADDRINUSE"],
+            "prevention": "端口固定分配后不再更改（MCP=3001, 游戏后端=3000）",
+            "severity": "medium",
+            "status": "resolved",
+            "recurrence": 3,
+            "relatedTasks": [],
+            "file": "entries/ERR-008__mcp-port-conflict-not-persisted.md",
+            "firstSeen": "2026-04-07"
         }
     ],
     "entrySchema": {

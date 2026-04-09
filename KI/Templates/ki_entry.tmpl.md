@@ -1,33 +1,30 @@
-# KI Entry: {TITLE}
+---
+id: "{KI-{NNN} | DEC-{NNN} | LES-{NNN}}"
+type: "{decision | lesson}"
+title: "{标题}"
+status: "{active | deprecated}"
+created: "{YYYY-MM-DD}"
+tags:
+  - "ki/{decision | lesson}"
+  - "{layer/KI | layer/Agent | ...}"
+aliases:
+  - "{ID}"
+---
 
-## Metadata
-- **ID**: KI-{NNN}
-- **Title**: {TITLE}
-- **Type**: external_ki | Internal_KI | pattern
-- **Scope**: global | project
-- **Source**: {来源路径或任务编号}
-- **Tags**: [{tag1}, {tag2}]
-- **Confidence**: {0.0 - 1.0}
-- **Version**: {v1}
-- **Created**: {YYYY-MM-DD}
-- **Last Verified**: {YYYY-MM-DD}
+# {标题}
 
-## 适用场景
-{描述何时应该使用此 KI}
+## Decision / Lesson
+{核心内容}
 
-## 不适用场景
-{描述何时不应使用此 KI}
+## Rationale / Context
+{原因或背景}
 
-## 内容
-{KI 核心内容}
+## Alternatives Considered
+- {备选方案1}
+- {备选方案2}
 
-## 依赖关系
-- {依赖的其他 KI 或资源}
-
-## 冲突关系
-- {与其他 KI 的已知冲突}
+## Outcome / Evidence
+{结果或证据}
 
 ## 关联
-- **Error Book**: {关联的错误条目}
-- **Archive**: {关联的归档记录}
-- **Pattern**: {关联的复用模式}
+- [[相关条目|显示名]] — 简要说明

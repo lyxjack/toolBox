@@ -1,13 +1,24 @@
-# 用 Python 直接修改 Cocos Creator prefab 文件导致游戏崩溃
+---
+id: ERR-002
+type: error
+errorCode: ISO-003
+severity: critical
+status: recurring
+recurrence: 2
+firstSeen: 2026-04-06
+tags:
+  - error/critical
+  - engine/cocos
+  - asset/prefab
+  - tool/python
+  - errorCode/ISO-003
+  - ki/error-book
+prevention: "绝对禁止用任何脚本直接修改 .prefab/.scene/.anim 文件"
+aliases:
+  - ERR-002
+---
 
-## Metadata
-- **ID**: ERR-002
-- **Error Code**: ISO-003
-- **Severity**: critical
-- **Keywords**: [prefab, json.dump, python, cocos, .prefab, .scene, .anim, 序列化, 格式]
-- **First Seen**: 2026-04-06
-- **Recurrence**: 0
-- **Status**: resolved
+# 用 Python 直接修改 Cocos Creator prefab 文件导致游戏崩溃
 
 ## 错误现象
 
@@ -40,3 +51,4 @@
 ## 关联
 - 项目: kingDianPuzzle
 - Session: 20260406-213536
+- [[PAT-002__cocos-asset-operation|PAT-002]] — Cocos 资产文件操作原则

@@ -115,11 +115,30 @@ ERR-{NNN}__{slug}.md
 | **解决** | 错误根因已消除 | status 改为 resolved |
 | **删除** | 不删除,错题永久保留 | — |
 
-## 7. 索引同步规则
+## 7. Obsidian 集成
+
+### 7.1 Vault 配置
+Error_Book 是 Obsidian Vault（root: `KI/`）的一部分。Obsidian + Local REST API 插件必须运行才能使用 MCP 召回。
+
+### 7.2 YAML Frontmatter 规范
+所有条目使用 YAML frontmatter 替代原 `## Metadata` 段落。必需字段：
+- `id`, `type`, `errorCode`, `severity`, `status`, `recurrence`, `firstSeen`, `tags`, `prevention`, `aliases`
+
+### 7.3 标签体系
+使用 Obsidian 层级标签：`error/{severity}`, `engine/{name}`, `tool/{name}`, `asset/{type}`, `errorCode/{code}`, `ki/error-book`
+
+### 7.4 Wikilinks
+交叉引用使用 Obsidian wikilink 语法：`[[ERR-NNN__slug|ERR-NNN]]`
+aliases 字段确保短链接 `[[ERR-NNN]]` 可正确解析。
+
+### 7.5 index.json 状态
+index.json 已冻结（`_meta.frozen: true`），不再参与召回流程。仅作为历史快照保留。
+
+## 8. 索引同步规则
 
 **强制约束**:任何错题的增加或状态变更,必须同步更新 `index.json`。
 
-## 8. Token 优化策略
+## 9. Token 优化策略
 
 1. **index.json 轻量化**:keywords 字段用于快速匹配,避免加载所有详情文件
 2. **只加载命中条目**:关键词未命中时不读取任何详情文件

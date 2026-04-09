@@ -73,9 +73,10 @@
 
 ### KI Layer
 - External_KI: `KI/External_KI/` — 88 skill 主索引 + 12 类别索引 + 质量审计 + 交叉引用
-- Internal_KI: `KI/Internal_KI/` — 项目级知识库接口契约(实际数据在各项目中)
+- Internal_KI: `KI/Internal_KI/` — 项目级知识库接口契约(实际数据在各项目中),含 Pattern Book(`patterns/`)、`decisions/`、`lessons/`
 - Error_Book: `KI/Error_Book/` — 全局级错题本(跨项目共享,含 entries/)
 - Templates: `KI/Templates/` — ki_entry, error_book_entry 模板
+- **知识召回**: KI 层整体作为 Obsidian Vault,通过 Obsidian MCP（Local REST API 插件）进行召回,替代原 index.json 查询机制。index.json 已冻结,仅作历史快照保留。
 
 ### Tool Layer
 - 15 个 git clone 仓库(只读)

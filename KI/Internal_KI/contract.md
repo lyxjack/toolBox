@@ -135,3 +135,26 @@ Internal_KI 是项目级的精华知识库,存放经过验证的、对项目开�
 1. **优先 Glob**:按 category 目录定位,避免加载全量 index.json
 2. **index.json 只做路由**:summary 字段用于判断是否需要读取详情,避免全量加载
 3. **按需加载**:只读取与当前任务相关的 category 目录下的文件
+
+## 10. Obsidian 集成
+
+### 10.1 Vault 配置
+Internal_KI 是 Obsidian Vault（root: `KI/`）的一部分。Obsidian + Local REST API 插件必须运行才能使用 MCP 召回。
+
+### 10.2 Pattern Book
+Pattern Book 存放在 `patterns/` 目录中,记录经过验证的正确做法和可复用模式。
+
+条目使用 YAML frontmatter 格式,必需字段：
+- `id`, `type`, `title`, `status`, `created`, `tags`, `complements`, `aliases`
+
+Pattern Book 通过 Obsidian MCP 进行召回,与 Error Book 形成互补：
+- Error Book = 不应该怎么做（防错）
+- Pattern Book = 应该怎么做（复用）
+
+### 10.3 Decisions 与 Lessons
+重大技术决策提取为独立 `.md` 文件,存放在 `decisions/` 目录。
+经验教训提取为独立 `.md` 文件,存放在 `lessons/` 目录。
+
+### 10.4 index.json 状态
+index.json 已冻结（`_meta.frozen: true`），不再参与召回流程。仅作为历史快照保留。
+Obsidian MCP 搜索替代 index.json 成为主要召回机制。

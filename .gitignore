@@ -3,6 +3,7 @@
 
 # Local settings
 .claude/settings.local.json
+.mcp.json
 
 # Tool layer: ignore nested .git dirs from cloned repos
 Tool/**/.git/

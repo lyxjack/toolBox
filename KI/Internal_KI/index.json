@@ -2,6 +2,8 @@
     "_meta": {
         "description": "Internal_KI 接口注册表。定义 Internal_KI 的用途和结构规范。实际项目数据存放在各项目的 .claude/Internal_KI/ 中。",
         "version": "3.0",
+        "frozen": true,
+        "frozenNote": "已迁移至 Obsidian MCP 召回。条目已拆为独立 .md 文件。本文件为历史快照，不再更新。",
         "contract": "KI/Internal_KI/contract.md",
         "note": "本文件保留 toolBox 自身的知识条目。各项目的 KI 条目在项目目录内管理。"
     },

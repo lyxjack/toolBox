@@ -1,13 +1,23 @@
-# buyView 弹窗 bug 排查路径错误——简单问题复杂化
+---
+id: ERR-003
+type: error
+errorCode: BHV-001
+severity: high
+status: resolved
+recurrence: 0
+firstSeen: 2026-04-06
+tags:
+  - error/high
+  - engine/cocos
+  - asset/prefab
+  - errorCode/BHV-001
+  - ki/error-book
+prevention: "Cocos UI 交互 bug 先用排除法逐个关闭 BaseViewCmpt 布尔属性"
+aliases:
+  - ERR-003
+---
 
-## Metadata
-- **ID**: ERR-003
-- **Error Code**: BHV-001
-- **Severity**: high
-- **Keywords**: [mask, isMask, BlockInputEvents, 弹窗, 点击, 无法交互, prefab, buyView, popup, 遮罩]
-- **First Seen**: 2026-04-06
-- **Recurrence**: 0
-- **Status**: resolved
+# buyView 弹窗 bug 排查路径错误——简单问题复杂化
 
 ## 错误现象
 
@@ -47,5 +57,6 @@ BaseViewCmpt 的 `addMask()` 在运行时创建全屏遮罩节点并加 `BlockIn
 不能假设其他弹窗的属性配置适用于新弹窗。buyView 作为游戏内浮窗，不需要 isMask（遮罩会干扰已有的游戏界面），和 challengeView 等从主页弹出的弹窗场景不同。
 
 ## 关联
-- ERR-002: Python 修改 prefab 导致崩溃（本次排查过程中的连锁错误）
+- [[ERR-002__python-modify-cocos-prefab|ERR-002]]: Python 修改 prefab 导致崩溃（本次排查过程中的连锁错误）
 - Session: 20260406-221209, 20260406-213536
+- [[PAT-004__ui-bug-elimination|PAT-004]] — UI 交互 Bug 排查流程
