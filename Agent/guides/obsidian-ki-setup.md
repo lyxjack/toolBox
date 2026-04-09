@@ -113,11 +113,12 @@ toolBox 的 KI（Knowledge Intelligence）层管理三类知识资产：
   "mcpServers": {
     "obsidian-ki": {
       "command": "npx",
-      "args": ["-y", "@cyanheads/obsidian-mcp-server"],
+      "args": ["-y", "obsidian-mcp-server"],
       "env": {
         "OBSIDIAN_API_KEY": "<替换为你的 API Key>",
-        "OBSIDIAN_API_PORT": "27124",
-        "OBSIDIAN_VAULT_NAME": "KI"
+        "OBSIDIAN_BASE_URL": "https://127.0.0.1:27124",
+        "OBSIDIAN_VERIFY_SSL": "false",
+        "OBSIDIAN_ENABLE_CACHE": "true"
       }
     }
   }
@@ -125,7 +126,9 @@ toolBox 的 KI（Knowledge Intelligence）层管理三类知识资产：
 ```
 
 **重要**：
+- npm 包名是 `obsidian-mcp-server`（不带 `@cyanheads/` 前缀）
 - `OBSIDIAN_API_KEY` 替换为你在 2.4 步复制的值
+- `OBSIDIAN_BASE_URL` 使用 HTTPS（端口 27124），`OBSIDIAN_VERIFY_SSL` 设为 `false`（Obsidian 使用自签名证书）
 - `.mcp.json` 包含个人密钥，已在 `.gitignore` 中排除，不会提交到 git
 - 如果 toolBox 已有 `.mcp.json`（例如包含 Cocos MCP 配置），将 `obsidian-ki` 条目合并进去即可
 
@@ -415,7 +418,8 @@ SORT file.name ASC
 5. 手动启用 Community plugins（首次需关闭安全模式）
 6. 进入 Local REST API 设置，复制自己的 API Key
 7. 在 toolBox 根目录创建 `.mcp.json`，填入自己的 API Key（参考 Section 2.5）
-8. 验证连接（参考 Section 2.6）
+8. **重启 Claude Code**（`.mcp.json` 变更需要重启才生效）
+9. 验证连接（参考 Section 2.6）
 
 ---
 
@@ -435,6 +439,19 @@ SORT file.name ASC
 3. `.mcp.json` 是否在 toolBox 根目录？
 4. API Key 是否正确？
 5. 端口 27124 是否被占用？（`lsof -i :27124`）
+6. **修改 `.mcp.json` 后是否重启了 Claude Code？**（MCP 配置仅在启动时加载）
+
+### npm 包名错误
+
+**现象**：MCP Server 启动报 `npm error 404 Not Found`
+**原因**：包名写错了。正确的包名是 `obsidian-mcp-server`，不是 `@cyanheads/obsidian-mcp-server`。
+**验证**：`npx -y obsidian-mcp-server --help`
+
+### SSL 证书错误
+
+**现象**：MCP Server 启动后无法连接 Obsidian REST API
+**原因**：Obsidian Local REST API 使用自签名 HTTPS 证书
+**解决**：确保 `.mcp.json` 中包含 `"OBSIDIAN_VERIFY_SSL": "false"`
 
 ### 搜索无结果
 
@@ -453,7 +470,7 @@ toolBox 的端口分配：
 | 3001 | Cocos MCP Server |
 | 27124 | Obsidian Local REST API（默认） |
 
-如果 27124 被占用，在 Obsidian 的 Local REST API 设置中更改端口，并同步更新 `.mcp.json` 中的 `OBSIDIAN_API_PORT`。
+如果 27124 被占用，在 Obsidian 的 Local REST API 设置中更改端口，并同步更新 `.mcp.json` 中 `OBSIDIAN_BASE_URL` 的端口号。
 
 ---
 
