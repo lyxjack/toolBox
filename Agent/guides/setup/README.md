@@ -20,6 +20,10 @@
 
 无需任何额外配置。`CLAUDE.md` 和 `.claude/commands/` 已包含所有必要指令。
 
+4. **首次启动时 Claude 会自动检测 Obsidian MCP 状态**
+   - 如果未注册，Claude 会引导你完成 Obsidian 安装和 MCP 注册
+   - 详细步骤见 [Obsidian KI 设置指南](../obsidian-ki-setup.md)
+
 ## (可选) 全局配置
 
 如果你希望在 **其他项目目录** 中也能使用 toolBox 的治理规则:
@@ -52,4 +56,5 @@ toolBox/
 
 - **Git** — 用于 clone 仓库和管理 Skill 源
 - **Claude Code CLI** — 用于运行 AI Agent 工作流
-- **Node.js** (可选) — 部分 Skill 搜索功能需要 `npx`
+- **Node.js** — `npx` 用于 MCP server 和 Skill 搜索
+- **Obsidian** — 知识管理（KI 层），需启用 Local REST API 插件（端口 27124）

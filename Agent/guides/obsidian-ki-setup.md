@@ -106,33 +106,27 @@ toolBox 的 KI（Knowledge Intelligence）层管理三类知识资产：
 
 ### 2.5 配置 Claude Code 的 MCP 连接
 
-Obsidian MCP 已配置为**全局生效**（`~/.claude/.mcp.json`），所有项目目录下的 Claude Code 都能使用知识召回。
+> **⚠ 重要**：全局 MCP 必须通过 `claude mcp add --scope user` 注册。
+> **不要**手动创建 `~/.claude/.mcp.json`（Claude Code 不读取该文件）。参见 ERR-009。
 
-如果你需要手动配置，在 `~/.claude/.mcp.json`（全局）或项目根目录 `.mcp.json`（项目级）中添加：
+在终端执行以下命令（将 `<YOUR_API_KEY>` 替换为 2.4 步复制的值）：
 
-```json
-{
-  "mcpServers": {
-    "obsidian-ki": {
-      "command": "npx",
-      "args": ["-y", "obsidian-mcp-server"],
-      "env": {
-        "OBSIDIAN_API_KEY": "<替换为你的 API Key>",
-        "OBSIDIAN_BASE_URL": "https://127.0.0.1:27124",
-        "OBSIDIAN_VERIFY_SSL": "false",
-        "OBSIDIAN_ENABLE_CACHE": "true"
-      }
-    }
-  }
-}
+```bash
+claude mcp add obsidian-ki --scope user \
+  -e OBSIDIAN_API_KEY=<YOUR_API_KEY> \
+  -e OBSIDIAN_BASE_URL=https://127.0.0.1:27124 \
+  -e OBSIDIAN_VERIFY_SSL=false \
+  -e OBSIDIAN_ENABLE_CACHE=true \
+  -- npx -y obsidian-mcp-server
 ```
 
-**重要**：
+执行后配置写入 `~/.claude.json`，所有项目目录下的 Claude Code 都能使用知识召回。
+
+**注意**：
 - npm 包名是 `obsidian-mcp-server`（不带 `@cyanheads/` 前缀）
-- `OBSIDIAN_API_KEY` 替换为你在 2.4 步复制的值
 - `OBSIDIAN_BASE_URL` 使用 HTTPS（端口 27124），`OBSIDIAN_VERIFY_SSL` 设为 `false`（Obsidian 使用自签名证书）
-- `.mcp.json` 包含个人密钥，已在 `.gitignore` 中排除，不会提交到 git
-- 如果 toolBox 已有 `.mcp.json`（例如包含 Cocos MCP 配置），将 `obsidian-ki` 条目合并进去即可
+- 配置存储在 `~/.claude.json` 中（个人文件，不提交 git）
+- 验证注册成功：`claude mcp list` 应显示 `obsidian-ki`
 
 ### 2.6 验证 MCP 连接
 
@@ -419,9 +413,11 @@ SORT file.name ASC
 4. 插件会自动加载（配置已在 git 中）
 5. 手动启用 Community plugins（首次需关闭安全模式）
 6. 进入 Local REST API 设置，复制自己的 API Key
-7. 在 toolBox 根目录创建 `.mcp.json`，填入自己的 API Key（参考 Section 2.5）
-8. **重启 Claude Code**（`.mcp.json` 变更需要重启才生效）
+7. 在终端执行 `claude mcp add obsidian-ki --scope user` 注册全局 MCP（参考 Section 2.5）
+8. **重启 Claude Code**（MCP 配置仅在启动时加载）
 9. 验证连接（参考 Section 2.6）
+
+> **不要**手动创建 `~/.claude/.mcp.json`，Claude Code 不读取该文件（ERR-009）。
 
 ---
 
@@ -438,10 +434,11 @@ SORT file.name ASC
 **检查**：
 1. Obsidian 是否在运行？
 2. Local REST API 插件是否启用？
-3. `.mcp.json` 是否在 toolBox 根目录？
+3. `claude mcp list` 是否包含 `obsidian-ki`？（如果没有，用 `claude mcp add --scope user` 注册）
 4. API Key 是否正确？
 5. 端口 27124 是否被占用？（`lsof -i :27124`）
-6. **修改 `.mcp.json` 后是否重启了 Claude Code？**（MCP 配置仅在启动时加载）
+6. **修改配置后是否重启了 Claude Code？**（MCP 配置仅在启动时加载）
+7. **是否误用了 `~/.claude/.mcp.json`？** Claude Code 不读取该文件（ERR-009）
 
 ### npm 包名错误
 

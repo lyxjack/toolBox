@@ -45,7 +45,33 @@ cp ~/toolBox/Agent/templates/global_claude_md.md ~/.claude/CLAUDE.md
 sed -i '' 's|{TOOLBOX_ROOT}|/Users/'"$USER"'/toolBox|g' ~/.claude/CLAUDE.md
 ```
 
+### 4. 配置 Obsidian + 知识召回
+
+```bash
+# 安装 Obsidian (或从 https://obsidian.md 下载)
+brew install --cask obsidian
+```
+
+1. 启动 Obsidian → "Open folder as vault" → 选择 `~/toolBox/KI/`
+2. Settings → Community plugins → 关闭 Restricted mode → 启用 **Local REST API** 插件
+3. 进入 Local REST API 设置 → 复制 **API Key**
+4. 注册全局 MCP：
+
+```bash
+claude mcp add obsidian-ki --scope user \
+  -e OBSIDIAN_API_KEY=<YOUR_API_KEY> \
+  -e OBSIDIAN_BASE_URL=https://127.0.0.1:27124 \
+  -e OBSIDIAN_VERIFY_SSL=false \
+  -e OBSIDIAN_ENABLE_CACHE=true \
+  -- npx -y obsidian-mcp-server
+```
+
+5. 重启 Claude Code，验证 `claude mcp list` 包含 `obsidian-ki`
+
+> 详细说明见 [Obsidian KI 设置指南](../obsidian-ki-setup.md)
+
 ## 注意事项
 
 - macOS 文件系统默认大小写不敏感(APFS),目录名避免仅靠大小写区分
 - `.DS_Store` 已在 `.gitignore` 中排除
+- 全局 MCP 必须用 `claude mcp add --scope user` 注册，不能手写 `~/.claude/.mcp.json`（ERR-009）
