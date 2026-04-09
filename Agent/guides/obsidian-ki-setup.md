@@ -106,7 +106,9 @@ toolBox 的 KI（Knowledge Intelligence）层管理三类知识资产：
 
 ### 2.5 配置 Claude Code 的 MCP 连接
 
-在 toolBox 根目录创建或编辑 `.mcp.json`：
+Obsidian MCP 已配置为**全局生效**（`~/.claude/.mcp.json`），所有项目目录下的 Claude Code 都能使用知识召回。
+
+如果你需要手动配置，在 `~/.claude/.mcp.json`（全局）或项目根目录 `.mcp.json`（项目级）中添加：
 
 ```json
 {
