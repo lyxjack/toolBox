@@ -110,7 +110,7 @@ ERR-{NNN}__{slug}.md
 
 | 状态 | 触发条件 | 操作 |
 |------|---------|------|
-| **创建** | 用户手动添加(Agent 犯错后) | 写入 entries/ + 更新 index.json |
+| **创建** | 用户手动添加(Agent 犯错后) | 写入 entries/ + 更新 index.json + **必须评估并添加 ci_rules**（见第 8 节） |
 | **更新** | 同类错误再次发生 | recurrence +1,更新 status 为 recurring |
 | **解决** | 错误根因已消除 | status 改为 resolved |
 | **删除** | 不删除,错题永久保留 | — |
@@ -134,7 +134,50 @@ aliases 字段确保短链接 `[[ERR-NNN]]` 可正确解析。
 ### 7.5 index.json 状态
 index.json 已冻结（`_meta.frozen: true`），不再参与召回流程。仅作为历史快照保留。
 
-## 8. 索引同步规则
+## 8. CI 自动拦截 (ci_rules)
+
+### 8.1 概述
+Error Book 条目可以包含可选的 `ci_rules` 字段，将预防规则转化为 CI 可自动检查的静态规则。
+运行方式：`npm run lint`（本地）或 GitHub Actions（PR 检查）。
+Linter 脚本：`Agent/lint/error-book-linter.mjs`（零依赖）。
+
+### 8.2 ci_rules Schema
+```yaml
+ci_rules:                              # 可选，数组
+  - type: "file-pattern-ban"           # 规则类型（见下表）
+    pattern: "regex"                   # 匹配模式
+    file_pattern: "regex"              # 可选，限定文件范围
+    trigger_pattern: "regex"           # code-pattern-require 专用：触发条件
+    required_pattern: "regex"          # code-pattern-require 专用：必须存在的模式
+    message: "拦截提示信息"             # 必需
+    severity_override: "medium"        # 可选，覆盖条目默认 severity
+```
+
+### 8.3 规则类型
+
+| type | 用途 | 必需字段 |
+|------|------|---------|
+| `file-pattern-ban` | 禁止修改匹配文件名的文件 | `pattern`, `message` |
+| `code-pattern-ban` | 禁止文件中出现的代码模式 | `pattern`, `message`, 可选 `file_pattern` |
+| `code-pattern-require` | 当 trigger 出现时必须有 required | `trigger_pattern`, `required_pattern`, `message`, 可选 `file_pattern` |
+
+### 8.4 severity 与拦截行为
+- `critical` / `high` → **阻断**（exit 1，CI 失败）
+- `medium` / `low` → **警告**（exit 0，仅打印提示）
+- `severity_override` 可覆盖条目默认级别
+
+### 8.5 强制规则 — 创建条目时必须评估 ci_rules
+
+> **这是不可跳过的强执行约束。每次创建新 Error Book 条目时，Agent 必须执行以下流程：**
+
+1. **评估可自动化性**：判断该错误是否可以用 `file-pattern-ban`、`code-pattern-ban`、`code-pattern-require` 三种规则类型之一表达
+2. **可自动化 → 必须添加 ci_rules**：在 YAML frontmatter 中写入 ci_rules 字段，确保规则立即生效
+3. **不可自动化 → 必须标注原因**：在条目的 `预防规则` 章节末尾添加 `> CI: Tier 2 only — {原因}`，说明为什么无法用静态规则覆盖
+4. **添加后运行验证**：执行 `npm run lint:validate` 确认覆盖率
+
+**违反此规则等同于创建了一条没有防护的错误记录 — 错题本的价值在于防止复犯，不加 ci_rules 就是留了一个没锁的门。**
+
+## 9. 索引同步规则
 
 **强制约束**:任何错题的增加或状态变更,必须同步更新 `index.json`。
 

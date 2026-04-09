@@ -14,6 +14,12 @@ tags:
 prevention: "使用 Result 类型模式包裹所有 async 返回值"
 aliases:
   - ERR-001
+ci_rules:
+  - type: "code-pattern-ban"
+    file_pattern: "\\.ts$"
+    pattern: "async\\s+function\\s+\\w+\\s*\\([^)]*\\)\\s*\\{(?!\\s*try)"
+    message: "async 函数缺少 try-catch 包裹，可能导致未捕获 rejection — ERR-001"
+    severity_override: "medium"
 ---
 
 # Agent 在 async 函数中忘记 try-catch
