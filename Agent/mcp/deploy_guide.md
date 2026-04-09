@@ -71,6 +71,37 @@ npm run build
 
 ---
 
+## Obsidian MCP（全局知识库，所有项目共享）
+
+**前提**: Obsidian 已安装，KI Vault（`/Users/jackliu/toolBox/KI/`）已打开，Local REST API 插件已启用（端口 27124）。
+
+### 注册方式（Claude 执行，一次性）
+```bash
+claude mcp add obsidian-ki --scope user \
+  -e OBSIDIAN_API_KEY=<key> \
+  -e OBSIDIAN_BASE_URL=https://127.0.0.1:27124 \
+  -e OBSIDIAN_VERIFY_SSL=false \
+  -e OBSIDIAN_ENABLE_CACHE=true \
+  -- npx -y obsidian-mcp-server
+```
+
+### 重要：全局 MCP 注册规则
+- **必须**使用 `claude mcp add --scope user` 注册（写入 `~/.claude.json`）
+- **不能**手动创建 `~/.claude/.mcp.json`（Claude Code 不读取该文件，参见 ERR-009）
+- 项目级 MCP（如 cocos-creator）可以用项目根目录的 `.mcp.json`
+- 全局级 MCP（如 obsidian-ki）必须通过 CLI 命令注册
+
+### 验证
+```bash
+# 检查注册状态
+claude mcp list
+
+# 检查 Obsidian REST API
+curl -k https://127.0.0.1:27124
+```
+
+---
+
 ## 部署后验证
 
 部署完成后，Claude 应尝试调用一个 MCP tool 来验证连接：
