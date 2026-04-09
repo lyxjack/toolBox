@@ -241,12 +241,15 @@ function runLint(mode) {
   const entries = loadEntries();
   const changedFiles = getChangedFiles(mode);
 
+  const rulesCount = entries.filter(e => e.ci_rules?.length > 0).length;
+  console.log(`${DIM}[Error Book CI] 已加载 ${entries.length} 条错题记录 (${rulesCount} 条含 ci_rules)${RESET}`);
+
   if (changedFiles.length === 0) {
-    console.log(`${GREEN}✓${RESET} No changed files to lint.`);
+    console.log(`${GREEN}✓ CI 通过${RESET} — 无变更文件`);
     process.exit(0);
   }
 
-  console.log(`${DIM}Checking ${changedFiles.length} changed files against ${entries.length} Error Book entries...${RESET}\n`);
+  console.log(`${DIM}[Error Book CI] 检查 ${changedFiles.length} 个变更文件...${RESET}\n`);
 
   const allViolations = [];
 
@@ -272,7 +275,7 @@ function runLint(mode) {
 
   // 输出结果
   if (allViolations.length === 0) {
-    console.log(`${GREEN}✓${RESET} No Error Book violations found.`);
+    console.log(`${GREEN}✓ CI 通过${RESET}`);
     process.exit(0);
   }
 
@@ -298,9 +301,12 @@ function runLint(mode) {
   const blocking = allViolations.filter(v => v.severity === 'critical' || v.severity === 'high');
   const warnings = allViolations.filter(v => v.severity !== 'critical' && v.severity !== 'high');
 
-  console.log(`${BOLD}Summary:${RESET}`);
-  if (blocking.length) console.log(`  ${RED}${blocking.length} blocking violation(s)${RESET}`);
-  if (warnings.length) console.log(`  ${YELLOW}${warnings.length} warning(s)${RESET}`);
+  if (hasBlocking) {
+    console.log(`${RED}${BOLD}✗ CI 未通过${RESET} — ${blocking.length} 条错题本规则被违反`);
+    if (warnings.length) console.log(`  ${YELLOW}另有 ${warnings.length} 条警告${RESET}`);
+  } else {
+    console.log(`${GREEN}✓ CI 通过${RESET}${warnings.length ? ` (${warnings.length} 条警告)` : ''}`);
+  }
 
   process.exit(hasBlocking ? 1 : 0);
 }
