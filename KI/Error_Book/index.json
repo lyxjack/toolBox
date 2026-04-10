@@ -113,6 +113,45 @@
             "relatedTasks": [],
             "file": "entries/ERR-008__mcp-port-conflict-not-persisted.md",
             "firstSeen": "2026-04-07"
+        },
+        {
+            "id": "ERR-011",
+            "errorCode": "BHV-004",
+            "pattern": "30个item用了回收复用ScrollViewCmpt，导致底部启动和滚动全部出错，应该用简单全量创建",
+            "keywords": ["ScrollView", "ScrollViewCmpt", "回收", "复用", "scroll", "列表", "item", "过度工程"],
+            "prevention": "数据量<100用简单方案（全量创建+Layout+scrollToBottom），不照搬回收组件",
+            "severity": "high",
+            "status": "resolved",
+            "recurrence": 1,
+            "relatedTasks": [],
+            "file": "entries/ERR-011__overengineered-scroll-recycling.md",
+            "firstSeen": "2026-04-09"
+        },
+        {
+            "id": "ERR-012",
+            "errorCode": "BHV-001",
+            "pattern": "被告知参考已有代码时不动脑子照搬，没有比较场景差异导致方案不适用",
+            "keywords": ["参考", "照搬", "copy", "homeView", "差异分析", "独立判断"],
+            "prevention": "参照已有代码时必须先比较场景差异，独立判断适用性，参考≠照搬",
+            "severity": "high",
+            "status": "resolved",
+            "recurrence": 1,
+            "relatedTasks": [],
+            "file": "entries/ERR-012__blindly-copy-without-analysis.md",
+            "firstSeen": "2026-04-09"
+        },
+        {
+            "id": "ERR-013",
+            "errorCode": "EVD-001",
+            "pattern": "写入错题本时未检查 entries/ 目录已有文件，导致 ID 重复冲突",
+            "keywords": ["错题本", "Error_Book", "ID", "重复", "duplicate", "entries"],
+            "prevention": "新建条目前必须 ls entries/ 确认最大 ID，新条目 = max+1",
+            "severity": "medium",
+            "status": "resolved",
+            "recurrence": 1,
+            "relatedTasks": [],
+            "file": "entries/ERR-013__error-book-duplicate-id.md",
+            "firstSeen": "2026-04-09"
         }
     ],
     "entrySchema": {

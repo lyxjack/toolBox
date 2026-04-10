@@ -4,6 +4,8 @@ A structured, governance-driven workspace for AI agents. toolBox provides a five
 
 ## Quick Start
 
+### macOS / Linux
+
 ```bash
 # 1. Clone
 git clone <repo-url> toolBox
@@ -13,6 +15,31 @@ cd toolBox
 
 # 3. Bootstrap (installs dependencies, configures Obsidian, sets up hooks)
 bash bootstrap.sh
+# Or: node bootstrap.mjs
+# Or, inside Claude Code: /init
+
+# 4. Launch Claude Code
+claude
+```
+
+### Windows
+
+**Prerequisites** — install the following before bootstrapping:
+
+1. **Git**: Download from https://git-scm.com/download/win and install
+2. **Node.js >= 18**: Download LTS from https://nodejs.org/ and install (npm is included)
+3. **Claude Code CLI**: Open PowerShell and run `npm install -g @anthropic-ai/claude-code`
+
+```powershell
+# 1. Clone
+git clone <repo-url> toolBox
+
+# 2. Enter directory
+cd toolBox
+
+# 3. Bootstrap
+.\bootstrap.bat
+# Or: node bootstrap.mjs
 # Or, inside Claude Code: /init
 
 # 4. Launch Claude Code
@@ -24,8 +51,16 @@ claude
 ```bash
 cd toolBox
 git pull
-bash bootstrap.sh    # auto-detects version diff, runs incremental migrations
+
+# macOS / Linux:
+bash bootstrap.sh
+
+# Windows:
+# .\bootstrap.bat
+# Or: node bootstrap.mjs
+
 # Or, inside Claude Code: /init
+# Auto-detects version diff, runs incremental migrations
 ```
 
 ## Core Commands
@@ -99,11 +134,14 @@ Each skill category has an Anchor file (`KI/External_KI/skills/{category}/{categ
 
 ## Platform Support
 
-| Platform | Status |
-|----------|--------|
-| macOS | Fully supported |
-| Windows | Supported (PowerShell / WSL2) |
-| Linux | Fully supported |
+| Platform | Entry Command | Status |
+|----------|---------------|--------|
+| macOS | `bash bootstrap.sh` or `node bootstrap.mjs` | Fully supported |
+| Linux | `bash bootstrap.sh` or `node bootstrap.mjs` | Fully supported |
+| WSL2 | `bash bootstrap.sh` or `node bootstrap.mjs` | Fully supported |
+| Windows (native) | `bootstrap.bat` or `node bootstrap.mjs` | Fully supported |
+
+All platforms share the same cross-platform `bootstrap.mjs` (Node.js). The `.sh` and `.bat` wrappers are thin entry points for convenience.
 
 See [Setup Guide](Agent/guides/setup/README.md) for platform-specific instructions.
 

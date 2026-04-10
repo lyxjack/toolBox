@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-04-10
+
+### Added
+- `bootstrap.mjs` — cross-platform bootstrap entry point (Node.js ESM), replaces bash-only bootstrap.sh logic
+- `Agent/lib/bootstrap-utils.mjs` — cross-platform shared utilities for bootstrap
+- `bootstrap.bat` — Windows entry point (thin wrapper calling node bootstrap.mjs)
+- `Agent/tests/init/test_bootstrap.mjs` — 44 unit tests for bootstrap-utils
+- `Agent/tests/init/test_bootstrap_integration.mjs` — 28 integration tests covering full lifecycle
+- Error Book entries: ERR-011, ERR-012, ERR-013
+
+### Changed
+- `bootstrap.sh` — refactored to thin wrapper delegating to `node bootstrap.mjs` (backward compatible)
+- `README.md` — added Windows Quick Start guide and cross-platform support table
+- `.claude/commands/init.md` — added Windows/cross-platform entry commands
+
 ## [1.1.0] - 2026-04-09
 
 ### Added

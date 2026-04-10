@@ -7,7 +7,14 @@ description: toolBox bootstrap & update. Detects new user (full setup) or existi
 Run the bootstrap script to initialize or update toolBox:
 
 ```bash
+# macOS / Linux:
 bash bootstrap.sh
+
+# Windows (PowerShell):
+.\bootstrap.bat
+
+# Any platform:
+node bootstrap.mjs
 ```
 
 ## What This Does
@@ -45,8 +52,11 @@ If local version matches repo version, prints "Already up to date." and exits.
 
 | File | Purpose |
 |------|---------|
-| `bootstrap.sh` | Main script (this command runs it) |
-| `Agent/lib/bootstrap-utils.sh` | Shared shell functions |
+| `bootstrap.mjs` | Cross-platform main script (Node.js) |
+| `bootstrap.sh` | macOS/Linux wrapper (calls bootstrap.mjs) |
+| `bootstrap.bat` | Windows wrapper (calls bootstrap.mjs) |
+| `Agent/lib/bootstrap-utils.mjs` | Shared utility functions (Node.js) |
+| `Agent/lib/bootstrap-utils.sh` | Legacy shared shell functions |
 | `Agent/migrations/v*.sh` | Per-version migration scripts |
 | `VERSION` | Repo's declared version (semver) |
 | `.toolbox_version` | Local installed version (gitignored) |
