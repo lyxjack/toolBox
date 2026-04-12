@@ -152,6 +152,58 @@
             "relatedTasks": [],
             "file": "entries/ERR-013__error-book-duplicate-id.md",
             "firstSeen": "2026-04-09"
+        },
+        {
+            "id": "ERR-014",
+            "errorCode": "BHV-001",
+            "pattern": "美工资源使用中文文件名直接导入项目，导致路径和兼容性问题",
+            "keywords": ["资源", "导入", "中文", "文件名", "rename", "png", "美工", "切图", "asset"],
+            "prevention": "美工资源进入 assets/ 前必须重命名为英文 snake_case",
+            "severity": "high",
+            "status": "resolved",
+            "recurrence": 1,
+            "relatedTasks": [],
+            "file": "entries/ERR-014__chinese-filename-in-assets.md",
+            "firstSeen": "2026-04-10"
+        },
+        {
+            "id": "ERR-015",
+            "errorCode": "BHV-001",
+            "pattern": "png 资源没有 spriteFrame 编译产物就绑定到 Sprite，导致 missing asset",
+            "keywords": ["spriteFrame", "missing", "asset", "library", "f9941", "png", "导入", "Sprite", "meta", "编译"],
+            "prevention": "绑定 Sprite 前必须验证 library 中有 @f9941.json；不要手写 .meta 文件",
+            "severity": "critical",
+            "status": "resolved",
+            "recurrence": 1,
+            "relatedTasks": [],
+            "file": "entries/ERR-015__sprite-without-spriteframe.md",
+            "firstSeen": "2026-04-10"
+        },
+        {
+            "id": "ERR-016",
+            "errorCode": "BHV-001",
+            "pattern": "MCP prefab_update_prefab 把脚本组件压缩 class ID 替换为字符串类名，导致 MissingScript",
+            "keywords": ["MCP", "prefab_update", "class ID", "MissingScript", "__type__", "脚本", "压缩ID"],
+            "prevention": "MCP prefab_update 后必须 grep 检查脚本 __type__，字符串出现则在编辑器修复",
+            "severity": "critical",
+            "status": "recurring",
+            "recurrence": 3,
+            "relatedTasks": [],
+            "file": "entries/ERR-016__mcp-prefab-update-corrupts-class-id.md",
+            "firstSeen": "2026-04-07"
+        },
+        {
+            "id": "ERR-017",
+            "errorCode": "BHV-001",
+            "pattern": "MCP prefab_update 后节点 layer 被重置为非 UI_2D，运行时不可见",
+            "keywords": ["MCP", "prefab_update", "layer", "UI_2D", "33554432", "不可见", "重置"],
+            "prevention": "MCP prefab_update 后必须在编辑器中检查并修正所有节点 layer 为 UI_2D",
+            "severity": "critical",
+            "status": "recurring",
+            "recurrence": 3,
+            "relatedTasks": [],
+            "file": "entries/ERR-017__mcp-update-resets-node-layer.md",
+            "firstSeen": "2026-04-07"
         }
     ],
     "entrySchema": {

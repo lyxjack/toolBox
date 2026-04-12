@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-04-12
+
+### Fixed
+- cocos-mcp-server Bug 3: `node_create_node` 默认 layer 从 DEFAULT(1073741824) 改为 UI_2D(33554432)
+- cocos-mcp-server Bug 1: `prefab_update_prefab` 自定义脚本组件 `__type__` 从字符串类名转为压缩 UUID
+- cocos-mcp-server Bug 2: `prefab_update_prefab` 节点 position/contentSize 不再被重置为默认值
+
+### Added
+- cocos-mcp-server: vitest 单元测试框架 + 39 个 bug 修复覆盖测试
+- Error Book entries: ERR-014(中文文件名), ERR-015(spriteFrame missing), ERR-016(class ID 损坏), ERR-017(layer 重置)
+
 ## [1.1.1] - 2026-04-10
 
 ### Added

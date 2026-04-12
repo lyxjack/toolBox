@@ -978,34 +978,71 @@ export class PrefabTools implements ToolExecutor {
         }
 
         try {
-            // 使用MCP接口获取节点的组件信息
-            const response = await fetch('http://localhost:8585/mcp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    "jsonrpc": "2.0",
-                    "method": "tools/call",
-                    "params": {
-                        "name": "component_get_components",
-                        "arguments": {
-                            "nodeUuid": node.uuid
-                        }
-                    },
-                    "id": Date.now()
-                })
-            });
-            
-            const mcpResult = await response.json();
-            if (mcpResult.result?.content?.[0]?.text) {
-                const componentData = JSON.parse(mcpResult.result.content[0].text);
-                if (componentData.success && componentData.data.components) {
-                    // 更新节点的组件信息为MCP返回的正确数据
-                    node.components = componentData.data.components;
-                    console.log(`节点 ${node.uuid} 获取到 ${componentData.data.components.length} 个组件，包含脚本组件的正确类型`);
+            // 使用 query-node 获取节点的完整数据（包含 transform 和组件信息）
+            // query-node-tree 返回的数据可能不包含 position/contentSize，导致 fallback 到错误默认值
+            const fullNodeData = await Editor.Message.request('scene', 'query-node', node.uuid);
+
+            if (fullNodeData) {
+                // 增强 transform 数据（position, rotation, scale, layer）
+                if (fullNodeData.position) {
+                    node.position = fullNodeData.position;
+                }
+                if (fullNodeData.rotation) {
+                    node.rotation = fullNodeData.rotation;
+                }
+                if (fullNodeData.scale) {
+                    node.scale = fullNodeData.scale;
+                }
+                if (fullNodeData.layer) {
+                    node.layer = fullNodeData.layer;
+                }
+                if (fullNodeData.active !== undefined) {
+                    node.active = fullNodeData.active;
+                }
+
+                // 增强组件数据 — 从 query-node 的 __comps__ 获取完整属性（含 __scriptAsset）
+                if (fullNodeData.__comps__ && Array.isArray(fullNodeData.__comps__)) {
+                    node.components = fullNodeData.__comps__.map((comp: any) => ({
+                        type: comp.__type__ || comp.cid || comp.type || 'Unknown',
+                        __type__: comp.__type__,
+                        uuid: comp.uuid?.value || comp.uuid || null,
+                        enabled: comp.enabled !== undefined ? comp.enabled : true,
+                        properties: comp.value || comp,
+                        __scriptAsset: comp.__scriptAsset || comp.value?.__scriptAsset
+                    }));
+                    console.log(`节点 ${node.uuid} 增强完成: ${node.components.length} 个组件, position/layer 已更新`);
                 }
             }
         } catch (error) {
-            console.warn(`获取节点 ${node.uuid} 的MCP组件信息失败:`, error);
+            // Fallback: 尝试通过 MCP HTTP 接口获取组件信息
+            try {
+                const response = await fetch('http://localhost:8585/mcp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        "jsonrpc": "2.0",
+                        "method": "tools/call",
+                        "params": {
+                            "name": "component_get_components",
+                            "arguments": {
+                                "nodeUuid": node.uuid
+                            }
+                        },
+                        "id": Date.now()
+                    })
+                });
+
+                const mcpResult = await response.json();
+                if (mcpResult.result?.content?.[0]?.text) {
+                    const componentData = JSON.parse(mcpResult.result.content[0].text);
+                    if (componentData.success && componentData.data.components) {
+                        node.components = componentData.data.components;
+                        console.log(`节点 ${node.uuid} MCP fallback: 获取到 ${componentData.data.components.length} 个组件`);
+                    }
+                }
+            } catch (fallbackError) {
+                console.warn(`获取节点 ${node.uuid} 的完整数据失败:`, error, fallbackError);
+            }
         }
 
         // 递归处理子节点
@@ -1883,9 +1920,18 @@ export class PrefabTools implements ToolExecutor {
         // console.log(`创建组件对象 - 原始类型: ${componentType}`);
         // console.log('组件完整数据:', JSON.stringify(componentData, null, 2));
         
-        // 处理脚本组件 - MCP接口已经返回正确的压缩UUID格式
+        // 处理脚本组件 - 需要将字符串类名转换为压缩 UUID
         if (componentType && !componentType.startsWith('cc.')) {
-            console.log(`使用脚本组件压缩UUID类型: ${componentType}`);
+            // 尝试从 __scriptAsset 获取脚本 UUID 并压缩
+            const scriptAsset = componentData.properties?.__scriptAsset || componentData.__scriptAsset;
+            const scriptUuid = scriptAsset?.value?.uuid || scriptAsset?.uuid;
+            if (scriptUuid && typeof scriptUuid === 'string' && scriptUuid.length >= 32) {
+                const compressedId = this.uuidToCompressedId(scriptUuid);
+                console.log(`脚本组件类型转换: ${componentType} -> ${compressedId} (from scriptAsset UUID: ${scriptUuid})`);
+                componentType = compressedId;
+            } else {
+                console.log(`使用脚本组件原始类型: ${componentType} (无 __scriptAsset UUID 可用)`);
+            }
         }
         
         // 基础组件结构
@@ -1903,8 +1949,17 @@ export class PrefabTools implements ToolExecutor {
         
         // 根据组件类型添加特定属性
         if (componentType === 'cc.UITransform') {
-            const contentSize = componentData.properties?.contentSize?.value || { width: 100, height: 100 };
-            const anchorPoint = componentData.properties?.anchorPoint?.value || { x: 0.5, y: 0.5 };
+            // 从多种数据路径获取 contentSize，避免 fallback 到 100x100
+            const contentSize = componentData.properties?.contentSize?.value
+                || componentData.properties?._contentSize?.value
+                || componentData.properties?.contentSize
+                || componentData.properties?._contentSize
+                || { width: 100, height: 100 };
+            const anchorPoint = componentData.properties?.anchorPoint?.value
+                || componentData.properties?._anchorPoint?.value
+                || componentData.properties?.anchorPoint
+                || componentData.properties?._anchorPoint
+                || { x: 0.5, y: 0.5 };
             
             component._contentSize = {
                 "__type__": "cc.Size",
@@ -2187,7 +2242,7 @@ export class PrefabTools implements ToolExecutor {
         const scale = getValue(nodeData.scale) || getValue(nodeData.value?.scale) || { x: 1, y: 1, z: 1 };
         const active = getValue(nodeData.active) ?? getValue(nodeData.value?.active) ?? true;
         const name = nodeName || getValue(nodeData.name) || getValue(nodeData.value?.name) || 'Node';
-        const layer = getValue(nodeData.layer) || getValue(nodeData.value?.layer) || 1073741824;
+        const layer = getValue(nodeData.layer) || getValue(nodeData.value?.layer) || 33554432;  // UI_2D as default
 
         // 调试输出
         console.log(`创建节点: ${name}, parentNodeIndex: ${parentNodeIndex}`);
@@ -2564,11 +2619,22 @@ export class PrefabTools implements ToolExecutor {
     
     // 创建标准的组件对象
     private createStandardComponentObject(componentData: any, nodeId: number, prefabInfoId: number): any {
-        const componentType = componentData.__type__ || componentData.type;
-        
+        let componentType = componentData.__type__ || componentData.type;
+
         if (!componentType) {
             console.warn('组件缺少类型信息:', componentData);
             return null;
+        }
+
+        // 处理脚本组件 - 将字符串类名转换为压缩 UUID
+        if (componentType && !componentType.startsWith('cc.')) {
+            const scriptAsset = componentData.properties?.__scriptAsset || componentData.__scriptAsset || componentData.value?.__scriptAsset;
+            const scriptUuid = scriptAsset?.value?.uuid || scriptAsset?.uuid;
+            if (scriptUuid && typeof scriptUuid === 'string' && scriptUuid.length >= 32) {
+                const compressedId = this.uuidToCompressedId(scriptUuid);
+                console.log(`[createStandardComponentObject] 脚本组件类型转换: ${componentType} -> ${compressedId}`);
+                componentType = compressedId;
+            }
         }
         
         // 基础组件结构 - 基于官方预制体格式

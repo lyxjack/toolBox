@@ -8,7 +8,9 @@
     "scripts": {
         "preinstall": "node ./scripts/preinstall.js",
         "build": "tsc",
-        "watch": "tsc -w"
+        "watch": "tsc -w",
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "description": "i18n:cocos-mcp-server.description",
     "main": "./dist/main.js",
@@ -22,7 +24,8 @@
         "@types/fs-extra": "^9.0.5",
         "@types/node": "^18.17.1",
         "@types/uuid": "^9.0.8",
-        "typescript": "^5.8.2"
+        "typescript": "^5.8.2",
+        "vitest": "^4.1.4"
     },
     "panels": {
         "default": {
@@ -39,7 +42,7 @@
         }
     },
     "contributions": {
-                "menu": [
+        "menu": [
             {
                 "path": "i18n:menu.extension/Cocos MCP Server",
                 "label": "i18n:cocos-mcp-server.open_panel",

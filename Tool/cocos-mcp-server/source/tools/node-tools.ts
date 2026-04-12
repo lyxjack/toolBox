@@ -433,6 +433,24 @@ export class NodeTools implements ToolExecutor {
                     }
                 }
 
+                // 设置 layer 为 UI_2D (33554432)，确保 UI Camera 可渲染
+                if (uuid) {
+                    try {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        await Editor.Message.request('scene', 'set-property', {
+                            uuid: uuid,
+                            path: 'layer',
+                            dump: {
+                                type: 'Enum',
+                                value: 33554432  // UI_2D
+                            }
+                        });
+                        console.log('Node layer set to UI_2D (33554432)');
+                    } catch (err) {
+                        console.warn('Failed to set node layer:', err);
+                    }
+                }
+
                 // 设置初始变换（如果提供的话）
                 if (args.initialTransform && uuid) {
                     try {
@@ -522,7 +540,7 @@ export class NodeTools implements ToolExecutor {
                         type: comp.__type__ || 'Unknown',
                         enabled: comp.enabled !== undefined ? comp.enabled : true
                     })),
-                    layer: nodeData.layer?.value || 1073741824,
+                    layer: nodeData.layer?.value || 33554432,  // UI_2D as default
                     mobility: nodeData.mobility?.value || 0
                 };
                 resolve({ success: true, data: info });
