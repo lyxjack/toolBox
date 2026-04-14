@@ -1,5 +1,5 @@
 ---
-id: ERR-008
+id: ERR-006
 type: error
 errorCode: BHV-001
 severity: medium
@@ -13,7 +13,7 @@ tags:
   - ki/error-book
 prevention: "端口分配确定后不再更改，MCP=3001 游戏后端=3000，冲突时一次性解决"
 aliases:
-  - ERR-008
+  - ERR-006
 ---
 
 # MCP 端口配置反复变更导致混乱

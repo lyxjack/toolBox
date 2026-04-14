@@ -1,5 +1,5 @@
 ---
-id: ERR-014
+id: ERR-012
 type: error
 errorCode: BHV-001
 severity: high
@@ -14,7 +14,7 @@ tags:
   - ki/error-book
 prevention: "导入美工资源时第一步重命名为英文，禁止中文/空格文件名进入 assets/"
 aliases:
-  - ERR-014
+  - ERR-012
 ---
 
 # 美工资源使用中文文件名导入到项目

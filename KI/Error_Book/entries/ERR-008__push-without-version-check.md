@@ -1,5 +1,5 @@
 ---
-id: ERR-010
+id: ERR-008
 type: error
 errorCode: BHV-001
 severity: high
@@ -13,7 +13,7 @@ tags:
   - ki/error-book
 prevention: "git push 之前必须先询问用户是否需要更新版号，给出 semver 建议，等用户确认后再 push"
 aliases:
-  - ERR-010
+  - ERR-008
 ci_rules: []
 ---
 

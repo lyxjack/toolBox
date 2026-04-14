@@ -1,5 +1,5 @@
 ---
-id: ERR-006
+id: ERR-005
 type: error
 errorCode: ISO-003
 severity: critical
@@ -15,7 +15,7 @@ tags:
   - ki/error-book
 prevention: ".prefab 文件的结构性修改只能通过 Cocos 编辑器或 MCP API，禁止 python/脚本增删数组元素"
 aliases:
-  - ERR-006
+  - ERR-005
 ci_rules: []
 ---
 

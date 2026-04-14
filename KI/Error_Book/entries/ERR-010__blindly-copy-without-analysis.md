@@ -1,5 +1,5 @@
 ---
-id: ERR-012
+id: ERR-010
 type: error
 errorCode: BHV-001
 severity: high

@@ -1,5 +1,5 @@
 ---
-id: ERR-009
+id: ERR-007
 type: error
 errorCode: BHV-001
 severity: high
@@ -14,7 +14,7 @@ tags:
   - ki/error-book
 prevention: "Claude Code MCP 注册必须用 `claude mcp add --scope user`，不能手写 ~/.claude/.mcp.json"
 aliases:
-  - ERR-009
+  - ERR-007
 ---
 
 # Obsidian MCP 配置写入错误路径导致工具不加载

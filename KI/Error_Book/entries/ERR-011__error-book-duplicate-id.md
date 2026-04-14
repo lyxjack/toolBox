@@ -1,5 +1,5 @@
 ---
-id: ERR-013
+id: ERR-011
 type: error
 errorCode: EVD-001
 severity: medium
@@ -13,7 +13,7 @@ tags:
   - ki/error-book
 prevention: "写入错题本前必须先查 entries/ 目录已有文件的最大 ID，新条目用 max+1"
 aliases:
-  - ERR-013
+  - ERR-011
 ---
 
 # 写入错题本时 ID 与已有条目重复
