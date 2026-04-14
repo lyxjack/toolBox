@@ -179,6 +179,42 @@ export class PrefabTools implements ToolExecutor {
                     },
                     required: ['nodeUuid', 'assetUuid']
                 }
+            },
+            {
+                name: 'open_edit_mode',
+                description: 'Open a prefab in edit mode (like double-clicking in editor). The prefab becomes the current "scene" and all node/component operations act on the prefab directly.',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        prefabPath: {
+                            type: 'string',
+                            description: 'Prefab asset path (e.g., db://assets/resources/prefab/ui/homeView.prefab)'
+                        }
+                    },
+                    required: ['prefabPath']
+                }
+            },
+            {
+                name: 'save_edit',
+                description: 'Save the currently open prefab in edit mode (equivalent to Ctrl+S in prefab edit mode). Must be called while a prefab is open in edit mode.',
+                inputSchema: {
+                    type: 'object',
+                    properties: {}
+                }
+            },
+            {
+                name: 'close_edit_mode',
+                description: 'Close prefab edit mode and return to the previous scene. Optionally saves before closing.',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        save: {
+                            type: 'boolean',
+                            description: 'Whether to save before closing (default: true)',
+                            default: true
+                        }
+                    }
+                }
             }
         ];
     }
@@ -205,6 +241,12 @@ export class PrefabTools implements ToolExecutor {
                 return await this.duplicatePrefab(args);
             case 'restore_prefab_node':
                 return await this.restorePrefabNode(args.nodeUuid, args.assetUuid);
+            case 'open_edit_mode':
+                return await this.openEditMode(args.prefabPath);
+            case 'save_edit':
+                return await this.saveEdit();
+            case 'close_edit_mode':
+                return await this.closeEditMode(args.save);
             default:
                 throw new Error(`Unknown tool: ${toolName}`);
         }
@@ -2917,6 +2959,118 @@ export class PrefabTools implements ToolExecutor {
             console.error('保存预制体文件时出错:', error);
             return { success: false, error: error.message };
         }
+    }
+
+    // ──────────────────────────────────────────────
+    // Prefab Edit Mode tools
+    // ──────────────────────────────────────────────
+
+    private _previousSceneUuid: string | null = null;
+
+    private async openEditMode(prefabPath: string): Promise<ToolResponse> {
+        return new Promise(async (resolve) => {
+            try {
+                // Query the prefab's UUID
+                const prefabUuid: string | null = await Editor.Message.request('asset-db', 'query-uuid', prefabPath);
+                if (!prefabUuid) {
+                    resolve({ success: false, error: `Prefab not found: ${prefabPath}` });
+                    return;
+                }
+
+                // Remember current scene so we can return to it later
+                try {
+                    const currentSceneUuid: string | null = await Editor.Message.request('scene', 'query-current-scene');
+                    this._previousSceneUuid = currentSceneUuid;
+                } catch {
+                    this._previousSceneUuid = null;
+                }
+
+                // Open the prefab in edit mode (same as double-clicking in editor)
+                await Editor.Message.request('scene', 'open-scene', prefabUuid);
+
+                // Wait a moment for the scene to load, then query root node
+                await new Promise(r => setTimeout(r, 500));
+
+                let rootNodeUuid: string | null = null;
+                try {
+                    // Query the root node of the opened prefab
+                    const sceneTree: any = await Editor.Message.request('scene', 'query-node-tree');
+                    if (sceneTree && sceneTree.children && sceneTree.children.length > 0) {
+                        rootNodeUuid = sceneTree.children[0].uuid || null;
+                    }
+                    if (!rootNodeUuid && sceneTree && sceneTree.uuid) {
+                        rootNodeUuid = sceneTree.uuid;
+                    }
+                } catch {
+                    // Could not query tree, still report success with prefab opened
+                }
+
+                resolve({
+                    success: true,
+                    data: {
+                        prefabPath,
+                        prefabUuid,
+                        rootNodeUuid: rootNodeUuid || prefabUuid,
+                        message: `Prefab opened in edit mode: ${prefabPath}`
+                    }
+                });
+            } catch (err: any) {
+                resolve({ success: false, error: `Failed to open prefab edit mode: ${err.message}` });
+            }
+        });
+    }
+
+    private async saveEdit(): Promise<ToolResponse> {
+        return new Promise(async (resolve) => {
+            try {
+                // In prefab edit mode, save-scene saves the prefab
+                await Editor.Message.request('scene', 'save-scene');
+                resolve({
+                    success: true,
+                    message: 'Prefab saved successfully in edit mode'
+                });
+            } catch (err: any) {
+                resolve({ success: false, error: `Failed to save prefab: ${err.message}` });
+            }
+        });
+    }
+
+    private async closeEditMode(save: boolean = true): Promise<ToolResponse> {
+        return new Promise(async (resolve) => {
+            try {
+                // Save before closing if requested
+                if (save) {
+                    try {
+                        await Editor.Message.request('scene', 'save-scene');
+                    } catch {
+                        // Save failed but we still want to close
+                    }
+                }
+
+                // Return to the previous scene
+                if (this._previousSceneUuid) {
+                    await Editor.Message.request('scene', 'open-scene', this._previousSceneUuid);
+                    this._previousSceneUuid = null;
+                    resolve({
+                        success: true,
+                        message: 'Prefab edit mode closed, returned to previous scene'
+                    });
+                } else {
+                    // No previous scene recorded, try to create a new empty scene
+                    try {
+                        await Editor.Message.request('scene', 'new-scene');
+                    } catch {
+                        // Ignore — at least we exited prefab mode
+                    }
+                    resolve({
+                        success: true,
+                        message: 'Prefab edit mode closed (no previous scene to return to)'
+                    });
+                }
+            } catch (err: any) {
+                resolve({ success: false, error: `Failed to close prefab edit mode: ${err.message}` });
+            }
+        });
     }
 
 }

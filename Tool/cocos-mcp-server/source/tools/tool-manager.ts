@@ -10,11 +10,49 @@ export class ToolManager {
     constructor() {
         this.settings = this.readToolManagerSettings();
         this.initializeAvailableTools();
-        
+
         // 如果没有配置，自动创建一个默认配置
         if (this.settings.configurations.length === 0) {
             console.log('[ToolManager] No configurations found, creating default configuration...');
             this.createConfiguration('默认配置', '自动创建的默认工具配置');
+        }
+
+        // Sync new tools into existing configurations
+        this.syncNewToolsToConfigurations();
+    }
+
+    /**
+     * Sync newly added tools into all existing configurations.
+     * Tools present in availableTools but missing from a saved configuration
+     * are appended (enabled by default). Removed tools are pruned.
+     */
+    private syncNewToolsToConfigurations(): void {
+        let dirty = false;
+        const availableKey = (t: ToolConfig) => `${t.category}_${t.name}`;
+        const availableSet = new Set(this.availableTools.map(availableKey));
+
+        for (const config of this.settings.configurations) {
+            const existingKeys = new Set(config.tools.map(availableKey));
+
+            // Add new tools
+            for (const tool of this.availableTools) {
+                if (!existingKeys.has(availableKey(tool))) {
+                    config.tools.push({ ...tool, enabled: true });
+                    dirty = true;
+                    console.log(`[ToolManager] Synced new tool "${tool.category}_${tool.name}" into config "${config.name}"`);
+                }
+            }
+
+            // Remove tools that no longer exist in code
+            const before = config.tools.length;
+            config.tools = config.tools.filter(t => availableSet.has(availableKey(t)));
+            if (config.tools.length !== before) {
+                dirty = true;
+            }
+        }
+
+        if (dirty) {
+            this.saveSettings();
         }
     }
 

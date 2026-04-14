@@ -542,19 +542,97 @@ export class ProjectTools implements ToolExecutor {
         });
     }
 
+    /**
+     * Wait for image asset compilation to complete (spriteFrame sub-asset ready).
+     * Polls asset-db until the spriteFrame sub-asset (@f9941) is queryable.
+     */
+    private async waitForSpriteFrameCompilation(url: string, timeoutMs: number = 10000): Promise<boolean> {
+        const interval = 500;
+        const maxAttempts = Math.ceil(timeoutMs / interval);
+
+        for (let i = 0; i < maxAttempts; i++) {
+            try {
+                const assetInfo: any = await Editor.Message.request('asset-db', 'query-asset-info', url);
+                if (assetInfo && assetInfo.uuid) {
+                    const spriteFrameUuid = `${assetInfo.uuid}@f9941`;
+                    const subUrl = await Editor.Message.request('asset-db', 'query-url', spriteFrameUuid);
+                    if (subUrl) {
+                        return true;
+                    }
+                }
+            } catch {
+                // asset not yet ready, continue polling
+            }
+            await new Promise(r => setTimeout(r, interval));
+        }
+        return false;
+    }
+
+    /**
+     * Ensure a png asset's meta has userData.type = "sprite-frame".
+     * After refresh/reimport, query the meta via asset-db. If type is wrong,
+     * save corrected meta and reimport again.
+     */
+    private async ensureSpriteFrameType(url: string): Promise<void> {
+        try {
+            const meta: any = await Editor.Message.request('asset-db', 'query-asset-meta', url);
+            if (meta && meta.userData && meta.userData.type !== 'sprite-frame') {
+                meta.userData.type = 'sprite-frame';
+                await Editor.Message.request('asset-db', 'save-asset-meta', url, JSON.stringify(meta));
+                await Editor.Message.request('asset-db', 'reimport-asset', url);
+            }
+        } catch {
+            // If query-asset-meta is not available, try filesystem approach
+            try {
+                const diskPath: string | null = await Editor.Message.request('asset-db', 'query-path', url);
+                if (diskPath) {
+                    const metaPath = `${diskPath}.meta`;
+                    if (fs.existsSync(metaPath)) {
+                        const metaContent = JSON.parse(fs.readFileSync(metaPath, 'utf-8'));
+                        if (metaContent.userData && metaContent.userData.type !== 'sprite-frame') {
+                            metaContent.userData.type = 'sprite-frame';
+                            fs.writeFileSync(metaPath, JSON.stringify(metaContent, null, 2), 'utf-8');
+                            await Editor.Message.request('asset-db', 'reimport-asset', url);
+                        }
+                    }
+                }
+            } catch {
+                // Could not fix meta, will be caught by caller
+            }
+        }
+    }
+
+    private isImageAsset(url: string): boolean {
+        return /\.(png|jpg|jpeg|gif|tga|bmp|psd)$/i.test(url);
+    }
+
     private async refreshAssets(folder?: string): Promise<ToolResponse> {
-        return new Promise((resolve) => {
-            // 使用正确的 asset-db API 刷新资源
+        return new Promise(async (resolve) => {
             const targetPath = folder || 'db://assets';
-            
-            Editor.Message.request('asset-db', 'refresh-asset', targetPath).then(() => {
+
+            try {
+                await Editor.Message.request('asset-db', 'refresh-asset', targetPath);
+
+                // For image assets, ensure spriteFrame type and wait for compilation
+                if (this.isImageAsset(targetPath)) {
+                    await this.ensureSpriteFrameType(targetPath);
+                    const compiled = await this.waitForSpriteFrameCompilation(targetPath);
+                    if (!compiled) {
+                        resolve({
+                            success: false,
+                            error: `Assets refreshed but spriteFrame compilation timed out for: ${targetPath}`
+                        });
+                        return;
+                    }
+                }
+
                 resolve({
                     success: true,
                     message: `Assets refreshed in: ${targetPath}`
                 });
-            }).catch((err: Error) => {
+            } catch (err: any) {
                 resolve({ success: false, error: err.message });
-            });
+            }
         });
     }
 
@@ -879,18 +957,38 @@ export class ProjectTools implements ToolExecutor {
     }
 
     private async reimportAsset(url: string): Promise<ToolResponse> {
-        return new Promise((resolve) => {
-            Editor.Message.request('asset-db', 'reimport-asset', url).then(() => {
+        return new Promise(async (resolve) => {
+            try {
+                // For image assets, ensure userData.type is sprite-frame before reimport
+                if (this.isImageAsset(url)) {
+                    await this.ensureSpriteFrameType(url);
+                }
+
+                await Editor.Message.request('asset-db', 'reimport-asset', url);
+
+                // For image assets, wait for spriteFrame compilation to complete
+                if (this.isImageAsset(url)) {
+                    await this.ensureSpriteFrameType(url);
+                    const compiled = await this.waitForSpriteFrameCompilation(url);
+                    if (!compiled) {
+                        resolve({
+                            success: false,
+                            error: `Asset reimported but spriteFrame compilation timed out for: ${url}`
+                        });
+                        return;
+                    }
+                }
+
                 resolve({
                     success: true,
                     data: {
                         url: url,
-                        message: 'Asset reimported successfully'
+                        message: 'Asset reimported successfully (spriteFrame compilation verified)'
                     }
                 });
-            }).catch((err: Error) => {
+            } catch (err: any) {
                 resolve({ success: false, error: err.message });
-            });
+            }
         });
     }
 
