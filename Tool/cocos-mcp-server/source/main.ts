@@ -66,15 +66,15 @@ export const methods: { [key: string]: (...any: any) => any } = {
      * @zh 更新服务器设置
      */
     updateSettings(settings: MCPServerSettings) {
-        saveSettings(settings);
+        // Use the merged settings returned by saveSettings (not the partial
+        // panel payload) so fields like disabledScopes — not surfaced by the
+        // UI — still reach the running MCPServer instance.
+        const full = saveSettings(settings);
         if (mcpServer) {
             mcpServer.stop();
-            mcpServer = new MCPServer(settings);
-            mcpServer.start();
-        } else {
-            mcpServer = new MCPServer(settings);
-            mcpServer.start();
         }
+        mcpServer = new MCPServer(full);
+        mcpServer.start();
     },
 
     /**

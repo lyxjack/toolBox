@@ -46,7 +46,7 @@ export function readSettings(): MCPServerSettings {
     return DEFAULT_SETTINGS;
 }
 
-export function saveSettings(settings: MCPServerSettings): void {
+export function saveSettings(settings: MCPServerSettings): MCPServerSettings {
     try {
         ensureSettingsDir();
         const settingsFile = getSettingsPath();
@@ -60,8 +60,13 @@ export function saveSettings(settings: MCPServerSettings): void {
                 existing = {};
             }
         }
-        const merged = { ...existing, ...settings };
+        const merged = { ...existing, ...settings } as MCPServerSettings;
         fs.writeFileSync(settingsFile, JSON.stringify(merged, null, 2));
+        // Return the merged object so callers (main.ts:updateSettings) can
+        // instantiate MCPServer with the full settings — not just the partial
+        // panel payload. Without this, fields like disabledScopes round-trip
+        // through the file but never reach the running server.
+        return merged;
     } catch (e) {
         console.error('Failed to save settings:', e);
         throw e;
