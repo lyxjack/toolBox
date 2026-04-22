@@ -50,7 +50,18 @@ export function saveSettings(settings: MCPServerSettings): void {
     try {
         ensureSettingsDir();
         const settingsFile = getSettingsPath();
-        fs.writeFileSync(settingsFile, JSON.stringify(settings, null, 2));
+        // Merge with existing file content so UI-triggered saves preserve
+        // fields not surfaced in the panel (e.g., disabledScopes — Phase 0A).
+        let existing: Record<string, any> = {};
+        if (fs.existsSync(settingsFile)) {
+            try {
+                existing = JSON.parse(fs.readFileSync(settingsFile, 'utf8'));
+            } catch {
+                existing = {};
+            }
+        }
+        const merged = { ...existing, ...settings };
+        fs.writeFileSync(settingsFile, JSON.stringify(merged, null, 2));
     } catch (e) {
         console.error('Failed to save settings:', e);
         throw e;
