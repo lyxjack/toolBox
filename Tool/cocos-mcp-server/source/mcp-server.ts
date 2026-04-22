@@ -1,7 +1,26 @@
 import * as http from 'http';
 import * as url from 'url';
 import { v4 as uuidv4 } from 'uuid';
-import { MCPServerSettings, ServerStatus, MCPClient, ToolDefinition } from './types';
+import { MCPServerSettings, ServerStatus, MCPClient, ToolDefinition, ToolScope } from './types';
+
+// Category → default scope. Per-tool `scope` on a ToolDefinition overrides this.
+// Derived from MCP_AUDIT_REPORT.md §7: 8 core + 1 optional + 5 rare = 14 categories (= keys of this.tools).
+const CATEGORY_SCOPES: Record<string, ToolScope> = {
+    scene: 'core',
+    node: 'core',
+    component: 'core',
+    prefab: 'core',
+    project: 'core',
+    debug: 'core',
+    assetAdvanced: 'core',
+    sceneAdvanced: 'core',
+    validation: 'optional',
+    preferences: 'rare',
+    server: 'rare',
+    broadcast: 'rare',
+    sceneView: 'rare',
+    referenceImage: 'rare'
+};
 import { SceneTools } from './tools/scene-tools';
 import { NodeTools } from './tools/node-tools';
 import { ComponentTools } from './tools/component-tools';
@@ -90,12 +109,21 @@ export class MCPServer {
 
     private setupTools(): void {
         this.toolsList = [];
-        
-        // 如果没有启用工具配置，返回所有工具
+
+        // Scope filter is applied to BOTH branches (default full load and enabledTools filter).
+        // A tool is skipped if its effective scope (per-tool override > category default) is in disabledScopes.
+        const disabledScopes = new Set<ToolScope>(this.settings.disabledScopes || []);
+        const isScopeDisabled = (category: string, tool: ToolDefinition): boolean => {
+            const effective: ToolScope = tool.scope ?? CATEGORY_SCOPES[category] ?? 'core';
+            return disabledScopes.has(effective);
+        };
+
+        // 如果没有启用工具配置，返回所有工具(受 disabledScopes 过滤)
         if (!this.enabledTools || this.enabledTools.length === 0) {
             for (const [category, toolSet] of Object.entries(this.tools)) {
                 const tools = toolSet.getTools();
                 for (const tool of tools) {
+                    if (isScopeDisabled(category, tool)) continue;
                     this.toolsList.push({
                         name: `${category}_${tool.name}`,
                         description: tool.description,
@@ -104,12 +132,13 @@ export class MCPServer {
                 }
             }
         } else {
-            // 根据启用的工具配置过滤
+            // 根据启用的工具配置过滤(与 disabledScopes 取交集)
             const enabledToolNames = new Set(this.enabledTools.map(tool => `${tool.category}_${tool.name}`));
-            
+
             for (const [category, toolSet] of Object.entries(this.tools)) {
                 const tools = toolSet.getTools();
                 for (const tool of tools) {
+                    if (isScopeDisabled(category, tool)) continue;
                     const toolName = `${category}_${tool.name}`;
                     if (enabledToolNames.has(toolName)) {
                         this.toolsList.push({
@@ -121,8 +150,11 @@ export class MCPServer {
                 }
             }
         }
-        
-        console.log(`[MCPServer] Setup tools: ${this.toolsList.length} tools available`);
+
+        const scopeMsg = disabledScopes.size > 0
+            ? ` (disabled scopes: [${Array.from(disabledScopes).join(', ')}])`
+            : '';
+        console.log(`[MCPServer] Setup tools: ${this.toolsList.length} tools available${scopeMsg}`);
     }
 
     public getFilteredTools(enabledTools: any[]): ToolDefinition[] {

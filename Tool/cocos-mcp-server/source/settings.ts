@@ -7,7 +7,8 @@ const DEFAULT_SETTINGS: MCPServerSettings = {
     autoStart: false,
     enableDebugLog: false,
     allowedOrigins: ['*'],
-    maxConnections: 10
+    maxConnections: 10,
+    disabledScopes: []
 };
 
 const DEFAULT_TOOL_MANAGER_SETTINGS: ToolManagerSettings = {

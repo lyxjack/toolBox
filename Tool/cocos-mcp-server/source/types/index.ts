@@ -1,9 +1,15 @@
+export type ToolScope = 'core' | 'optional' | 'rare';
+
 export interface MCPServerSettings {
     port: number;
     autoStart: boolean;
     enableDebugLog: boolean;
     allowedOrigins: string[];
     maxConnections: number;
+    // Token-budget control: scopes listed here are skipped during setupTools().
+    // Empty array (default) = backward-compatible full load.
+    // Recommended: ["rare"] to disable low-frequency categories (see MCP_AUDIT_REPORT.md §5).
+    disabledScopes?: ToolScope[];
 }
 
 export interface ServerStatus {
@@ -16,6 +22,9 @@ export interface ToolDefinition {
     name: string;
     description: string;
     inputSchema: any;
+    // Optional per-tool scope override. If unset, the category default
+    // (CATEGORY_SCOPES in mcp-server.ts) applies.
+    scope?: ToolScope;
 }
 
 export interface ToolResponse {
