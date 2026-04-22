@@ -1737,3 +1737,149 @@ v1.3+ 的 `assetAdvanced_batch_configure` 把它压到 **2 次**:
 - `border`(九宫格 slice)— 需要定位 sprite-frame subMeta(`f9941` 等),不同版本 ID 不稳定。独立工具 `sprite_set_slice_border` 将在 Phase 1 评估
 - `autoSpriteFrame` / `autoClampNonPot` 作为 `refresh_assets` / `reimport_asset` 默认行为 — 属破坏性变更,待实机验证后放 Phase 1
 - 见 `MCP_AUDIT_REPORT.md` §3.3 / §7 路线图
+
+---
+
+## 附录 D:批量 UI 工具(v1.3+)
+
+### D.1 场景
+
+构建一个 reward slot 常见 sequence(改之前):
+
+```
+node_create_node            # 新建 slot 节点
+component_add_component × 3  # UITransform + Sprite + Label
+component_set_component_property × 6-8  # contentSize / spriteFrame / string / fontSize / color / ...
+= 10-12 次 MCP 调用,一个 slot
+```
+
+v1.3+ 有了底座 `component_batch_set_properties` + UI 语义层 `ui_set_label/layout/sprite`,一个 slot 压到 **4-5 次**:
+
+```
+node_create_node
+component_add_component × 3
+ui_set_sprite     # 一次设完 spriteFrame/sizeMode/color
+ui_set_label      # 一次设完 string/fontSize/color/isBold
+```
+
+### D.2 底座:`component_batch_set_properties`
+
+对**同一组件**一次设多个 property。schema 完全对齐现有 `set_component_property`,只是 `properties` 变成数组:
+
+```json
+{
+  "tool": "component_batch_set_properties",
+  "arguments": {
+    "nodeUuid": "<uuid>",
+    "componentType": "cc.Label",
+    "properties": [
+      { "property": "string",   "propertyType": "string",  "value": "×5000" },
+      { "property": "fontSize", "propertyType": "number",  "value": 22 },
+      { "property": "isBold",   "propertyType": "boolean", "value": true },
+      { "property": "color",    "propertyType": "color",   "value": { "r": 80, "g": 50, "b": 20, "a": 255 } }
+    ]
+  }
+}
+```
+
+返回:
+```json
+{
+  "success": true,
+  "data": {
+    "nodeUuid": "<uuid>",
+    "componentType": "cc.Label",
+    "succeededCount": 4, "failedCount": 0,
+    "succeeded": [{ "property": "string" }, ...],
+    "failed": []
+  }
+}
+```
+
+**部分失败**(某字段不识别)→ success=true,warning 提示,data.failed 列出原因 + errorCode。**全部失败** → success=false + `errorCode: EDITOR_API_ERROR`。
+
+### D.3 UI 语义层:`ui_set_label` / `ui_set_layout` / `ui_set_sprite`
+
+比底座更短 — 用户不需记 `propertyType`,只填 Cocos 组件已知字段:
+
+**`ui_set_label`**:
+```json
+{
+  "tool": "ui_set_label",
+  "arguments": {
+    "nodeUuid": "<uuid>",
+    "string": "×5000",
+    "fontSize": 22,
+    "isBold": true,
+    "color": { "r": 80, "g": 50, "b": 20, "a": 255 }
+  }
+}
+```
+所有字段可选,内部自动 map propertyType 后委托到 `component_batch_set_properties`。
+
+**`ui_set_layout`**:
+- `type` / `resizeMode` / `spacingX` / `spacingY` / `paddingLeft..Bottom` / `horizontalDirection` / `verticalDirection`
+- 枚举用 number(HORIZONTAL=1, VERTICAL=2, GRID=3)
+
+**`ui_set_sprite`**:
+- `spriteFrame`(UUID 或 db:// URL)/ `sizeMode`(0=CUSTOM / 1=TRIMMED / 2=RAW) / `type`(0=SIMPLE / 1=SLICED / 2=TILED / 3=FILLED)/ `color`
+
+### D.4 实战示例 — reward slot 完整构建
+
+```json
+[
+  { "tool": "node_create_node",
+    "arguments": { "name": "slot_gold", "parentUuid": "<rewardBox>", "layer": 33554432 } },
+
+  { "tool": "component_add_component",
+    "arguments": { "nodeUuid": "<slot>", "componentType": "cc.Sprite" } },
+  { "tool": "component_add_component",
+    "arguments": { "nodeUuid": "<slot>", "componentType": "cc.UITransform" } },
+
+  { "tool": "ui_set_sprite",
+    "arguments": { "nodeUuid": "<slot>", "spriteFrame": "db://assets/cardProps/gold.png/gold", "sizeMode": 1, "type": 0 } },
+
+  { "tool": "component_batch_set_properties",
+    "arguments": {
+      "nodeUuid": "<slot>",
+      "componentType": "cc.UITransform",
+      "properties": [
+        { "property": "contentSize", "propertyType": "size", "value": { "width": 60, "height": 78 } }
+      ]
+    } },
+
+  { "tool": "node_create_node",
+    "arguments": { "name": "lbCount", "parentUuid": "<slot>", "layer": 33554432 } },
+  { "tool": "component_add_component",
+    "arguments": { "nodeUuid": "<lbCount>", "componentType": "cc.Label" } },
+
+  { "tool": "ui_set_label",
+    "arguments": { "nodeUuid": "<lbCount>", "string": "×5000", "fontSize": 22, "isBold": true,
+                   "color": { "r": 80, "g": 50, "b": 20, "a": 255 } } }
+]
+```
+
+**8 次 MCP 调用**(含建两个节点 + 3 组件 + 3 次属性设置),vs 改前的 15+ 次。slot 个数多时收益线性放大。
+
+### D.5 组合事务(推荐做法)
+
+对 prefab 批量改动,用 PREFAB_EDIT_BEST_PRACTICES.md 的 6+N 件套包裹:
+
+```
+prefab_open_edit_mode
+sceneAdvanced_begin_undo_recording
+<batch UI ops above>
+sceneAdvanced_end_undo_recording
+scene_save_scene
+prefab_save_edit
+prefab_close_edit_mode
+```
+
+失败时 `sceneAdvanced_cancel_undo_recording` + `prefab_close_edit_mode(save=false)` 回滚。
+
+### D.6 未覆盖(留给 Phase 2+)
+
+- **ui_bind_button_event**(审计 §4.2,P1 候选) — Button click 事件绑定到 script 方法
+- **node_create_ui_node / prefab_add_ui_node**(审计 §2.2.2 + §4.2.1)— "建 UI 节点 + 挂组件 + 默认 UI_2D layer" 合一
+- **ensure: true** — 组件不存在时自动 add_component(本次未实现,用户先手动 `add_component`)
+- **动画 / 物理 / 粒子**的类似批量工具

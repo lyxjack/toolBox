@@ -1,4 +1,5 @@
 import { ToolDefinition, ToolResponse, ToolExecutor, ComponentInfo } from '../types';
+import { createErrorResponse, ERROR_CODES } from '../utils/error-response';
 
 export class ComponentTools implements ToolExecutor {
     getTools(): ToolDefinition[] {
@@ -178,6 +179,41 @@ export class ComponentTools implements ToolExecutor {
                         }
                     }
                 }
+            },
+            {
+                name: 'batch_set_properties',
+                description: 'Set multiple properties on a single component in one call. Wraps set_component_property N times — all properties target the same (nodeUuid, componentType). Failures on individual properties are isolated; the batch returns succeeded/failed lists. Preferred for UI construction (saves N-1 MCP round-trips).',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        nodeUuid: {
+                            type: 'string',
+                            description: 'Target node UUID'
+                        },
+                        componentType: {
+                            type: 'string',
+                            description: 'Component type (e.g., cc.Label, cc.Sprite, cc.Layout, cc.UITransform). If unsure, call get_components first.'
+                        },
+                        properties: {
+                            type: 'array',
+                            description: 'Property entries. Each must include property name, propertyType (for type conversion), and value. Same shape as set_component_property individual calls.',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    property: { type: 'string', description: 'Property name (e.g., "string", "fontSize", "contentSize")' },
+                                    propertyType: {
+                                        type: 'string',
+                                        description: 'Data type for conversion',
+                                        enum: ['string', 'number', 'boolean', 'integer', 'float', 'color', 'vec2', 'vec3', 'size', 'node', 'component', 'spriteFrame', 'prefab', 'asset', 'nodeArray', 'colorArray', 'numberArray', 'stringArray']
+                                    },
+                                    value: { description: 'Property value (any type; matches propertyType)' }
+                                },
+                                required: ['property', 'propertyType', 'value']
+                            }
+                        }
+                    },
+                    required: ['nodeUuid', 'componentType', 'properties']
+                }
             }
         ];
     }
@@ -198,6 +234,8 @@ export class ComponentTools implements ToolExecutor {
                 return await this.attachScript(args.nodeUuid, args.scriptPath);
             case 'get_available_components':
                 return await this.getAvailableComponents(args.category);
+            case 'batch_set_properties':
+                return await this.batchSetProperties(args);
             default:
                 throw new Error(`Unknown tool: ${toolName}`);
         }
@@ -1085,6 +1123,93 @@ export class ComponentTools implements ToolExecutor {
                 });
             }
         });
+    }
+
+    /**
+     * Batch-set N properties on the same (nodeUuid, componentType).
+     * Internally calls setComponentProperty for each entry serially.
+     * Individual failures do NOT abort the batch — they are collected into `failed[]`.
+     * Returns success=true if at least one property applied; success=false if ALL failed.
+     */
+    private async batchSetProperties(args: {
+        nodeUuid: string;
+        componentType: string;
+        properties: Array<{ property: string; propertyType: string; value: any }>;
+    }): Promise<ToolResponse> {
+        const { nodeUuid, componentType, properties } = args;
+
+        if (!nodeUuid || typeof nodeUuid !== 'string') {
+            return createErrorResponse(
+                ERROR_CODES.INVALID_PARAMS,
+                'nodeUuid must be a non-empty string',
+                { suggestion: 'Use get_all_nodes or find_node_by_name to obtain the UUID' }
+            );
+        }
+        if (!componentType || typeof componentType !== 'string') {
+            return createErrorResponse(
+                ERROR_CODES.INVALID_PARAMS,
+                'componentType must be a non-empty string',
+                { suggestion: 'E.g. "cc.Label", "cc.Sprite", "cc.Layout"' }
+            );
+        }
+        if (!Array.isArray(properties) || properties.length === 0) {
+            return createErrorResponse(
+                ERROR_CODES.INVALID_PARAMS,
+                'properties must be a non-empty array',
+                { suggestion: 'Each entry: { property: string, propertyType: string, value: any }' }
+            );
+        }
+
+        const succeeded: Array<{ property: string }> = [];
+        const failed: Array<{ property: string; error: string; errorCode?: string }> = [];
+
+        for (const entry of properties) {
+            if (!entry || typeof entry.property !== 'string' || typeof entry.propertyType !== 'string') {
+                failed.push({
+                    property: entry?.property ?? '<missing>',
+                    error: 'entry missing property/propertyType',
+                    errorCode: ERROR_CODES.INVALID_PARAMS
+                });
+                continue;
+            }
+            const result = await this.setComponentProperty({
+                nodeUuid,
+                componentType,
+                property: entry.property,
+                propertyType: entry.propertyType,
+                value: entry.value
+            });
+            if (result.success) {
+                succeeded.push({ property: entry.property });
+            } else {
+                failed.push({
+                    property: entry.property,
+                    error: result.error || 'unknown',
+                    errorCode: result.errorCode || ERROR_CODES.UNKNOWN
+                });
+            }
+        }
+
+        const allFailed = succeeded.length === 0 && failed.length > 0;
+        if (allFailed) {
+            return createErrorResponse(
+                ERROR_CODES.EDITOR_API_ERROR,
+                `All ${failed.length} property write(s) failed on ${componentType}`,
+                { failed, suggestion: 'Verify componentType exists on the node (get_components) and property names are correct' }
+            );
+        }
+        return {
+            success: true,
+            data: {
+                nodeUuid,
+                componentType,
+                succeededCount: succeeded.length,
+                failedCount: failed.length,
+                succeeded,
+                failed
+            },
+            ...(failed.length > 0 ? { warning: `${failed.length} of ${properties.length} properties failed — see data.failed` } : {})
+        };
     }
 
 

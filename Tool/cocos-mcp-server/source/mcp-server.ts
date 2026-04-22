@@ -19,7 +19,8 @@ const CATEGORY_SCOPES: Record<string, ToolScope> = {
     server: 'rare',
     broadcast: 'rare',
     sceneView: 'rare',
-    referenceImage: 'rare'
+    referenceImage: 'rare',
+    ui: 'core'
 };
 import { SceneTools } from './tools/scene-tools';
 import { NodeTools } from './tools/node-tools';
@@ -35,6 +36,7 @@ import { SceneViewTools } from './tools/scene-view-tools';
 import { ReferenceImageTools } from './tools/reference-image-tools';
 import { AssetAdvancedTools } from './tools/asset-advanced-tools';
 import { ValidationTools } from './tools/validation-tools';
+import { UITools } from './tools/ui-tools';
 
 export class MCPServer {
     private settings: MCPServerSettings;
@@ -66,6 +68,7 @@ export class MCPServer {
             this.tools.referenceImage = new ReferenceImageTools();
             this.tools.assetAdvanced = new AssetAdvancedTools();
             this.tools.validation = new ValidationTools();
+            this.tools.ui = new UITools();
             console.log('[MCPServer] Tools initialized successfully');
         } catch (error) {
             console.error('[MCPServer] Error initializing tools:', error);
