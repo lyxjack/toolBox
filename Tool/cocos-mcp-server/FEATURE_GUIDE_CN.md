@@ -1497,3 +1497,76 @@ Cocos Creator 使用 `db://` 前缀的资源URL格式：
 ---
 
 *此文档基于 Cocos Creator MCP 服务器 v1.3.0 编写，如有更新请参考最新版本文档。*
+
+---
+
+## 附录 A:Token Budget 配置(v1.3+)
+
+### A.1 背景
+
+MCP client 首次连接时会拉取所有工具的 `inputSchema` 并注入对话上下文。当前 server 暴露 **160 个工具**(14 category),全量加载约 **14,000 tokens**。在长对话中这是固定税,影响有效上下文。
+
+### A.2 scope 元数据
+
+每个工具都有一个 **scope**(来自 category 默认或工具自身 override):
+
+- **`core`** — 高频核心(scene / node / component / prefab / project / debug / assetAdvanced / sceneAdvanced) = **107 tools**
+- **`optional`** — 偶尔使用(validation) = **3 tools**
+- **`rare`** — 低频罕用(preferences / server / broadcast / sceneView / referenceImage) = **50 tools**
+
+rare 分类的依据:在实战项目(kingDianPuzzle 星星之路 20+ commit)中调用次数为 0(详见 `MCP_AUDIT_REPORT.md` §8)。
+
+### A.3 启用方法
+
+在 `{project}/settings/mcp-server.json` 中设置 `disabledScopes` 字段:
+
+```json
+{
+  "port": 3000,
+  "autoStart": false,
+  "disabledScopes": ["rare"]
+}
+```
+
+**推荐值**:
+| 配置 | toolsList.length | 预估 token 节省 |
+|---|---:|---:|
+| `[]`(默认)| 160 | 基线 |
+| `["rare"]`(推荐)| 110 | ~40% |
+| `["rare", "optional"]`(激进)| 107 | ~42% |
+
+保存后**重启 MCP server**(或在扩展管理器中点"重启插件"),启动日志出现:
+
+```
+[MCPServer] Setup tools: 110 tools available (disabled scopes: [rare])
+```
+
+### A.4 per-tool 覆盖
+
+对于希望**精细**控制的场景,每个 `ToolDefinition` 可以自带 `scope` 字段覆盖 category 默认:
+
+```typescript
+{
+  name: 'my_rarely_used_tool',
+  description: '...',
+  inputSchema: { ... },
+  scope: 'rare'  // 即便 category 是 core,此 tool 也被视为 rare
+}
+```
+
+此机制为 Phase 1 的细粒度 scope 标注预留。
+
+### A.5 与工具管理器(tool-manager)的叠加
+
+现有 UI 面板的 `enabledTools` 白名单与 `disabledScopes` **叠加**(取交集):
+
+- `disabledScopes` 先过滤一遍(移除 scope 命中的工具)
+- 再应用 `enabledTools`(如果配置了)
+
+即:UI 面板开启的工具,若其 scope 被 `disabledScopes` 禁用,依然不会加载。
+
+### A.6 相关参考
+
+- `MCP_AUDIT_REPORT.md` §5 — 4 种 token 优化方案的横向对比 + 公式
+- `PREFAB_EDIT_BEST_PRACTICES.md` — 高频 core 工具的组合使用指南
+- `source/mcp-server.ts` `CATEGORY_SCOPES` 常量 — category → scope 映射的 source of truth

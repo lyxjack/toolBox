@@ -15,6 +15,8 @@
 
 - **[📖 Complete Feature Guide (English)](FEATURE_GUIDE_EN.md)** - Detailed documentation for all 158 tools（待补充）
 - **[📖 完整功能指南 (中文)](FEATURE_GUIDE_CN.md)** - 所有158工具的详细文档（待补充）
+- **[🧰 Prefab 编辑最佳实践](PREFAB_EDIT_BEST_PRACTICES.md)** - 正确的 6+N 件套 sequence、回滚路径、常见踩坑
+- **[🔍 MCP 审计报告](MCP_AUDIT_REPORT.md)** - 工具清单、Token 优化方案、独立缺口分析
 
 
 ## 更新日志
@@ -255,6 +257,36 @@ claude mcp add --transport http cocos-creator http://127.0.0.1:3000/mcp（使用
 - **配置持久化**: 自动保存和加载工具配置
 - **配置导入导出**: 支持工具配置的导入导出功能
 - **实时状态管理**: 工具状态实时更新和同步
+
+### 💰 Token Budget 控制 (v1.3+)
+
+**问题**:全量加载会把 160 个工具的 schema 塞进会话(~14k token),长对话中占比显著。
+
+**解决**:在 `{project}/settings/mcp-server.json` 中声明要关闭的 scope:
+
+```json
+{
+  "disabledScopes": ["rare"]
+}
+```
+
+效果(启动日志):
+```
+[MCPServer] Setup tools: 110 tools available (disabled scopes: [rare])
+```
+
+**scope 分层**:
+| Scope | 默认包含的 category | 工具数 |
+|---|---|---:|
+| `core` | scene / node / component / prefab / project / debug / assetAdvanced / sceneAdvanced | 107 |
+| `optional` | validation | 3 |
+| `rare` | preferences / server / broadcast / sceneView / referenceImage | 50 |
+
+- **推荐配置**: `"disabledScopes": ["rare"]` → 160 → 110(-31% 条目,实测 token 降幅约 40%)
+- **激进配置**: `"disabledScopes": ["rare", "optional"]` → 107
+- **默认(空)**: 全量 160,保持向后兼容
+
+每个工具也可以用 `scope` 字段做 per-tool 覆盖(覆盖其 category 默认)。详细分析见 [MCP_AUDIT_REPORT.md](MCP_AUDIT_REPORT.md) §5。
 
 ### 🚀 核心优势
 - **操作码统一**: 所有工具采用"类别_操作"命名，参数Schema统一
