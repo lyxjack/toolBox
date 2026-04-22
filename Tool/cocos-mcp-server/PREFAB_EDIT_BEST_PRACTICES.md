@@ -142,8 +142,38 @@ MCP 目前**无法**直接在 `cc.Label.font` 上挂 TTFFont 资源(见审计 §
 
 ---
 
+## 错误处理与 errorCode(v1.3+)
+
+从 v1.3 起,prefab 相关工具返回的 `ToolResponse` 在失败时会带**机器可读** `errorCode`(见 `FEATURE_GUIDE_CN.md` 附录 B):
+
+| errorCode | 出现在 prefab 链路的场景 | 建议动作 |
+|---|---|---|
+| `NOT_FOUND` | prefab 路径错 / 节点 UUID 不存在 / 预制体文件不存在 | 用 `node_find_node_by_name` 或 `prefab_get_prefab_list` 核对标识 |
+| `INVALID_PARAMS` | 未提供 `prefabPath` / `savePath` | 读 `details.suggestion` 示例 |
+| `INVALID_STATE` | 原生 prefab 创建 API 不存在 / 复制功能不可用 | 按 `instruction` 走编辑器 GUI 路径 |
+| `IO_ERROR` | `.prefab` 文件 JSON 解析失败 | 检查是否被脚本污染(ERR-002/005),从 git 还原 |
+
+AI 处理失败时**优先读 `errorCode`**,再 fallback 到 `error` 字符串:
+
+```ts
+const resp = await callTool('prefab_open_edit_mode', { prefabPath });
+if (!resp.success) {
+  if (resp.errorCode === 'NOT_FOUND') {
+    // 先 prefab_get_prefab_list 核对路径
+  } else if (resp.errorCode === 'IO_ERROR') {
+    // 文件可能受污染;提示用户 git checkout
+  }
+}
+```
+
+当前 Phase 0B 仅在 `prefab-tools.ts` 做了 canonical 示例。其他工具文件后续增量跟进。
+
+---
+
 ## 延伸阅读
 - `MCP_AUDIT_REPORT.md` §3.2 — Prefab 编辑链路深度分析
+- `MCP_AUDIT_REPORT.md` §4.3 — 结构化 errorCode 的设计动机
+- `FEATURE_GUIDE_CN.md` 附录 B — errorCode 完整约定
 - `MCP_FEEDBACK_AND_PROPOSAL.md` §2 — 实战痛点(kingDianPuzzle 20+ commit 证据)
 - `KI/Error_Book/entries/ERR-002__python-modify-cocos-prefab.md`
 - `KI/Error_Book/entries/ERR-004__mcp-prefab-layer-ui2d.md`

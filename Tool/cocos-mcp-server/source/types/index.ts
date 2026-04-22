@@ -27,11 +27,21 @@ export interface ToolDefinition {
     scope?: ToolScope;
 }
 
+// Structured error companion for ToolResponse. Free-form keys allowed for site-specific context.
+export interface ErrorDetails {
+    suggestion?: string;            // hint shown to human/AI
+    relatedAssets?: string[];       // db:// URLs that may be relevant
+    editorLogRef?: string;          // pointer into editor log
+    [key: string]: any;
+}
+
 export interface ToolResponse {
     success: boolean;
     data?: any;
     message?: string;
-    error?: string;
+    error?: string;                 // human-readable error (kept for backward compat)
+    errorCode?: string;             // machine-readable code (UPPER_SNAKE_CASE; see ERROR_CODES in utils/error-response.ts)
+    details?: ErrorDetails;
     instruction?: string;
     warning?: string;
     verificationData?: any;

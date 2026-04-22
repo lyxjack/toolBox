@@ -1,4 +1,5 @@
 import { ToolDefinition, ToolResponse, ToolExecutor, PrefabInfo } from '../types';
+import { createErrorResponse, ERROR_CODES } from '../utils/error-response';
 
 export class PrefabTools implements ToolExecutor {
     getTools(): ToolDefinition[] {
@@ -600,7 +601,11 @@ export class PrefabTools implements ToolExecutor {
                 // 方法1: 尝试使用 create-node 然后设置预制体
                 const assetInfo = await this.getAssetInfo(args.prefabPath);
                 if (!assetInfo) {
-                    resolve({ success: false, error: '无法获取预制体信息' });
+                    resolve(createErrorResponse(
+                        ERROR_CODES.NOT_FOUND,
+                        '无法获取预制体信息',
+                        { relatedAssets: [args.prefabPath], suggestion: '确认 prefabPath 为合法 db:// URL,且资源已导入' }
+                    ));
                     return;
                 }
 
@@ -806,10 +811,11 @@ export class PrefabTools implements ToolExecutor {
                 // 支持 prefabPath 和 savePath 两种参数名
                 const pathParam = args.prefabPath || args.savePath;
                 if (!pathParam) {
-                    resolve({
-                        success: false,
-                        error: '缺少预制体路径参数。请提供 prefabPath 或 savePath。'
-                    });
+                    resolve(createErrorResponse(
+                        ERROR_CODES.INVALID_PARAMS,
+                        '缺少预制体路径参数。请提供 prefabPath 或 savePath。',
+                        { suggestion: '示例: { "prefabPath": "db://assets/prefabs/MyPrefab.prefab" }' }
+                    ));
                     return;
                 }
 
@@ -862,8 +868,11 @@ export class PrefabTools implements ToolExecutor {
             // 根据官方API文档，不存在直接的预制体创建API
             // 预制体创建需要手动在编辑器中完成
             resolve({
-                success: false,
-                error: '原生预制体创建API不存在',
+                ...createErrorResponse(
+                    ERROR_CODES.INVALID_STATE,
+                    '原生预制体创建API不存在',
+                    { suggestion: '预制体创建需要手动操作:编辑器中选节点 → 拖到资源管理器 / 右键生成预制体' }
+                ),
                 instruction: '根据Cocos Creator官方API文档，预制体创建需要手动操作：\n1. 在场景中选择节点\n2. 将节点拖拽到资源管理器中\n3. 或右键节点选择"生成预制体"'
             });
         });
@@ -875,10 +884,11 @@ export class PrefabTools implements ToolExecutor {
                 // 1. 获取源节点的完整数据
                 const nodeData = await this.getNodeData(nodeUuid);
                 if (!nodeData) {
-                    resolve({
-                        success: false,
-                        error: `无法找到节点: ${nodeUuid}`
-                    });
+                    resolve(createErrorResponse(
+                        ERROR_CODES.NOT_FOUND,
+                        `无法找到节点: ${nodeUuid}`,
+                        { suggestion: '用 node_get_all_nodes 或 node_find_node_by_name 先核对 UUID 是否存在于当前场景' }
+                    ));
                     return;
                 }
 
@@ -1486,10 +1496,11 @@ export class PrefabTools implements ToolExecutor {
                 // 读取预制体文件内容
                 Editor.Message.request('asset-db', 'query-asset-info', prefabPath).then((assetInfo: any) => {
                     if (!assetInfo) {
-                        resolve({
-                            success: false,
-                            error: '预制体文件不存在'
-                        });
+                        resolve(createErrorResponse(
+                            ERROR_CODES.NOT_FOUND,
+                            '预制体文件不存在',
+                            { relatedAssets: [prefabPath] }
+                        ));
                         return;
                     }
 
@@ -1510,10 +1521,11 @@ export class PrefabTools implements ToolExecutor {
                                 }
                             });
                         } catch (parseError) {
-                            resolve({
-                                success: false,
-                                error: '预制体文件格式错误，无法解析JSON'
-                            });
+                            resolve(createErrorResponse(
+                                ERROR_CODES.IO_ERROR,
+                                '预制体文件格式错误，无法解析JSON',
+                                { relatedAssets: [prefabPath], suggestion: '检查文件是否被外部脚本污染(参考 ERR-002/005);必要时从 git 还原' }
+                            ));
                         }
                     }).catch((error: any) => {
                         resolve({
@@ -1616,8 +1628,11 @@ export class PrefabTools implements ToolExecutor {
                 
                 // 预制体复制功能暂时禁用，因为涉及复杂的序列化格式
                 resolve({
-                    success: false,
-                    error: '预制体复制功能暂时不可用',
+                    ...createErrorResponse(
+                        ERROR_CODES.INVALID_STATE,
+                        '预制体复制功能暂时不可用',
+                        { suggestion: '编辑器 GUI 中手动复制(资源管理器右键复制/粘贴)' }
+                    ),
                     instruction: '请在 Cocos Creator 编辑器中手动复制预制体：\n1. 在资源管理器中选择要复制的预制体\n2. 右键选择复制\n3. 在目标位置粘贴'
                 });
 

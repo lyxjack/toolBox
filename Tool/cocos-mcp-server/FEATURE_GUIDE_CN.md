@@ -1570,3 +1570,72 @@ rare 分类的依据:在实战项目(kingDianPuzzle 星星之路 20+ commit)中�
 - `MCP_AUDIT_REPORT.md` §5 — 4 种 token 优化方案的横向对比 + 公式
 - `PREFAB_EDIT_BEST_PRACTICES.md` — 高频 core 工具的组合使用指南
 - `source/mcp-server.ts` `CATEGORY_SCOPES` 常量 — category → scope 映射的 source of truth
+
+---
+
+## 附录 B:错误码约定(v1.3+)
+
+### B.1 `ToolResponse` 结构
+
+每次工具调用返回的 `ToolResponse` 现在同时包含**人类可读**(`error: string` / `message`)与**机器可读**(`errorCode: string` / `details: ErrorDetails`)两路错误信息:
+
+```ts
+interface ToolResponse {
+  success: boolean;
+  data?: any;
+  message?: string;      // 人类可读
+  error?: string;        // 人类可读(向后兼容)
+  errorCode?: string;    // 机器可读(UPPER_SNAKE_CASE)
+  details?: {
+    suggestion?: string;
+    relatedAssets?: string[];
+    editorLogRef?: string;
+    [key: string]: any;
+  };
+  // ... 其余字段
+}
+```
+
+### B.2 `ERROR_CODES` 初始集
+
+约定用字符串常量(非 enum),方便每个站点按需扩展而不破坏 schema:
+
+| Code | 典型场景 |
+|---|---|
+| `NOT_FOUND` | asset / node / prefab / component UUID 或路径不存在 |
+| `INVALID_PARAMS` | 调用缺参或参数类型错误 |
+| `INVALID_STATE` | 无开放场景 / 未入编辑模式 / 功能被禁用 |
+| `EDITOR_API_ERROR` | `Editor.Message.request` 被 reject 或抛错 |
+| `IO_ERROR` | 文件读写 / meta 解析失败 |
+| `OPERATION_TIMEOUT` | awaited 操作超时 |
+| `PERMISSION_DENIED` | 编辑器拒绝(锁定资源 / 权限不足)|
+| `UNKNOWN` | 无法归类的 fallback |
+
+具体常量见 `source/utils/error-response.ts`。
+
+### B.3 AI / 客户端用法
+
+AI 处理失败时应**优先读 `errorCode`**,再 fallback 到 `error` 字符串:
+
+```ts
+if (!resp.success) {
+  switch (resp.errorCode) {
+    case 'NOT_FOUND':        /* 让用户核对路径/UUID */ break;
+    case 'INVALID_STATE':    /* 先开编辑模式或打开场景 */ break;
+    case 'INVALID_PARAMS':   /* 读 details.suggestion 查参数示例 */ break;
+    case 'IO_ERROR':         /* 可能是 ERR-002/005 类污染,考虑 git 还原 */ break;
+    default:                 /* 回退到 resp.error 字符串 */
+  }
+}
+```
+
+### B.4 当前 retrofit 覆盖范围
+
+本阶段(Phase 0B)仅在 `prefab-tools.ts` 的 7 个高频站点落实 errorCode,建立 canonical pattern。其余 225+ 站点保留原 `error: string` 字段(**向后兼容,未损失**),将在后续增量 PR 中按文件维度逐步迁移。
+
+### B.5 为站点添加新 errorCode
+
+`ERROR_CODES` 不是穷举 — 若现有 8 个 code 不合适,可以:
+1. 直接传任意 UPPER_SNAKE_CASE 字符串给 `createErrorResponse`(如 `'PREFAB_EDIT_MODE_REQUIRED'`)
+2. 若该 code 被 ≥ 2 个站点复用,考虑加入 `ERROR_CODES` 常量表并更新本文档 B.2
+3. 禁止用小写 / 驼峰 / 中文 / 空格;禁止与现有 code 语义重叠
