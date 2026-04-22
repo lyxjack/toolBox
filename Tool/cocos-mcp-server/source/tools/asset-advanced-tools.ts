@@ -1,4 +1,5 @@
 import { ToolDefinition, ToolResponse, ToolExecutor } from '../types';
+import { createErrorResponse, ERROR_CODES } from '../utils/error-response';
 
 export class AssetAdvancedTools implements ToolExecutor {
     getTools(): ToolDefinition[] {
@@ -211,6 +212,42 @@ export class AssetAdvancedTools implements ToolExecutor {
                         }
                     }
                 }
+            },
+            {
+                name: 'batch_configure',
+                description: 'Batch-fix meta fields (type / wrapMode) on multiple assets in one call. Collapses the common "refresh → reimport × N → save_asset_meta × N" 15-call workflow into 2 calls. See FEATURE_GUIDE_CN.md Appendix C.',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        urls: {
+                            type: 'array',
+                            items: { type: 'string' },
+                            description: 'Target asset URLs (db:// prefix). E.g. ["db://assets/icons/a.png", ...]'
+                        },
+                        config: {
+                            type: 'object',
+                            description: 'Fields to apply to every URL. At least one field required.',
+                            properties: {
+                                type: {
+                                    type: 'string',
+                                    enum: ['sprite-frame', 'texture'],
+                                    description: 'Set meta.userData.type. Fixes ERR-018 #1 (png imported as texture instead of sprite-frame).'
+                                },
+                                wrapModeS: {
+                                    type: 'string',
+                                    enum: ['repeat', 'clamp-to-edge', 'mirrored-repeat'],
+                                    description: 'Applied to every subMeta whose userData contains a wrapModeS field. Fixes ERR-018 #3 for non-POT textures.'
+                                },
+                                wrapModeT: {
+                                    type: 'string',
+                                    enum: ['repeat', 'clamp-to-edge', 'mirrored-repeat'],
+                                    description: 'Same as wrapModeS for T axis.'
+                                }
+                            }
+                        }
+                    },
+                    required: ['urls', 'config']
+                }
             }
         ];
     }
@@ -239,6 +276,8 @@ export class AssetAdvancedTools implements ToolExecutor {
                 return await this.compressTextures(args.directory, args.format, args.quality);
             case 'export_asset_manifest':
                 return await this.exportAssetManifest(args.directory, args.format, args.includeMetadata);
+            case 'batch_configure':
+                return await this.batchConfigureAssets(args.urls, args.config);
             default:
                 throw new Error(`Unknown tool: ${toolName}`);
         }
@@ -259,6 +298,99 @@ export class AssetAdvancedTools implements ToolExecutor {
                 resolve({ success: false, error: err.message });
             });
         });
+    }
+
+    /**
+     * Batch-apply meta field changes across N assets in one call.
+     * Mutates only fields that match config keys; preserves everything else in each meta.
+     * Per-URL failures are isolated — other URLs continue.
+     */
+    private async batchConfigureAssets(
+        urls: string[],
+        config: { type?: string; wrapModeS?: string; wrapModeT?: string }
+    ): Promise<ToolResponse> {
+        if (!Array.isArray(urls) || urls.length === 0) {
+            return createErrorResponse(
+                ERROR_CODES.INVALID_PARAMS,
+                'urls must be a non-empty string array',
+                { suggestion: 'Pass an array of db:// asset URLs, e.g. ["db://assets/a.png", "db://assets/b.png"]' }
+            );
+        }
+        if (!config || Object.keys(config).length === 0) {
+            return createErrorResponse(
+                ERROR_CODES.INVALID_PARAMS,
+                'config object is empty; at least one of type/wrapModeS/wrapModeT is required',
+                { suggestion: 'Example: { "type": "sprite-frame", "wrapModeS": "clamp-to-edge", "wrapModeT": "clamp-to-edge" }' }
+            );
+        }
+
+        const succeeded: Array<{ url: string; applied: Record<string, boolean> }> = [];
+        const failed: Array<{ url: string; error: string; errorCode: string }> = [];
+
+        for (const url of urls) {
+            try {
+                const raw: any = await Editor.Message.request('asset-db', 'query-asset-meta', url);
+                if (!raw) {
+                    failed.push({ url, error: 'meta not found', errorCode: ERROR_CODES.NOT_FOUND });
+                    continue;
+                }
+                // Cocos may return meta as object or JSON string — normalize.
+                const meta: any = typeof raw === 'string' ? JSON.parse(raw) : raw;
+                const applied: Record<string, boolean> = { type: false, wrapModeS: false, wrapModeT: false };
+
+                if (config.type !== undefined) {
+                    meta.userData = meta.userData || {};
+                    meta.userData.type = config.type;
+                    applied.type = true;
+                }
+
+                if (config.wrapModeS !== undefined || config.wrapModeT !== undefined) {
+                    const subMetas = meta.subMetas || {};
+                    for (const subId of Object.keys(subMetas)) {
+                        const sub = subMetas[subId];
+                        if (!sub || !sub.userData) continue;
+                        const hasWrap = 'wrapModeS' in sub.userData || 'wrapModeT' in sub.userData;
+                        if (!hasWrap) continue;
+                        if (config.wrapModeS !== undefined) {
+                            sub.userData.wrapModeS = config.wrapModeS;
+                            applied.wrapModeS = true;
+                        }
+                        if (config.wrapModeT !== undefined) {
+                            sub.userData.wrapModeT = config.wrapModeT;
+                            applied.wrapModeT = true;
+                        }
+                    }
+                }
+
+                await Editor.Message.request('asset-db', 'save-asset-meta', url, JSON.stringify(meta));
+                succeeded.push({ url, applied });
+            } catch (err: any) {
+                failed.push({
+                    url,
+                    error: err?.message || String(err),
+                    errorCode: ERROR_CODES.EDITOR_API_ERROR
+                });
+            }
+        }
+
+        const allFailed = succeeded.length === 0 && failed.length > 0;
+        if (allFailed) {
+            return createErrorResponse(
+                ERROR_CODES.EDITOR_API_ERROR,
+                `All ${failed.length} URL(s) failed to configure`,
+                { failed, suggestion: 'Check per-URL error codes; consider running reimport_asset first if wrapMode changes did not persist' }
+            );
+        }
+        return {
+            success: true,
+            data: {
+                succeededCount: succeeded.length,
+                failedCount: failed.length,
+                succeeded,
+                failed
+            },
+            ...(failed.length > 0 ? { warning: `${failed.length} of ${urls.length} URL(s) failed — see data.failed` } : {})
+        };
     }
 
     private async generateAvailableUrl(url: string): Promise<ToolResponse> {

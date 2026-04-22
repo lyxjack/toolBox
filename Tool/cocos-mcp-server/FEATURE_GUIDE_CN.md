@@ -1639,3 +1639,101 @@ if (!resp.success) {
 1. 直接传任意 UPPER_SNAKE_CASE 字符串给 `createErrorResponse`(如 `'PREFAB_EDIT_MODE_REQUIRED'`)
 2. 若该 code 被 ≥ 2 个站点复用,考虑加入 `ERROR_CODES` 常量表并更新本文档 B.2
 3. 禁止用小写 / 驼峰 / 中文 / 空格;禁止与现有 code 语义重叠
+
+---
+
+## 附录 C:资产批量配置(v1.3+)
+
+### C.1 场景
+
+`kingDianPuzzle` 星星之路 v2.0 导入 cardProps(7 张 170×170 PNG)时踩过的坑:
+
+```
+1× project_refresh_assets       — type 错 / 缺 sprite-frame subMeta / wrap=repeat
+7× project_reimport_asset       — 每张逐个 reimport 修 type
+7× assetAdvanced_save_asset_meta — 每张逐个改 wrapMode 到 clamp-to-edge
+= 15 次 MCP 调用,7 张图
+```
+
+v1.3+ 的 `assetAdvanced_batch_configure` 把它压到 **2 次**:
+
+```
+1× project_refresh_assets       — 触发导入(仍需要)
+1× assetAdvanced_batch_configure({ urls: [...7 urls], config: { type, wrapModeS, wrapModeT } })
+= 2 次调用,7 张图
+```
+
+### C.2 参数表
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| `urls` | `string[]` | ✅ | 目标资源 URL 列表,db:// 前缀 |
+| `config.type` | `'sprite-frame' \| 'texture'` | ❌ | 设置 meta `userData.type`;修 ERR-018 #1(png 被当 texture 不是 sprite-frame)|
+| `config.wrapModeS` | `'repeat' \| 'clamp-to-edge' \| 'mirrored-repeat'` | ❌ | 批量应用到所有含 `wrapModeS` 字段的 subMeta;修 ERR-018 #3(非 POT 纹理默认 repeat)|
+| `config.wrapModeT` | 同上 | ❌ | T 轴版本 |
+
+**至少需要一个 config 字段非空**,否则返回 `INVALID_PARAMS`。
+
+### C.3 返回结构
+
+成功(部分成功也算 success=true):
+```json
+{
+  "success": true,
+  "data": {
+    "succeededCount": 6,
+    "failedCount": 1,
+    "succeeded": [
+      { "url": "db://assets/icons/a.png", "applied": { "type": true, "wrapModeS": true, "wrapModeT": true } },
+      ...
+    ],
+    "failed": [
+      { "url": "db://assets/icons/bad.png", "error": "meta not found", "errorCode": "NOT_FOUND" }
+    ]
+  },
+  "warning": "1 of 7 URL(s) failed — see data.failed"
+}
+```
+
+全部失败时 `success=false`,并带 `errorCode: EDITOR_API_ERROR` + `details.failed`。
+
+`applied` 字段告诉 AI 每字段是否**实际**命中了 subMeta(例如对一个不含 texture subMeta 的 json 资源,`applied.wrapModeS=false`,请求静默无效)。
+
+### C.4 实战示例 — starRoad 17 张 + cardProps 7 张 (24 张非 POT)
+
+```json
+{
+  "tool": "assetAdvanced_batch_configure",
+  "arguments": {
+    "urls": [
+      "db://assets/textures/starRoad/bg.png",
+      "db://assets/textures/starRoad/item_normal.png",
+      "db://assets/textures/starRoad/big_star.png",
+      "db://assets/textures/starRoad/check_done.png",
+      "db://assets/textures/cardProps/rose.png",
+      "db://assets/textures/cardProps/duck.png"
+    ],
+    "config": {
+      "type": "sprite-frame",
+      "wrapModeS": "clamp-to-edge",
+      "wrapModeT": "clamp-to-edge"
+    }
+  }
+}
+```
+
+一次调用修完 24 张资源。
+
+### C.5 失败兜底
+
+如果 `wrapMode` 改动**未生效**(某些 Cocos 版本下 subMeta 保存语义不一致):
+
+1. 先 `project_reimport_asset` 单独 reimport 那张资源
+2. 再 `assetAdvanced_batch_configure` 重跑一次
+3. 若仍不行,退化到 `save_asset_meta`(单资源完整 meta 字符串)
+
+### C.6 未覆盖功能(留给 Phase 1)
+
+- `border`(九宫格 slice)— 需要定位 sprite-frame subMeta(`f9941` 等),不同版本 ID 不稳定。独立工具 `sprite_set_slice_border` 将在 Phase 1 评估
+- `autoSpriteFrame` / `autoClampNonPot` 作为 `refresh_assets` / `reimport_asset` 默认行为 — 属破坏性变更,待实机验证后放 Phase 1
+- 见 `MCP_AUDIT_REPORT.md` §3.3 / §7 路线图
