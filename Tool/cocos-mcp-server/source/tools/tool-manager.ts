@@ -134,8 +134,9 @@ export class ToolManager {
             const { ReferenceImageTools } = require('./reference-image-tools');
             const { AssetAdvancedTools } = require('./asset-advanced-tools');
             const { ValidationTools } = require('./validation-tools');
+            const { UITools } = require('./ui-tools');
 
-            // 初始化工具实例
+            // 初始化工具实例 — keep in sync with mcp-server.ts initializeTools()
             const tools = {
                 scene: new SceneTools(),
                 node: new NodeTools(),
@@ -150,7 +151,8 @@ export class ToolManager {
                 sceneView: new SceneViewTools(),
                 referenceImage: new ReferenceImageTools(),
                 assetAdvanced: new AssetAdvancedTools(),
-                validation: new ValidationTools()
+                validation: new ValidationTools(),
+                ui: new UITools()
             };
 
             // 从每个工具类获取工具列表
