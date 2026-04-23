@@ -1,0 +1,40 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ERROR_CODES = void 0;
+exports.createErrorResponse = createErrorResponse;
+/**
+ * Canonical error code catalog for ToolResponse.errorCode.
+ * Uses string constants (not enum) to allow per-site extension without schema migration.
+ *
+ * Convention: UPPER_SNAKE_CASE. Prefer a generic code + `details.*` over a specific
+ * enum member when the taxonomy is still evolving. See FEATURE_GUIDE_CN.md Appendix B.
+ */
+exports.ERROR_CODES = {
+    /** Requested asset / node / prefab / component was not found. */
+    NOT_FOUND: 'NOT_FOUND',
+    /** Caller-supplied params failed validation (missing/invalid type/out of range). */
+    INVALID_PARAMS: 'INVALID_PARAMS',
+    /** Operation requires a state that is not satisfied (no scene open, not in edit mode, scene dirty). */
+    INVALID_STATE: 'INVALID_STATE',
+    /** Editor.Message.request rejected or threw. */
+    EDITOR_API_ERROR: 'EDITOR_API_ERROR',
+    /** Filesystem / meta IO failure. */
+    IO_ERROR: 'IO_ERROR',
+    /** Awaited editor operation exceeded its timeout. */
+    OPERATION_TIMEOUT: 'OPERATION_TIMEOUT',
+    /** Editor refused the operation (permissions / locked asset). */
+    PERMISSION_DENIED: 'PERMISSION_DENIED',
+    /** Fallback when the cause cannot be classified. */
+    UNKNOWN: 'UNKNOWN'
+};
+/**
+ * Build a structured error ToolResponse.
+ *
+ * Keeps the legacy `error: string` field populated for backward compatibility with
+ * clients that only know the old shape, while adding `errorCode` + `details` for
+ * programmatic error handling by AI agents.
+ */
+function createErrorResponse(errorCode, message, details) {
+    return Object.assign({ success: false, error: message, errorCode }, (details !== undefined ? { details } : {}));
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZXJyb3ItcmVzcG9uc2UuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi9zb3VyY2UvdXRpbHMvZXJyb3ItcmVzcG9uc2UudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBcUNBLGtEQVdDO0FBOUNEOzs7Ozs7R0FNRztBQUNVLFFBQUEsV0FBVyxHQUFHO0lBQ3ZCLGlFQUFpRTtJQUNqRSxTQUFTLEVBQUUsV0FBVztJQUN0QixvRkFBb0Y7SUFDcEYsY0FBYyxFQUFFLGdCQUFnQjtJQUNoQyx1R0FBdUc7SUFDdkcsYUFBYSxFQUFFLGVBQWU7SUFDOUIsZ0RBQWdEO0lBQ2hELGdCQUFnQixFQUFFLGtCQUFrQjtJQUNwQyxvQ0FBb0M7SUFDcEMsUUFBUSxFQUFFLFVBQVU7SUFDcEIscURBQXFEO0lBQ3JELGlCQUFpQixFQUFFLG1CQUFtQjtJQUN0QyxpRUFBaUU7SUFDakUsaUJBQWlCLEVBQUUsbUJBQW1CO0lBQ3RDLG9EQUFvRDtJQUNwRCxPQUFPLEVBQUUsU0FBUztDQUNaLENBQUM7QUFJWDs7Ozs7O0dBTUc7QUFDSCxTQUFnQixtQkFBbUIsQ0FDL0IsU0FBb0IsRUFDcEIsT0FBZSxFQUNmLE9BQXNCO0lBRXRCLHVCQUNJLE9BQU8sRUFBRSxLQUFLLEVBQ2QsS0FBSyxFQUFFLE9BQU8sRUFDZCxTQUFTLElBQ04sQ0FBQyxPQUFPLEtBQUssU0FBUyxDQUFDLENBQUMsQ0FBQyxFQUFFLE9BQU8sRUFBRSxDQUFDLENBQUMsQ0FBQyxFQUFFLENBQUMsRUFDL0M7QUFDTixDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgVG9vbFJlc3BvbnNlLCBFcnJvckRldGFpbHMgfSBmcm9tICcuLi90eXBlcyc7XG5cbi8qKlxuICogQ2Fub25pY2FsIGVycm9yIGNvZGUgY2F0YWxvZyBmb3IgVG9vbFJlc3BvbnNlLmVycm9yQ29kZS5cbiAqIFVzZXMgc3RyaW5nIGNvbnN0YW50cyAobm90IGVudW0pIHRvIGFsbG93IHBlci1zaXRlIGV4dGVuc2lvbiB3aXRob3V0IHNjaGVtYSBtaWdyYXRpb24uXG4gKlxuICogQ29udmVudGlvbjogVVBQRVJfU05BS0VfQ0FTRS4gUHJlZmVyIGEgZ2VuZXJpYyBjb2RlICsgYGRldGFpbHMuKmAgb3ZlciBhIHNwZWNpZmljXG4gKiBlbnVtIG1lbWJlciB3aGVuIHRoZSB0YXhvbm9teSBpcyBzdGlsbCBldm9sdmluZy4gU2VlIEZFQVRVUkVfR1VJREVfQ04ubWQgQXBwZW5kaXggQi5cbiAqL1xuZXhwb3J0IGNvbnN0IEVSUk9SX0NPREVTID0ge1xuICAgIC8qKiBSZXF1ZXN0ZWQgYXNzZXQgLyBub2RlIC8gcHJlZmFiIC8gY29tcG9uZW50IHdhcyBub3QgZm91bmQuICovXG4gICAgTk9UX0ZPVU5EOiAnTk9UX0ZPVU5EJyxcbiAgICAvKiogQ2FsbGVyLXN1cHBsaWVkIHBhcmFtcyBmYWlsZWQgdmFsaWRhdGlvbiAobWlzc2luZy9pbnZhbGlkIHR5cGUvb3V0IG9mIHJhbmdlKS4gKi9cbiAgICBJTlZBTElEX1BBUkFNUzogJ0lOVkFMSURfUEFSQU1TJyxcbiAgICAvKiogT3BlcmF0aW9uIHJlcXVpcmVzIGEgc3RhdGUgdGhhdCBpcyBub3Qgc2F0aXNmaWVkIChubyBzY2VuZSBvcGVuLCBub3QgaW4gZWRpdCBtb2RlLCBzY2VuZSBkaXJ0eSkuICovXG4gICAgSU5WQUxJRF9TVEFURTogJ0lOVkFMSURfU1RBVEUnLFxuICAgIC8qKiBFZGl0b3IuTWVzc2FnZS5yZXF1ZXN0IHJlamVjdGVkIG9yIHRocmV3LiAqL1xuICAgIEVESVRPUl9BUElfRVJST1I6ICdFRElUT1JfQVBJX0VSUk9SJyxcbiAgICAvKiogRmlsZXN5c3RlbSAvIG1ldGEgSU8gZmFpbHVyZS4gKi9cbiAgICBJT19FUlJPUjogJ0lPX0VSUk9SJyxcbiAgICAvKiogQXdhaXRlZCBlZGl0b3Igb3BlcmF0aW9uIGV4Y2VlZGVkIGl0cyB0aW1lb3V0LiAqL1xuICAgIE9QRVJBVElPTl9USU1FT1VUOiAnT1BFUkFUSU9OX1RJTUVPVVQnLFxuICAgIC8qKiBFZGl0b3IgcmVmdXNlZCB0aGUgb3BlcmF0aW9uIChwZXJtaXNzaW9ucyAvIGxvY2tlZCBhc3NldCkuICovXG4gICAgUEVSTUlTU0lPTl9ERU5JRUQ6ICdQRVJNSVNTSU9OX0RFTklFRCcsXG4gICAgLyoqIEZhbGxiYWNrIHdoZW4gdGhlIGNhdXNlIGNhbm5vdCBiZSBjbGFzc2lmaWVkLiAqL1xuICAgIFVOS05PV046ICdVTktOT1dOJ1xufSBhcyBjb25zdDtcblxuZXhwb3J0IHR5cGUgRXJyb3JDb2RlID0gdHlwZW9mIEVSUk9SX0NPREVTW2tleW9mIHR5cGVvZiBFUlJPUl9DT0RFU10gfCBzdHJpbmc7XG5cbi8qKlxuICogQnVpbGQgYSBzdHJ1Y3R1cmVkIGVycm9yIFRvb2xSZXNwb25zZS5cbiAqXG4gKiBLZWVwcyB0aGUgbGVnYWN5IGBlcnJvcjogc3RyaW5nYCBmaWVsZCBwb3B1bGF0ZWQgZm9yIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgd2l0aFxuICogY2xpZW50cyB0aGF0IG9ubHkga25vdyB0aGUgb2xkIHNoYXBlLCB3aGlsZSBhZGRpbmcgYGVycm9yQ29kZWAgKyBgZGV0YWlsc2AgZm9yXG4gKiBwcm9ncmFtbWF0aWMgZXJyb3IgaGFuZGxpbmcgYnkgQUkgYWdlbnRzLlxuICovXG5leHBvcnQgZnVuY3Rpb24gY3JlYXRlRXJyb3JSZXNwb25zZShcbiAgICBlcnJvckNvZGU6IEVycm9yQ29kZSxcbiAgICBtZXNzYWdlOiBzdHJpbmcsXG4gICAgZGV0YWlscz86IEVycm9yRGV0YWlsc1xuKTogVG9vbFJlc3BvbnNlIHtcbiAgICByZXR1cm4ge1xuICAgICAgICBzdWNjZXNzOiBmYWxzZSxcbiAgICAgICAgZXJyb3I6IG1lc3NhZ2UsXG4gICAgICAgIGVycm9yQ29kZSxcbiAgICAgICAgLi4uKGRldGFpbHMgIT09IHVuZGVmaW5lZCA/IHsgZGV0YWlscyB9IDoge30pXG4gICAgfTtcbn1cbiJdfQ==

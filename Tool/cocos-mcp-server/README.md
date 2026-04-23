@@ -1,311 +1,70 @@
 # Cocos Creator MCP 服务器插件
 
-**[📖 English](README.EN.md)**  **[📖 中文](README.md)**
+一个适用于 Cocos Creator 3.8+ 的 MCP(模型上下文协议)服务器插件,让 AI 助手通过标准化协议与 Cocos Creator 编辑器交互。
 
-一个适用于 Cocos Creator 3.8+ 的综合性 MCP（模型上下文协议）服务器插件，使 AI 助手能够通过标准化协议与 Cocos Creator 编辑器进行交互。一键安装和使用，省去所有繁琐环境和配置。已经测试过Claude客户端Claude CLI和Cursor，其他的编辑器理论上也完美支持。
+**本仓库是独立维护分支**,聚焦在:
+- **规模**: **165 个工具** 覆盖 **15 个 category**(详见 [`MCP_AUDIT_REPORT.md`](MCP_AUDIT_REPORT.md) §2 完整清单)
+- **Token 预算可控**: 通过 `disabledScopes` 配置关闭低频 rare 类,token 消耗 **13,111 → 11,084(-15%)**,启动即省
+- **结构化错误**: `ToolResponse.errorCode` + `details.suggestion` 让 AI 程序化区分错误类型(NOT_FOUND / INVALID_PARAMS / IO_ERROR / ...),替代字符串匹配
+- **批量优化**: `assetAdvanced_batch_configure` / `component_batch_set_properties` / `ui_set_*` 把"N 次 MCP 调用"压缩到 1 次
+- **测试覆盖**: `npm run test` 下 **288 个单元测试**,类型系统 + 参数验证 + 委托契约 + 源码结构断言
+- **集成测试**: 真实 Cocos 编辑器跑分 **4.88/5**(见 [`INTEGRATION_TEST_PLAN.md`](INTEGRATION_TEST_PLAN.md))
 
-**🚀 现在提供 50 个强力融合工具，实现99%的编辑器控制！**
+## 快速链接
 
-## 视频演示和教学
-
-[<img width="503" height="351" alt="image" src="https://github.com/user-attachments/assets/f186ce14-9ffc-4a29-8761-48bdd7c1ea16" />](https://www.bilibili.com/video/BV1mB8dzfEw8?spm_id_from=333.788.recommend_more_video.0&vd_source=6b1ff659dd5f04a92cc6d14061e8bb92)
-
-
-##快速链接
-
-- **[📖 Complete Feature Guide (English)](FEATURE_GUIDE_EN.md)** - Detailed documentation for all 158 tools（待补充）
-- **[📖 完整功能指南 (中文)](FEATURE_GUIDE_CN.md)** - 所有158工具的详细文档（待补充）
-- **[🧰 Prefab 编辑最佳实践](PREFAB_EDIT_BEST_PRACTICES.md)** - 正确的 6+N 件套 sequence、回滚路径、常见踩坑
-- **[🔍 MCP 审计报告](MCP_AUDIT_REPORT.md)** - 工具清单、Token 优化方案、独立缺口分析
-
-
-## 更新日志
-
-## 🚀 重大更新 v1.5.0（2024年7月29日）（已经在cocos 商城更新，github版本将在下个版本同步更新）
-
-cocos store：https://store.cocos.com/app/detail/7941
-
-- **工具精简与重构**：将原有150+工具浓缩规整为50个高复用、高覆盖率的核心工具，去除所有无效冗余代码，极大提升易用性和可维护性。
-- **操作码统一**：所有工具均采用“操作码+参数”模式，极大简化AI调用流程，提升AI调用成功率，减少AI调用次数，降低50% token消耗。
-- **预制体功能全面升级**：彻底修复和完善预制体的创建、实例化、同步、引用等所有核心功能，支持复杂引用关系，100%对齐官方格式。
-- **事件绑定与老功能补全**：补充并实现了事件绑定、节点/组件/资源等老功能，所有方法与官方实现完全对齐。
-- **接口优化**：所有接口参数更清晰，文档更完善，AI更容易理解和调用。
-- **插件面板优化**：面板UI更简洁，操作更直观。
-- **性能与兼容性提升**：整体架构更高效，兼容Cocos Creator 3.8.6及以上所有版本。
-
-
-## 工具体系与操作码
-
-- 所有工具均以“类别_操作”命名，参数采用统一Schema，支持多操作码（action）切换，极大提升灵活性和可扩展性。
-- 50个核心工具涵盖场景、节点、组件、预制体、资源、项目、调试、偏好设置、服务器、消息广播等全部编辑器操作。
-- 工具调用示例：
-
-```json
-{
-  "tool": "node_lifecycle",
-  "arguments": {
-    "action": "create",
-    "name": "MyNode",
-    "parentUuid": "parent-uuid",
-    "nodeType": "2DNode"
-  }
-}
-```
+- [**🔍 MCP 审计报告**](MCP_AUDIT_REPORT.md) — 工具清单、Token 优化方案矩阵、独立缺口与 P0-P3 路线图
+- [**🧰 Prefab 编辑最佳实践**](PREFAB_EDIT_BEST_PRACTICES.md) — 正确的 6+N 件套 sequence / 回滚路径 / 常见踩坑
+- [**💰 Token 预算分析**](TOKEN_BUDGET_ANALYSIS.md) — 真实 schema bytes 实测 + 5 条进一步优化候选
+- [**🧪 集成测试计划**](INTEGRATION_TEST_PLAN.md) — 28 个 Editor-dependent 测试点 + 评分模板
+- [**📖 完整功能指南**](FEATURE_GUIDE_CN.md) — 每个工具的参数、返回、示例(附录 A-D 含 Token/errorCode/batch/UI 专题)
 
 ---
 
-## 主要功能类别（部分示例）
+## 更新日志
 
-- **scene_management**：场景管理（获取/打开/保存/新建/关闭场景）
-- **node_query / node_lifecycle / node_transform**：节点查询、创建、删除、属性变更
-- **component_manage / component_script / component_query**：组件增删、脚本挂载、组件信息
-- **prefab_browse / prefab_lifecycle / prefab_instance**：预制体浏览、创建、实例化、同步
-- **asset_manage / asset_analyze**：资源导入、删除、依赖分析
-- **project_manage / project_build_system**：项目运行、构建、配置信息
-- **debug_console / debug_logs**：控制台与日志管理
-- **preferences_manage**：偏好设置
-- **server_info**：服务器信息
-- **broadcast_message**：消息广播
+### v1.5.0 (2026-04-22) — Phase 0 + Phase 1 集成
 
+> 集成测试综合分 **4.88/5**(0 P0 / 0 P1 / 5 P2)。工具 160 → **165** / category 14 → **15**(新增 `ui`)。
 
-### v1.4.0 - 2025年7月26日（当前github版本）
+#### 🆕 新能力
 
-#### 🎯 重大功能修复
-- **完全修复预制体创建功能**: 彻底解决了预制体创建时组件/节点/资源类型引用丢失的问题
-- **正确的引用处理**: 实现了与手动创建预制体完全一致的引用格式
-  - **内部引用**: 预制体内部的节点和组件引用正确转换为 `{"__id__": x}` 格式
-  - **外部引用**: 预制体外部的节点和组件引用正确设置为 `null`
-  - **资源引用**: 预制体、纹理、精灵帧等资源引用完整保留UUID格式
-- **组件/脚本移除API规范化**: 现在移除组件/脚本时，必须传入组件的cid（type字段），不能用脚本名或类名。AI和用户应先用getComponents获取type字段（cid），再传给removeComponent。这样能100%准确移除所有类型组件和脚本，兼容所有Cocos Creator版本。
+- **`disabledScopes` 配置项** — `settings/mcp-server.json` 加 `"disabledScopes": ["rare"]` 默认关 5 个低频 category(preferences / server / broadcast / sceneView / referenceImage);tools/list 从 165 降到 115,实测 token 从 13,111 降到 **11,084(-15%)**。每个工具也可用 `scope` 字段做 per-tool 覆盖。
+- **结构化 `ToolResponse.errorCode`** — 新增 `errorCode: string`(UPPER_SNAKE_CASE,非枚举)+ `details: ErrorDetails`(含 `suggestion` / `relatedAssets` / `editorLogRef`)。prefab-tools.ts 下 **12 个高频错误点**已 retrofit。AI 可 `switch(resp.errorCode)` 做精确自修复,不再字符串匹配 `error` 文案。保留旧 `error: string` 字段不变,向后兼容。
+- **`assetAdvanced_batch_configure`** — 一次调用批量改 N 张资产的 `type` / `wrapModeS` / `wrapModeT`,把"导 7 张 png 的 15 次 MCP 调用"压到 **2 次**;per-URL 失败隔离,返回 `succeeded/failed` + 每项 `applied` 命中标志。
+- **新 `ui` category** — `component_batch_set_properties` 底座 + 3 个语义快捷 `ui_set_label` / `ui_set_layout` / `ui_set_sprite`;reward slot 构建从 10-12 次调用降到 **4-5 次**。propertyType 由 UITools 内部硬编码,用户只填字段值。
 
-#### 🔧 核心改进
-- **索引顺序优化**: 调整预制体对象创建顺序，确保与Cocos Creator标准格式一致
-- **组件类型支持**: 扩展组件引用检测，支持所有cc.开头的组件类型（Label、Button、Sprite等）
-- **UUID映射机制**: 完善内部UUID到索引的映射系统，确保引用关系正确建立
-- **属性格式标准化**: 修复组件属性顺序和格式，消除引擎解析错误
+#### 🐛 修复
 
-#### 🐛 错误修复
-- **修复预制体导入错误**: 解决 `Cannot read properties of undefined (reading '_name')` 错误
-- **修复引擎兼容性**: 解决 `placeHolder.initDefault is not a function` 错误
-- **修复属性覆盖**: 防止 `_objFlags` 等关键属性被组件数据覆盖
-- **修复引用丢失**: 确保所有类型的引用都能正确保存和加载
+- settings 保存时合并未知字段,不再吞掉 panel 不可见字段(`disabledScopes` 等)
+- UI 保存后 `MCPServer` 用 merged settings 重建,scope 过滤不再被 panel toggle 擦掉
+- `tool-manager` 注册 `UITools`,`syncNewToolsToConfigurations` 自动把 ui 工具追加到既有配置
+- `prefab_get_prefab_info` / `prefab_validate_prefab` / `prefab_duplicate_prefab` 补结构化 errorCode
 
-#### 📈 功能增强
-- **完整组件属性保留**: 包括私有属性（如_group、_density等）在内的所有组件属性
-- **子节点结构支持**: 正确处理预制体的层级结构和子节点关系
-- **变换属性处理**: 保留节点的位置、旋转、缩放和层级信息
-- **调试信息优化**: 添加详细的引用处理日志，便于问题追踪
+#### 🧪 测试 / 文档
 
-#### 💡 技术突破
-- **引用类型识别**: 智能区分内部引用和外部引用，避免无效引用
-- **格式兼容性**: 生成的预制体与手动创建的预制体格式100%兼容
-- **引擎集成**: 预制体可以正常挂载到场景中，无任何运行时错误
-- **性能优化**: 优化预制体创建流程，提高大型预制体的处理效率
+- 4 个 phase-scoped 测试文件共 **94 个 test case**,总数 194 → **288**
+- 新增 `MCP_AUDIT_REPORT.md` / `PREFAB_EDIT_BEST_PRACTICES.md` / `INTEGRATION_TEST_PLAN.md` / `TOKEN_BUDGET_ANALYSIS.md`
+- `FEATURE_GUIDE_CN.md` 新增附录 A-D
 
-**🎉 现在预制体创建功能已完全可用，支持复杂的组件引用关系和完整的预制体结构！**
+#### ⚠️ 已知限制(5 个 P2,不影响功能)
 
-### v1.3.0 - 2024年7月25日
+1. `server_get_server_status` 工具未暴露在默认 scope
+2. `debug_get_editor_info` 在某些 Cocos 版本返 `version: "Unknown"`
+3. README 部分位置写 port `3000`,若被占用会自动回退 3001
+4. `ui_set_label({nodeUuid: "fake"})` 对不合法 UUID 返 `EDITOR_API_ERROR`(期望 `INVALID_PARAMS`)— ergonomics 瑕疵
+5. `ui_set_label` 对未挂 cc.Label 的节点,suggestion 未显式引导 `component_add_component`
 
-#### 🆕 新功能
-- **集成工具管理面板**: 在主控制面板中直接添加了全面的工具管理功能
-- **工具配置系统**: 实现了选择性工具启用/禁用，支持持久化配置
-- **动态工具加载**: 增强了工具发现功能，能够动态加载MCP服务器中的所有158个可用工具
-- **实时工具状态管理**: 添加了工具计数和状态的实时更新，当单个工具切换时立即反映
-- **配置持久化**: 在编辑器会话间自动保存和加载工具配置
-
-#### 🔧 改进
-- **统一面板界面**: 将工具管理合并到主MCP服务器面板作为标签页，消除了对单独面板的需求
-- **增强服务器设置**: 改进了服务器配置管理，具有更好的持久化和加载功能
-- **Vue 3集成**: 升级到Vue 3 Composition API，提供更好的响应性和性能
-- **更好的错误处理**: 添加了全面的错误处理，包含失败操作的回滚机制
-- **改进的UI/UX**: 增强了视觉设计，包含适当的分隔符、独特的块样式和非透明模态背景
-
-#### 🐛 错误修复
-- **修复工具状态持久化**: 解决了工具状态在标签页切换或面板重新打开时重置的问题
-- **修复配置加载**: 纠正了服务器设置加载问题和消息注册问题
-- **修复复选框交互**: 解决了复选框取消选中问题并改进了响应性
-- **修复面板滚动**: 确保工具管理面板中的正确滚动功能
-- **修复IPC通信**: 解决了前端和后端之间的各种IPC通信问题
-
-#### 🏗️ 技术改进
-- **简化架构**: 移除了多配置复杂性，专注于单一配置管理
-- **更好的类型安全**: 增强了TypeScript类型定义和接口
-- **改进数据同步**: 前端UI状态和后端工具管理器之间更好的同步
-- **增强调试**: 添加了全面的日志记录和调试功能
-
-#### 📊 统计信息
-- **总工具数**: 从151个增加到158个工具
-- **类别**: 13个工具类别，全面覆盖
-- **编辑器控制**: 实现98%的编辑器功能覆盖
-
-### v1.2.0 - 之前版本
-- 初始发布，包含151个工具
-- 基本MCP服务器功能
-- 场景、节点、组件和预制体操作
-- 项目控制和调试工具
-
-
-
-## 快速使用
-
-**Claude cli配置：**
-
-```
-claude mcp add --transport http cocos-creator http://127.0.0.1:3000/mcp（使用你自己配置的端口号）
-```
-
-**Claude客户端配置：**
-
-```
-{
-
-  "mcpServers": {
-
-		"cocos-creator": {
-
- 		"type": "http",
-
-		"url": "http://127.0.0.1:3000/mcp"
-
-		 }
-
-	  }
-
-}
-```
-
-**Cursor或VS类MCP配置**
-
-```
-{
-
-  "mcpServers": { 
-
-   "cocos-creator": {
-      "url": "http://localhost:3000/mcp"
-   }
-  }
-
-}
-```
-
-## 功能特性
-
-### 🎯 场景操作 (scene_*)
-- **scene_management**: 场景管理 - 获取当前场景、打开/保存/创建/关闭场景，支持场景列表查询
-- **scene_hierarchy**: 场景层级 - 获取完整场景结构，支持组件信息包含
-- **scene_execution_control**: 执行控制 - 执行组件方法、场景脚本、预制体同步
-
-### 🎮 节点操作 (node_*)
-- **node_query**: 节点查询 - 按名称/模式查找节点，获取节点信息，检测2D/3D类型
-- **node_lifecycle**: 节点生命周期 - 创建/删除节点，支持组件预装、预制体实例化
-- **node_transform**: 节点变换 - 修改节点名称、位置、旋转、缩放、可见性等属性
-- **node_hierarchy**: 节点层级 - 移动、复制、粘贴节点，支持层级结构操作
-- **node_clipboard**: 节点剪贴板 - 复制/粘贴/剪切节点操作
-- **node_property_management**: 属性管理 - 重置节点属性、组件属性、变换属性
-
-### 🔧 组件操作 (component_*)
-- **component_manage**: 组件管理 - 添加/删除引擎组件（cc.Sprite、cc.Button等）
-- **component_script**: 脚本组件 - 挂载/移除自定义脚本组件
-- **component_query**: 组件查询 - 获取组件列表、详细信息、可用组件类型
-- **set_component_property**: 属性设置 - 设置单个或多个组件属性值
-
-### 📦 预制体操作 (prefab_*)
-- **prefab_browse**: 预制体浏览 - 列出预制体、查看信息、验证文件
-- **prefab_lifecycle**: 预制体生命周期 - 从节点创建预制体、删除预制体
-- **prefab_instance**: 预制体实例 - 实例化到场景、解除链接、应用更改、还原原始
-- **prefab_edit**: 预制体编辑 - 进入/退出编辑模式、保存预制体、测试更改
-
-### 🚀 项目控制 (project_*)
-- **project_manage**: 项目管理 - 运行项目、构建项目、获取项目信息和设置
-- **project_build_system**: 构建系统 - 控制构建面板、检查构建状态、预览服务器管理
-
-### 🔍 调试工具 (debug_*)
-- **debug_console**: 控制台管理 - 获取/清空控制台日志，支持过滤和限制
-- **debug_logs**: 日志分析 - 读取/搜索/分析项目日志文件，支持模式匹配
-- **debug_system**: 系统调试 - 获取编辑器信息、性能统计、环境信息
-
-### 📁 资源管理 (asset_*)
-- **asset_manage**: 资源管理 - 批量导入/删除资源、保存元数据、生成URL
-- **asset_analyze**: 资源分析 - 获取依赖关系、导出资源清单
-- **asset_system**: 资源系统 - 刷新资源、查询资源数据库状态
-- **asset_query**: 资源查询 - 按类型/文件夹查询资源、获取详细信息
-- **asset_operations**: 资源操作 - 创建/复制/移动/删除/保存/重新导入资源
-
-### ⚙️ 偏好设置 (preferences_*)
-- **preferences_manage**: 偏好管理 - 获取/设置编辑器偏好设置
-- **preferences_global**: 全局设置 - 管理全局配置和系统设置
-
-### 🌐 服务器与广播 (server_* / broadcast_*)
-- **server_info**: 服务器信息 - 获取服务器状态、项目详情、环境信息
-- **broadcast_message**: 消息广播 - 监听和广播自定义消息
-
-### 🖼️ 参考图片 (referenceImage_*)
-- **reference_image_manage**: 参考图片管理 - 添加/删除/管理场景视图中的参考图片
-- **reference_image_view**: 参考图片视图 - 控制参考图片的显示和编辑
-
-### 🎨 场景视图 (sceneView_*)
-- **scene_view_control**: 场景视图控制 - 控制Gizmo工具、坐标系、视图模式
-- **scene_view_tools**: 场景视图工具 - 管理场景视图的各种工具和选项
-
-### ✅ 验证工具 (validation_*)
-- **validation_scene**: 场景验证 - 验证场景完整性、检查缺失资源
-- **validation_asset**: 资源验证 - 验证资源引用、检查资源完整性
-
-### 🛠️ 工具管理
-- **工具配置系统**: 选择性启用/禁用工具，支持多套配置
-- **配置持久化**: 自动保存和加载工具配置
-- **配置导入导出**: 支持工具配置的导入导出功能
-- **实时状态管理**: 工具状态实时更新和同步
-
-### 💰 Token Budget 控制 (v1.3+)
-
-**问题**:全量加载会把 160 个工具的 schema 塞进会话(~14k token),长对话中占比显著。
-
-**解决**:在 `{project}/settings/mcp-server.json` 中声明要关闭的 scope:
-
-```json
-{
-  "disabledScopes": ["rare"]
-}
-```
-
-效果(启动日志):
-```
-[MCPServer] Setup tools: 110 tools available (disabled scopes: [rare])
-```
-
-**scope 分层**:
-| Scope | 默认包含的 category | 工具数 |
-|---|---|---:|
-| `core` | scene / node / component / prefab / project / debug / assetAdvanced / sceneAdvanced | 107 |
-| `optional` | validation | 3 |
-| `rare` | preferences / server / broadcast / sceneView / referenceImage | 50 |
-
-- **推荐配置**: `"disabledScopes": ["rare"]` → 160 → 110(-31% 条目,实测 token 降幅约 40%)
-- **激进配置**: `"disabledScopes": ["rare", "optional"]` → 107
-- **默认(空)**: 全量 160,保持向后兼容
-
-每个工具也可以用 `scope` 字段做 per-tool 覆盖(覆盖其 category 默认)。详细分析见 [MCP_AUDIT_REPORT.md](MCP_AUDIT_REPORT.md) §5。
-
-### 🚀 核心优势
-- **操作码统一**: 所有工具采用"类别_操作"命名，参数Schema统一
-- **高复用性**: 50个核心工具覆盖99%编辑器功能
-- **AI友好**: 参数清晰、文档完善、调用简单
-- **性能优化**: 降低50% token消耗，提升AI调用成功率
-- **完全兼容**: 与Cocos Creator官方API 100%对齐
+---
 
 ## 安装说明
 
-### 1. 复制插件文件
-
-将整个 `cocos-mcp-server` 文件夹复制到您的 Cocos Creator 项目的 `extensions` 目录中，您也可以直接在扩展管理器中导入项目：
+### 1. 复制插件到项目
 
 ```
-您的项目/
+你的Cocos项目/
 ├── assets/
 ├── extensions/
-│   └── cocos-mcp-server/          <- 将插件放在这里
+│   └── cocos-mcp-server/          ← 插件放这里
 │       ├── source/
 │       ├── dist/
 │       ├── package.json
@@ -314,146 +73,188 @@ claude mcp add --transport http cocos-creator http://127.0.0.1:3000/mcp（使用
 └── ...
 ```
 
-### 2. 安装依赖
+### 2. 安装运行时依赖
 
 ```bash
 cd extensions/cocos-mcp-server
-npm install
+npm install --omit=dev --legacy-peer-deps
 ```
 
-### 3. 构建插件
+> `--omit=dev` 跳过 vitest 等仅在源码 repo 需要的 devDependencies;`--legacy-peer-deps` 绕过上游 peer-dep 冲突。
+
+### 3. 构建(若 dist/ 未同步)
 
 ```bash
 npm run build
 ```
 
-### 4. 启用插件
+> 本仓库已预编译 dist/,通常可跳过。若改了 source/ 下代码需重新 build。
 
-1. 重启 Cocos Creator 或刷新扩展
-2. 插件将出现在扩展菜单中
-3. 点击 `扩展 > Cocos MCP Server` 打开控制面板
+### 4. 在 Cocos Creator 启用
 
-## 使用方法
+1. 打开项目 → 顶部菜单 → **扩展 → 扩展管理器**
+2. 找到 `cocos-mcp-server` → **启用**
+3. 控制台出现:
+   ```
+   [MCPServer] ✅ HTTP server started successfully on http://127.0.0.1:3000
+   [MCPServer] Setup tools: 115 tools available (disabled scopes: [rare])
+   ```
 
-### 启动服务器
+### 5. 链接 AI 客户端
 
-1. 从 `扩展 > Cocos MCP Server` 打开 MCP 服务器面板
-2. 配置设置：
-   - **端口**: HTTP 服务器端口（默认：3000）
-   - **自动启动**: 编辑器启动时自动启动服务器
-   - **调试日志**: 启用详细日志以便开发调试
-   - **最大连接数**: 允许的最大并发连接数
+**Claude Code CLI**:
+```bash
+claude mcp add --transport http cocos-creator http://127.0.0.1:3000/mcp
+```
 
-3. 点击"启动服务器"开始接受连接
+**Claude Desktop / Cursor / 任意 MCP client**:
+```jsonc
+{
+  "mcpServers": {
+    "cocos-creator": {
+      "type": "http",
+      "url": "http://127.0.0.1:3000/mcp"
+    }
+  }
+}
+```
 
-### 连接 AI 助手
+---
 
-服务器在 `http://localhost:3000/mcp`（或您配置的端口）上提供 HTTP 端点。
+## 配置:`settings/mcp-server.json`
 
-AI 助手可以使用 MCP 协议连接并访问所有可用工具。
+| 字段 | 类型 | 默认 | 说明 |
+|---|---|---|---|
+| `port` | number | 3000 | HTTP 端口。被占用时需手动改 |
+| `autoStart` | boolean | false | 编辑器启动时自动拉起 MCP server |
+| `enableDebugLog` | boolean | false | 详细 log |
+| `maxConnections` | number | 10 | 最大并发连接数 |
+| **`disabledScopes`** | `string[]` | `[]` | 关闭指定 scope 的工具。推荐 `["rare"]` 省 ~15% token |
 
+### scope 分层(v1.5+)
+
+| Scope | 默认 category | 工具数 | 用途 |
+|---|---|---:|---|
+| `core` | scene / node / component / prefab / project / debug / assetAdvanced / sceneAdvanced / ui | 112 | 高频核心 |
+| `optional` | validation | 3 | 偶尔使用 |
+| `rare` | preferences / server / broadcast / sceneView / referenceImage | 50 | 实战几乎不触 |
+
+**推荐组合**:
+- `"disabledScopes": []` → 165 tools(全量,~13,111 token)
+- `"disabledScopes": ["rare"]` → 115 tools(~11,084 token,-15%)**← 本仓库默认推荐**
+- `"disabledScopes": ["rare", "optional"]` → 112 tools(~10,860 token)
+
+详见 [`TOKEN_BUDGET_ANALYSIS.md`](TOKEN_BUDGET_ANALYSIS.md)。
+
+---
+
+## 能力概览(165 工具 / 15 category)
+
+| Category | Scope | # | 代表工具 |
+|---|---|---:|---|
+| `scene` | core | 8 | `open_scene` / `save_scene` / `get_scene_hierarchy` |
+| `node` | core | 11 | `create_node` / `find_nodes` / `set_node_transform` |
+| `component` | core | 8 | `add_component` / `set_component_property` / `batch_set_properties` ⭐ |
+| `prefab` | core | 13 | `open_edit_mode` / `save_edit` / `update_prefab` |
+| `project` | core | 24 | `refresh_assets` / `build_project` / `create_asset` |
+| `debug` | core | 10 | `get_console_logs` / `execute_script` / `validate_scene` |
+| `assetAdvanced` | core | 12 | `batch_configure` ⭐ / `save_asset_meta` / `batch_import_assets` |
+| `sceneAdvanced` | core | 23 | `begin_undo_recording` / `copy_node` / `paste_node` / `execute_scene_script` |
+| `ui` ⭐ | core | 3 | `set_label` / `set_layout` / `set_sprite`(Phase 1 新)|
+| `validation` | optional | 3 | `validate_json_params` / `safe_string_value` |
+| `preferences` | rare | 7 | `query_preferences_config` |
+| `server` | rare | 6 | `get_server_status` / `query_server_port` |
+| `broadcast` | rare | 5 | `listen_broadcast` |
+| `sceneView` | rare | 20 | `change_gizmo_tool` / `focus_camera_on_nodes` |
+| `referenceImage` | rare | 12 | `add_reference_image` |
+
+**⭐ = v1.5.0 新增或底座升级**。完整清单见 [`MCP_AUDIT_REPORT.md`](MCP_AUDIT_REPORT.md) §2.2。
+
+---
 
 ## 开发
 
 ### 项目结构
+
 ```
 cocos-mcp-server/
-├── source/                    # TypeScript 源文件
-│   ├── main.ts               # 插件入口点
-│   ├── mcp-server.ts         # MCP 服务器实现
-│   ├── settings.ts           # 设置管理
-│   ├── types/                # TypeScript 类型定义
-│   ├── tools/                # 工具实现
+├── source/                         # TypeScript 源码
+│   ├── main.ts                    # 插件入口(load/unload/panel 注册)
+│   ├── mcp-server.ts              # MCP HTTP server + scope 过滤
+│   ├── settings.ts                # 设置 IO(带 merge)
+│   ├── types/index.ts             # 公共接口(ToolDefinition/ToolResponse/ErrorDetails/...)
+│   ├── utils/
+│   │   └── error-response.ts      # createErrorResponse + ERROR_CODES
+│   ├── tools/                     # 15 个 category 实现
 │   │   ├── scene-tools.ts
 │   │   ├── node-tools.ts
 │   │   ├── component-tools.ts
 │   │   ├── prefab-tools.ts
 │   │   ├── project-tools.ts
 │   │   ├── debug-tools.ts
+│   │   ├── asset-advanced-tools.ts
+│   │   ├── scene-advanced-tools.ts
+│   │   ├── ui-tools.ts            ⭐ Phase 1
+│   │   ├── validation-tools.ts
 │   │   ├── preferences-tools.ts
 │   │   ├── server-tools.ts
 │   │   ├── broadcast-tools.ts
-│   │   ├── scene-advanced-tools.ts (已整合到 node-tools.ts 和 scene-tools.ts)
 │   │   ├── scene-view-tools.ts
 │   │   ├── reference-image-tools.ts
-│   │   └── asset-advanced-tools.ts
-│   ├── panels/               # UI 面板实现
-│   └── test/                 # 测试文件
-├── dist/                     # 编译后的 JavaScript 输出
-├── static/                   # 静态资源（图标等）
-├── i18n/                     # 国际化文件
-├── package.json              # 插件配置
-└── tsconfig.json             # TypeScript 配置
+│   │   └── tool-manager.ts        # 工具启用白名单管理
+│   └── panels/                    # Vue 3 UI 面板
+├── dist/                          # tsc 产物(tracked)
+├── tests/                         # vitest 单元测试
+│   ├── bug-fixes.test.ts
+│   ├── reimport-and-prefab-edit.test.ts
+│   ├── error-book-renumber.test.ts
+│   ├── phase-0a-scope-filter.test.ts          ⭐
+│   ├── phase-0b-error-response.test.ts        ⭐
+│   ├── phase-0c-batch-configure.test.ts       ⭐
+│   └── phase-1-batch-ui.test.ts               ⭐
+├── scripts/preinstall.js
+└── package.json
 ```
 
-### 从源码构建
+### 构建 / 测试
 
 ```bash
-# 安装依赖
-npm install
-
-# 开发构建（监视模式）
-npm run watch
-
-# 生产构建
-npm run build
+npm run build         # tsc → dist/
+npm run watch         # tsc --watch
+npm run test          # vitest run (288 tests)
+npm run test:watch    # vitest
 ```
 
-### 添加新工具
+### 新增工具
 
-1. 在 `source/tools/` 中创建新的工具类
-2. 实现 `ToolExecutor` 接口
-3. 将工具添加到 `mcp-server.ts` 初始化中
-4. 工具会自动通过 MCP 协议暴露
+1. 在 `source/tools/` 下新建或扩展 tool class
+2. 实现 `ToolExecutor` 接口(`getTools()` + `execute(name, args)`)
+3. 在 `source/mcp-server.ts` `initializeTools()` 里注册新 category
+4. 在 `source/tools/tool-manager.ts` `initializeAvailableTools()` 里同步注册(否则 UI 白名单会遗漏)
+5. 更新 `mcp-server.ts` 的 `CATEGORY_SCOPES` 映射
+6. 新错误路径应走 `createErrorResponse(ERROR_CODES.XXX, msg, details)`(见 `source/utils/error-response.ts`)
 
-### TypeScript 支持
-
-插件完全使用 TypeScript 编写，具备：
-- 启用严格类型检查
-- 为所有 API 提供全面的类型定义
-- 开发时的 IntelliSense 支持
-- 自动编译为 JavaScript
+---
 
 ## 故障排除
 
-### 常见问题
+| 现象 | 排查 |
+|---|---|
+| 启动后 `Setup tools: 165`(无 `disabled scopes` 后缀)| 确认 `settings/mcp-server.json` 含 `"disabledScopes": ["rare"]`;扩展做过 **禁用 → 再启用** |
+| 启动日志正常但 Claude Code `/mcp list` 显示 `✗ Connection refused` | 端口不一致;MCP server 日志第一行就能看到实际监听端口 |
+| 工具能调到但返回很多 `EDITOR_API_ERROR` | 场景未加载 / 节点 UUID 过期 / 编辑模式未打开。调前先 `scene_get_current_scene` + `node_get_all_nodes` |
+| 改了 `source/*.ts` 后不生效 | 需重 build(`npm run build`)并 **完全退出 Cocos Creator**(`Cmd+Q`)再开 — 扩展的 require cache 不会随"禁用/启用"清除 |
 
-1. **服务器无法启动**: 检查端口可用性和防火墙设置
-2. **工具不工作**: 确保场景已加载且 UUID 有效
-3. **构建错误**: 运行 `npm run build` 检查 TypeScript 错误
-4. **连接问题**: 验证 HTTP URL 和服务器状态
+详细错误处理约定见 [`FEATURE_GUIDE_CN.md`](FEATURE_GUIDE_CN.md) 附录 B。
 
-### 调试模式
-
-在插件面板中启用调试日志以获取详细的操作日志。
-
-### 使用调试工具
-
-```json
-{
-  "tool": "debug_get_console_logs",
-  "arguments": {"limit": 50, "filter": "error"}
-}
-```
-
-```json
-{
-  "tool": "debug_validate_scene",
-  "arguments": {"checkMissingAssets": true}
-}
-```
+---
 
 ## 系统要求
 
-- Cocos Creator 3.8.6 或更高版本
-- Node.js（Cocos Creator 自带）
-- TypeScript（作为开发依赖安装）
+- Cocos Creator 3.8.6+
+- Node.js(Cocos Creator 自带)
+- TypeScript(仅开发需要)
 
-## 许可证
+## 许可
 
-本插件供 Cocos Creator 项目使用,并且源代码一并打包，可以用于学习和交流。没有加密。可以支持你自己二次开发优化，任何本项目代码或者衍生代码均不能用于任何商用、转售，如果需要商用，请联系本人。
-
-## 联系我加入群
-<img alt="image" src="https://github.com/user-attachments/assets/a276682c-4586-480c-90e5-6db132e89e0f" width="400" height="400" />
-
-
+源码随插件一起打包,供学习、交流、二次开发。
