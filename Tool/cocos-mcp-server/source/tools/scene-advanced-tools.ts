@@ -4,21 +4,20 @@ export class SceneAdvancedTools implements ToolExecutor {
     getTools(): ToolDefinition[] {
         return [
             {
-                name: 'reset_node_property',
-                description: 'Reset node property to default value',
+                name: 'reset',
+                description: 'Unified reset (v1.6.0). action=property: reset a node property by path. action=transform: reset position/rotation/scale. action=component: reset a component to defaults.',
                 inputSchema: {
                     type: 'object',
                     properties: {
-                        uuid: {
+                        action: {
                             type: 'string',
-                            description: 'Node UUID'
+                            enum: ['property', 'transform', 'component'],
+                            description: 'What to reset'
                         },
-                        path: {
-                            type: 'string',
-                            description: 'Property path (e.g., position, rotation, scale)'
-                        }
+                        uuid: { type: 'string', description: 'Node UUID (property/transform) or Component UUID (component)' },
+                        path: { type: 'string', description: 'For property: path to reset (e.g., "position")' }
                     },
-                    required: ['uuid', 'path']
+                    required: ['action', 'uuid']
                 }
             },
             {
@@ -129,34 +128,7 @@ export class SceneAdvancedTools implements ToolExecutor {
                     required: ['uuids']
                 }
             },
-            {
-                name: 'reset_node_transform',
-                description: 'Reset node position, rotation and scale',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        uuid: {
-                            type: 'string',
-                            description: 'Node UUID'
-                        }
-                    },
-                    required: ['uuid']
-                }
-            },
-            {
-                name: 'reset_component',
-                description: 'Reset component to default values',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        uuid: {
-                            type: 'string',
-                            description: 'Component UUID'
-                        }
-                    },
-                    required: ['uuid']
-                }
-            },
+            // v1.6.0: reset_node_transform + reset_component merged into `reset({action})` above.
             {
                 name: 'restore_prefab',
                 description: 'Restore prefab instance from asset',
@@ -373,6 +345,22 @@ export class SceneAdvancedTools implements ToolExecutor {
                 return await this.resetNodeTransform(args.uuid);
             case 'reset_component':
                 return await this.resetComponent(args.uuid);
+            case 'reset':
+                // v1.6.0 unified action-code dispatcher
+                switch (args.action) {
+                    case 'property':
+                        return await this.resetNodeProperty(args.uuid, args.path);
+                    case 'transform':
+                        return await this.resetNodeTransform(args.uuid);
+                    case 'component':
+                        return await this.resetComponent(args.uuid);
+                    default:
+                        return {
+                            success: false,
+                            error: `Unknown reset action: ${args.action}`,
+                            errorCode: 'INVALID_PARAMS'
+                        } as any;
+                }
             case 'restore_prefab':
                 return await this.restorePrefab(args.nodeUuid, args.assetUuid);
             case 'execute_component_method':

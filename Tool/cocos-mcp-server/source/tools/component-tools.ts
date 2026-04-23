@@ -40,38 +40,8 @@ export class ComponentTools implements ToolExecutor {
                     required: ['nodeUuid', 'componentType']
                 }
             },
-            {
-                name: 'get_components',
-                description: 'Get all components of a node',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        nodeUuid: {
-                            type: 'string',
-                            description: 'Node UUID'
-                        }
-                    },
-                    required: ['nodeUuid']
-                }
-            },
-            {
-                name: 'get_component_info',
-                description: 'Get specific component information',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        nodeUuid: {
-                            type: 'string',
-                            description: 'Node UUID'
-                        },
-                        componentType: {
-                            type: 'string',
-                            description: 'Component type to get info for'
-                        }
-                    },
-                    required: ['nodeUuid', 'componentType']
-                }
-            },
+            // v1.6.0: get_components + get_component_info + get_available_components
+            // merged into `query({action})` — see bottom of getTools().
             {
                 name: 'set_component_property',
                 description: 'Set a component property (cc.Label / cc.Sprite / custom). For node fields use set_node_property / set_node_transform. See FEATURE_GUIDE §3.5.',
@@ -166,18 +136,26 @@ export class ComponentTools implements ToolExecutor {
                 }
             },
             {
-                name: 'get_available_components',
-                description: 'Get list of available component types',
+                name: 'query',
+                description: 'Unified component query (v1.6.0). action=list: all components on a node. action=info: one specific component. action=available: list of available component types by category.',
                 inputSchema: {
                     type: 'object',
                     properties: {
+                        action: {
+                            type: 'string',
+                            enum: ['list', 'info', 'available'],
+                            description: 'Which query to perform'
+                        },
+                        nodeUuid: { type: 'string', description: 'Target node UUID (required for list/info)' },
+                        componentType: { type: 'string', description: 'Component type (required for info)' },
                         category: {
                             type: 'string',
-                            description: 'Component category filter',
                             enum: ['all', 'renderer', 'ui', 'physics', 'animation', 'audio'],
+                            description: 'For available: filter by category',
                             default: 'all'
                         }
-                    }
+                    },
+                    required: ['action']
                 }
             },
             {
@@ -236,6 +214,22 @@ export class ComponentTools implements ToolExecutor {
                 return await this.getAvailableComponents(args.category);
             case 'batch_set_properties':
                 return await this.batchSetProperties(args);
+            case 'query':
+                // v1.6.0 unified action-code dispatcher
+                switch (args.action) {
+                    case 'list':
+                        return await this.getComponents(args.nodeUuid);
+                    case 'info':
+                        return await this.getComponentInfo(args.nodeUuid, args.componentType);
+                    case 'available':
+                        return await this.getAvailableComponents(args.category);
+                    default:
+                        return createErrorResponse(
+                            ERROR_CODES.INVALID_PARAMS,
+                            `Unknown query action: ${args.action}`,
+                            { suggestion: 'Use action: "list" | "info" | "available"' }
+                        );
+                }
             default:
                 throw new Error(`Unknown tool: ${toolName}`);
         }

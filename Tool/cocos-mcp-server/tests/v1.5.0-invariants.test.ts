@@ -93,30 +93,30 @@ function buildExposedTools() {
 describe('v1.5.0 invariants — aggregate shape', () => {
     const all = buildExposedTools();
 
-    it('I1 — total tool count is 165 across 15 categories', () => {
-        expect(all.length).toBe(165);
+    it('I1 — total tool count is 151 across 15 categories (v1.6.0: -14 from consolidation)', () => {
+        expect(all.length).toBe(151);
         const cats = new Set(all.map(t => t.category));
         expect(cats.size).toBe(15);
     });
 
-    it('I2 — scope distribution: 113 core + 3 optional + 49 rare (core = 112 cat-default + 1 per-tool override for get_server_status)', () => {
+    it('I2 — scope distribution: 99 core + 3 optional + 49 rare', () => {
         const byScope: Record<ToolScope, number> = { core: 0, optional: 0, rare: 0 };
         for (const t of all) byScope[t.scope]++;
-        expect(byScope.core).toBe(113);
+        expect(byScope.core).toBe(99);
         expect(byScope.optional).toBe(3);
         expect(byScope.rare).toBe(49);
     });
 
-    it('I2b — with disabledScopes=["rare"], 116 tools remain loaded (includes promoted get_server_status)', () => {
+    it('I2b — with disabledScopes=["rare"], 102 tools remain loaded', () => {
         const disabled = new Set<ToolScope>(['rare']);
         const remaining = all.filter(t => !disabled.has(t.scope));
-        expect(remaining.length).toBe(116);
+        expect(remaining.length).toBe(102);
     });
 
-    it('I2c — with disabledScopes=["rare","optional"], 113 tools remain loaded', () => {
+    it('I2c — with disabledScopes=["rare","optional"], 99 tools remain loaded', () => {
         const disabled = new Set<ToolScope>(['rare', 'optional']);
         const remaining = all.filter(t => !disabled.has(t.scope));
-        expect(remaining.length).toBe(113);
+        expect(remaining.length).toBe(99);
     });
 });
 
@@ -147,8 +147,29 @@ describe('v1.5.0 invariants — key feature tools reachable', () => {
     const all = buildExposedTools();
     const names = new Set(all.map(t => t.name));
 
-    it('I5.a — Phase 0C: assetAdvanced_batch_configure present', () => {
-        expect(names.has('assetAdvanced_batch_configure')).toBe(true);
+    it('I5.a — v1.6.0 consolidated asset batch: assetAdvanced_batch present', () => {
+        expect(names.has('assetAdvanced_batch')).toBe(true);
+        // Old granular tools removed from tools/list (dispatcher still routes internally)
+        expect(names.has('assetAdvanced_batch_configure')).toBe(false);
+        expect(names.has('assetAdvanced_batch_import_assets')).toBe(false);
+        expect(names.has('assetAdvanced_batch_delete_assets')).toBe(false);
+    });
+
+    it('I5.a2 — v1.6.0 consolidated tools all present', () => {
+        expect(names.has('component_query')).toBe(true);          // was: get_components/info/available
+        expect(names.has('scene_management')).toBe(true);          // was: open/save/close/create/save_as
+        expect(names.has('node_lifecycle')).toBe(true);            // was: delete/move/duplicate (create stays)
+        expect(names.has('sceneAdvanced_reset')).toBe(true);       // was: reset_node_property/transform/component
+        expect(names.has('debug_logs')).toBe(true);                // was: get_console/project_logs + search
+    });
+
+    it('I5.a3 — old granular tools removed from tools/list (but create_node kept)', () => {
+        expect(names.has('component_get_components')).toBe(false);
+        expect(names.has('scene_open_scene')).toBe(false);
+        expect(names.has('node_delete_node')).toBe(false);
+        expect(names.has('node_create_node')).toBe(true);          // create_node intentionally kept (rich schema)
+        expect(names.has('sceneAdvanced_reset_node_transform')).toBe(false);
+        expect(names.has('debug_get_console_logs')).toBe(false);
     });
 
     it('I5.b — Phase 1 base: component_batch_set_properties present', () => {
@@ -261,8 +282,8 @@ describe('v1.5.0 invariants — documentation guards (P2.B)', () => {
 describe('v1.5.0 invariants — package version', () => {
     const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf-8'));
 
-    it('I10 — package.json version is 1.5.0', () => {
-        expect(pkg.version).toBe('1.5.0');
+    it('I10 — package.json version is 1.6.0 (consolidation release)', () => {
+        expect(pkg.version).toBe('1.6.0');
     });
 
     it('I10b — runtime dependencies are minimal (uuid/fs-extra/vue only)', () => {

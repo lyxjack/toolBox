@@ -205,59 +205,23 @@ export class NodeTools implements ToolExecutor {
                 }
             },
             {
-                name: 'delete_node',
-                description: 'Delete a node from scene',
+                name: 'lifecycle',
+                description: 'Unified node lifecycle ops (v1.6.0). action=delete/move/duplicate. NOTE: create_node stays independent because its schema (components/initialTransform/prefab-instantiation) is too rich to merge cleanly.',
                 inputSchema: {
                     type: 'object',
                     properties: {
-                        uuid: {
+                        action: {
                             type: 'string',
-                            description: 'Node UUID to delete'
-                        }
-                    },
-                    required: ['uuid']
-                }
-            },
-            {
-                name: 'move_node',
-                description: 'Move node to new parent',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        nodeUuid: {
-                            type: 'string',
-                            description: 'Node UUID to move'
+                            enum: ['delete', 'move', 'duplicate'],
+                            description: 'Which lifecycle op to perform'
                         },
-                        newParentUuid: {
-                            type: 'string',
-                            description: 'New parent node UUID'
-                        },
-                        siblingIndex: {
-                            type: 'number',
-                            description: 'Sibling index in new parent',
-                            default: -1
-                        }
+                        uuid: { type: 'string', description: 'For delete/duplicate: target node UUID' },
+                        nodeUuid: { type: 'string', description: 'For move: target node UUID' },
+                        newParentUuid: { type: 'string', description: 'For move: new parent UUID' },
+                        siblingIndex: { type: 'number', description: 'For move: sibling order index (-1 = append)', default: -1 },
+                        includeChildren: { type: 'boolean', description: 'For duplicate: include children', default: true }
                     },
-                    required: ['nodeUuid', 'newParentUuid']
-                }
-            },
-            {
-                name: 'duplicate_node',
-                description: 'Duplicate a node',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        uuid: {
-                            type: 'string',
-                            description: 'Node UUID to duplicate'
-                        },
-                        includeChildren: {
-                            type: 'boolean',
-                            description: 'Include children nodes',
-                            default: true
-                        }
-                    },
-                    required: ['uuid']
+                    required: ['action']
                 }
             },
             {
@@ -301,6 +265,22 @@ export class NodeTools implements ToolExecutor {
                 return await this.duplicateNode(args.uuid, args.includeChildren);
             case 'detect_node_type':
                 return await this.detectNodeType(args.uuid);
+            case 'lifecycle':
+                // v1.6.0 unified action-code dispatcher (excludes create_node)
+                switch (args.action) {
+                    case 'delete':
+                        return await this.deleteNode(args.uuid);
+                    case 'move':
+                        return await this.moveNode(args.nodeUuid, args.newParentUuid, args.siblingIndex);
+                    case 'duplicate':
+                        return await this.duplicateNode(args.uuid, args.includeChildren);
+                    default:
+                        return {
+                            success: false,
+                            error: `Unknown node.lifecycle action: ${args.action}`,
+                            errorCode: 'INVALID_PARAMS'
+                        } as any;
+                }
             default:
                 throw new Error(`Unknown tool: ${toolName}`);
         }

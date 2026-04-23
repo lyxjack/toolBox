@@ -58,55 +58,8 @@ export class AssetAdvancedTools implements ToolExecutor {
                     required: ['urlOrUUID']
                 }
             },
-            {
-                name: 'batch_import_assets',
-                description: 'Import multiple assets in batch',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        sourceDirectory: {
-                            type: 'string',
-                            description: 'Source directory path'
-                        },
-                        targetDirectory: {
-                            type: 'string',
-                            description: 'Target directory URL'
-                        },
-                        fileFilter: {
-                            type: 'array',
-                            items: { type: 'string' },
-                            description: 'File extensions to include (e.g., [".png", ".jpg"])',
-                            default: []
-                        },
-                        recursive: {
-                            type: 'boolean',
-                            description: 'Include subdirectories',
-                            default: false
-                        },
-                        overwrite: {
-                            type: 'boolean',
-                            description: 'Overwrite existing files',
-                            default: false
-                        }
-                    },
-                    required: ['sourceDirectory', 'targetDirectory']
-                }
-            },
-            {
-                name: 'batch_delete_assets',
-                description: 'Delete multiple assets in batch',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        urls: {
-                            type: 'array',
-                            items: { type: 'string' },
-                            description: 'Array of asset URLs to delete'
-                        }
-                    },
-                    required: ['urls']
-                }
-            },
+            // v1.6.0: batch_import_assets + batch_delete_assets + batch_configure
+            // merged into `batch({action})` — see bottom of getTools().
             {
                 name: 'validate_asset_references',
                 description: 'Validate asset references and find broken links',
@@ -214,39 +167,37 @@ export class AssetAdvancedTools implements ToolExecutor {
                 }
             },
             {
-                name: 'batch_configure',
-                description: 'Batch-fix meta (type / wrapMode) on N assets. Collapses 15-call workflow to 2. See FEATURE_GUIDE §附录 C.',
+                name: 'batch',
+                description: 'Unified asset batch ops (v1.6.0). action=configure: fix meta fields (type/wrapMode) — see FEATURE_GUIDE §C. action=import: copy assets from a source directory. action=delete: remove N assets by URL.',
                 inputSchema: {
                     type: 'object',
                     properties: {
+                        action: {
+                            type: 'string',
+                            enum: ['configure', 'import', 'delete'],
+                            description: 'Which batch operation to run'
+                        },
                         urls: {
                             type: 'array',
                             items: { type: 'string' },
-                            description: 'Target asset URLs (db:// prefix). E.g. ["db://assets/icons/a.png", ...]'
+                            description: 'For configure/delete: target asset URLs (db:// prefix).'
                         },
                         config: {
                             type: 'object',
-                            description: 'Fields to apply to every URL. At least one field required.',
+                            description: 'For configure only. At least one field required.',
                             properties: {
-                                type: {
-                                    type: 'string',
-                                    enum: ['sprite-frame', 'texture'],
-                                    description: 'Set meta.userData.type. Fixes ERR-018 #1 (png imported as texture instead of sprite-frame).'
-                                },
-                                wrapModeS: {
-                                    type: 'string',
-                                    enum: ['repeat', 'clamp-to-edge', 'mirrored-repeat'],
-                                    description: 'Applied to every subMeta whose userData contains a wrapModeS field. Fixes ERR-018 #3 for non-POT textures.'
-                                },
-                                wrapModeT: {
-                                    type: 'string',
-                                    enum: ['repeat', 'clamp-to-edge', 'mirrored-repeat'],
-                                    description: 'Same as wrapModeS for T axis.'
-                                }
+                                type: { type: 'string', enum: ['sprite-frame', 'texture'] },
+                                wrapModeS: { type: 'string', enum: ['repeat', 'clamp-to-edge', 'mirrored-repeat'] },
+                                wrapModeT: { type: 'string', enum: ['repeat', 'clamp-to-edge', 'mirrored-repeat'] }
                             }
-                        }
+                        },
+                        sourceDirectory: { type: 'string', description: 'For import: source directory path' },
+                        targetDirectory: { type: 'string', description: 'For import: target directory URL' },
+                        fileFilter: { type: 'array', items: { type: 'string' }, description: 'For import: e.g. [".png"]' },
+                        recursive: { type: 'boolean', description: 'For import: include subdirs' },
+                        overwrite: { type: 'boolean', description: 'For import: overwrite existing' }
                     },
-                    required: ['urls', 'config']
+                    required: ['action']
                 }
             }
         ];
@@ -262,6 +213,7 @@ export class AssetAdvancedTools implements ToolExecutor {
                 return await this.queryAssetDbReady();
             case 'open_asset_external':
                 return await this.openAssetExternal(args.urlOrUUID);
+            // v1.6.0 consolidated — kept as internal fallbacks
             case 'batch_import_assets':
                 return await this.batchImportAssets(args);
             case 'batch_delete_assets':
@@ -278,6 +230,22 @@ export class AssetAdvancedTools implements ToolExecutor {
                 return await this.exportAssetManifest(args.directory, args.format, args.includeMetadata);
             case 'batch_configure':
                 return await this.batchConfigureAssets(args.urls, args.config);
+            case 'batch':
+                // v1.6.0 unified action-code dispatcher
+                switch (args.action) {
+                    case 'configure':
+                        return await this.batchConfigureAssets(args.urls, args.config);
+                    case 'import':
+                        return await this.batchImportAssets(args);
+                    case 'delete':
+                        return await this.batchDeleteAssets(args.urls);
+                    default:
+                        return createErrorResponse(
+                            ERROR_CODES.INVALID_PARAMS,
+                            `Unknown batch action: ${args.action}`,
+                            { suggestion: 'Use action: "configure" | "import" | "delete"' }
+                        );
+                }
             default:
                 throw new Error(`Unknown tool: ${toolName}`);
         }

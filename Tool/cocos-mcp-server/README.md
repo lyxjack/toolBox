@@ -22,6 +22,49 @@
 
 ## 更新日志
 
+### v1.6.0 (2026-04-22) — P1 + P2 工具合并
+
+> 依 [`TOOL_CONSOLIDATION_ANALYSIS.md`](TOOL_CONSOLIDATION_ANALYSIS.md) §4 推荐路径执行。工具数 **165 → 151**(-14);rare-off 下 116 → **~102**;token 实测降幅约 **-6.5%** 叠加在 v1.5.0 的 -15% 之上。集成测试 Cocos 端无需任何 prompt 改动,除非 AI 硬编码了本次合并的旧工具名(下方"迁移指南")。
+
+#### 🔀 6 组合并(P2)
+
+6 个新 action-code 工具取代 20 个旧独立工具,**旧工具名从 tools/list 消失**,但 `execute` 内部仍保留旧 case 一个版本作 fallback,避免已部署的 AI prompt 立即断。
+
+| 新工具 | action enum | 取代的旧工具 |
+|---|---|---|
+| `assetAdvanced_batch` | `configure` / `import` / `delete` | `batch_configure` / `batch_import_assets` / `batch_delete_assets` |
+| `component_query` | `list` / `info` / `available` | `get_components` / `get_component_info` / `get_available_components` |
+| `scene_management` | `open` / `save` / `close` / `create` / `save_as` | `open_scene` / `save_scene` / `close_scene` / `create_scene` / `save_scene_as` |
+| `node_lifecycle` | `delete` / `move` / `duplicate` | `delete_node` / `move_node` / `duplicate_node`(`create_node` 保留独立,schema 太丰富) |
+| `sceneAdvanced_reset` | `property` / `transform` / `component` | `reset_node_property` / `reset_node_transform` / `reset_component` |
+| `debug_logs` | `console` / `project` / `search` | `get_console_logs` / `get_project_logs` / `search_project_logs` |
+
+#### ✂️ 7 个 bloated description 瘦身(P1)
+
+Top 20 最肥工具里的 6 个 description 从平均 180 字符压到 ≤ 100 字符,节省 ~195 tokens。详细用法推到 `FEATURE_GUIDE_CN.md`。
+
+#### 🧪 测试
+
+- **342 单元测试**(v1.5.0 的 318 → 342,+24)
+- `tests/p2-consolidation.test.ts`(22 cases)覆盖每组新工具 schema / action enum / invalid-action validation / 旧 toolName 的 internal-compat 路由
+- `v1.5.0-invariants.test.ts`(现适用到 v1.6.0)断言 151 tools / 99 core / 3 optional / 49 rare
+
+#### 🚚 迁移指南(对消费 MCP 的 AI prompts)
+
+**大部分情况**:旧 toolName 内部仍被 `execute` 接受,不会立即 breaking。但下次 `tools/list` 时这些名字不再暴露,AI 的"工具记忆"会自然切到新名。
+
+**如果 AI prompt 硬编码了旧 tool 名**(罕见),请按上表对应替换:
+```
+component_get_components           → component_query({action: "list"})
+scene_open_scene                    → scene_management({action: "open"})
+node_delete_node                    → node_lifecycle({action: "delete"})
+assetAdvanced_batch_configure       → assetAdvanced_batch({action: "configure"})
+debug_get_console_logs              → debug_logs({action: "console"})
+sceneAdvanced_reset_node_transform  → sceneAdvanced_reset({action: "transform"})
+```
+
+---
+
 ### v1.5.0 (2026-04-22) — Phase 0 + Phase 1 集成
 
 > 集成测试综合分 **4.88/5**(0 P0 / 0 P1 / 5 P2)。工具 160 → **165** / category 14 → **15**(新增 `ui`)。

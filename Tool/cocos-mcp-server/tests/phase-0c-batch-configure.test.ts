@@ -16,42 +16,43 @@ import { ERROR_CODES } from '../source/utils/error-response';
 const SOURCE_DIR = path.join(__dirname, '..', 'source');
 const assetToolsSrc = fs.readFileSync(path.join(SOURCE_DIR, 'tools', 'asset-advanced-tools.ts'), 'utf-8');
 
-describe('Phase 0C: batch_configure tool schema', () => {
+describe('Phase 0C: batch tool schema (v1.6.0 consolidated: batch_configure → batch({action:"configure"}))', () => {
     const tools = new AssetAdvancedTools().getTools();
-    const batchConfig = tools.find(t => t.name === 'batch_configure');
+    const batch = tools.find(t => t.name === 'batch');
 
-    it('is registered in getTools()', () => {
-        expect(batchConfig).toBeDefined();
+    it('new consolidated `batch` tool is registered in getTools()', () => {
+        expect(batch).toBeDefined();
     });
 
-    it('has description mentioning meta / ERR-018 / token reduction', () => {
-        expect(batchConfig!.description.toLowerCase()).toContain('meta');
+    it('old `batch_configure` tool name is no longer exposed in tools/list', () => {
+        expect(tools.find(t => t.name === 'batch_configure')).toBeUndefined();
+        expect(tools.find(t => t.name === 'batch_import_assets')).toBeUndefined();
+        expect(tools.find(t => t.name === 'batch_delete_assets')).toBeUndefined();
     });
 
-    it('requires urls and config', () => {
-        expect(batchConfig!.inputSchema.required).toEqual(['urls', 'config']);
+    it('batch tool requires action enum', () => {
+        expect(batch!.inputSchema.required).toEqual(['action']);
     });
 
-    it('urls is an array of strings', () => {
-        const s = batchConfig!.inputSchema.properties.urls;
+    it('action enum covers configure / import / delete', () => {
+        const a = batch!.inputSchema.properties.action;
+        expect(a.enum).toEqual(['configure', 'import', 'delete']);
+    });
+
+    it('urls param (for configure/delete) is an array of strings', () => {
+        const s = batch!.inputSchema.properties.urls;
         expect(s.type).toBe('array');
         expect(s.items.type).toBe('string');
     });
 
     it('config.type enum covers sprite-frame + texture', () => {
-        const t = batchConfig!.inputSchema.properties.config.properties.type;
+        const t = batch!.inputSchema.properties.config.properties.type;
         expect(t.enum).toEqual(['sprite-frame', 'texture']);
     });
 
     it('config.wrapModeS enum covers the 3 Cocos wrap modes', () => {
-        const w = batchConfig!.inputSchema.properties.config.properties.wrapModeS;
+        const w = batch!.inputSchema.properties.config.properties.wrapModeS;
         expect(w.enum).toEqual(['repeat', 'clamp-to-edge', 'mirrored-repeat']);
-    });
-
-    it('config.wrapModeT has the same enum as wrapModeS', () => {
-        const s = batchConfig!.inputSchema.properties.config.properties.wrapModeS;
-        const t = batchConfig!.inputSchema.properties.config.properties.wrapModeT;
-        expect(t.enum).toEqual(s.enum);
     });
 });
 

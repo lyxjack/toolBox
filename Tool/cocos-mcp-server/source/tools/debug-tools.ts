@@ -31,26 +31,8 @@ export class DebugTools implements ToolExecutor {
 
     getTools(): ToolDefinition[] {
         return [
-            {
-                name: 'get_console_logs',
-                description: 'Get editor console logs',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        limit: {
-                            type: 'number',
-                            description: 'Number of recent logs to retrieve',
-                            default: 100
-                        },
-                        filter: {
-                            type: 'string',
-                            description: 'Filter logs by type',
-                            enum: ['all', 'log', 'warn', 'error', 'info'],
-                            default: 'all'
-                        }
-                    }
-                }
-            },
+            // v1.6.0: get_console_logs + get_project_logs + search_project_logs
+            // merged into `logs({action})` — see below.
             {
                 name: 'clear_console',
                 description: 'Clear editor console',
@@ -127,32 +109,6 @@ export class DebugTools implements ToolExecutor {
                 }
             },
             {
-                name: 'get_project_logs',
-                description: 'Get project logs from temp/logs/project.log file',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        lines: {
-                            type: 'number',
-                            description: 'Number of lines to read from the end of the log file (default: 100)',
-                            default: 100,
-                            minimum: 1,
-                            maximum: 10000
-                        },
-                        filterKeyword: {
-                            type: 'string',
-                            description: 'Filter logs containing specific keyword (optional)'
-                        },
-                        logLevel: {
-                            type: 'string',
-                            description: 'Filter by log level',
-                            enum: ['ERROR', 'WARN', 'INFO', 'DEBUG', 'TRACE', 'ALL'],
-                            default: 'ALL'
-                        }
-                    }
-                }
-            },
-            {
                 name: 'get_log_file_info',
                 description: 'Get information about the project log file',
                 inputSchema: {
@@ -161,31 +117,36 @@ export class DebugTools implements ToolExecutor {
                 }
             },
             {
-                name: 'search_project_logs',
-                description: 'Search for specific patterns or errors in project logs',
+                name: 'logs',
+                description: 'Unified log access (v1.6.0). action=console: editor console lines. action=project: read project.log tail. action=search: regex search across project.log. NOTE: return shape differs per action — console/project return log arrays, search returns match objects with location/context.',
                 inputSchema: {
                     type: 'object',
                     properties: {
-                        pattern: {
+                        action: {
                             type: 'string',
-                            description: 'Search pattern (supports regex)'
+                            enum: ['console', 'project', 'search'],
+                            description: 'Which log source / operation'
                         },
-                        maxResults: {
-                            type: 'number',
-                            description: 'Maximum number of matching results',
-                            default: 20,
-                            minimum: 1,
-                            maximum: 100
+                        limit: { type: 'number', description: 'For console: recent N (default 100)', default: 100 },
+                        filter: {
+                            type: 'string',
+                            enum: ['all', 'log', 'warn', 'error', 'info'],
+                            description: 'For console: filter by log type',
+                            default: 'all'
                         },
-                        contextLines: {
-                            type: 'number',
-                            description: 'Number of context lines to show around each match',
-                            default: 2,
-                            minimum: 0,
-                            maximum: 10
-                        }
+                        lines: { type: 'number', description: 'For project: tail N lines (default 100)', default: 100 },
+                        filterKeyword: { type: 'string', description: 'For project: keyword filter' },
+                        logLevel: {
+                            type: 'string',
+                            enum: ['ERROR', 'WARN', 'INFO', 'DEBUG', 'TRACE', 'ALL'],
+                            description: 'For project: log level filter',
+                            default: 'ALL'
+                        },
+                        pattern: { type: 'string', description: 'For search: regex pattern' },
+                        maxResults: { type: 'number', description: 'For search: max matches (default 20)', default: 20 },
+                        contextLines: { type: 'number', description: 'For search: context lines per match (default 2)', default: 2 }
                     },
-                    required: ['pattern']
+                    required: ['action']
                 }
             }
         ];
@@ -213,6 +174,22 @@ export class DebugTools implements ToolExecutor {
                 return await this.getLogFileInfo();
             case 'search_project_logs':
                 return await this.searchProjectLogs(args.pattern, args.maxResults, args.contextLines);
+            case 'logs':
+                // v1.6.0 unified action-code dispatcher
+                switch (args.action) {
+                    case 'console':
+                        return await this.getConsoleLogs(args.limit, args.filter);
+                    case 'project':
+                        return await this.getProjectLogs(args.lines, args.filterKeyword, args.logLevel);
+                    case 'search':
+                        return await this.searchProjectLogs(args.pattern, args.maxResults, args.contextLines);
+                    default:
+                        return {
+                            success: false,
+                            error: `Unknown logs action: ${args.action}`,
+                            errorCode: 'INVALID_PARAMS'
+                        } as any;
+                }
             default:
                 throw new Error(`Unknown tool: ${toolName}`);
         }

@@ -20,65 +20,22 @@ export class SceneTools implements ToolExecutor {
                 }
             },
             {
-                name: 'open_scene',
-                description: 'Open a scene by path',
+                name: 'management',
+                description: 'Unified scene CRUD (v1.6.0). action=open/save/close/create/save_as. Each action has its own side-effect profile — open/close switch current scene state; create/save_as write new file; save writes current.',
                 inputSchema: {
                     type: 'object',
                     properties: {
-                        scenePath: {
+                        action: {
                             type: 'string',
-                            description: 'The scene file path'
-                        }
-                    },
-                    required: ['scenePath']
-                }
-            },
-            {
-                name: 'save_scene',
-                description: 'Save current scene',
-                inputSchema: {
-                    type: 'object',
-                    properties: {}
-                }
-            },
-            {
-                name: 'create_scene',
-                description: 'Create a new scene asset',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        sceneName: {
-                            type: 'string',
-                            description: 'Name of the new scene'
+                            enum: ['open', 'save', 'close', 'create', 'save_as'],
+                            description: 'Which scene operation to perform'
                         },
-                        savePath: {
-                            type: 'string',
-                            description: 'Path to save the scene (e.g., db://assets/scenes/NewScene.scene)'
-                        }
+                        scenePath: { type: 'string', description: 'For open: the scene db:// path' },
+                        sceneName: { type: 'string', description: 'For create: name of the new scene' },
+                        savePath: { type: 'string', description: 'For create: path to save (db://assets/scenes/X.scene)' },
+                        path: { type: 'string', description: 'For save_as: destination path' }
                     },
-                    required: ['sceneName', 'savePath']
-                }
-            },
-            {
-                name: 'save_scene_as',
-                description: 'Save scene as new file',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        path: {
-                            type: 'string',
-                            description: 'Path to save the scene'
-                        }
-                    },
-                    required: ['path']
-                }
-            },
-            {
-                name: 'close_scene',
-                description: 'Close current scene',
-                inputSchema: {
-                    type: 'object',
-                    properties: {}
+                    required: ['action']
                 }
             },
             {
@@ -116,6 +73,26 @@ export class SceneTools implements ToolExecutor {
                 return await this.closeScene();
             case 'get_scene_hierarchy':
                 return await this.getSceneHierarchy(args.includeComponents);
+            case 'management':
+                // v1.6.0 unified action-code dispatcher
+                switch (args.action) {
+                    case 'open':
+                        return await this.openScene(args.scenePath);
+                    case 'save':
+                        return await this.saveScene();
+                    case 'close':
+                        return await this.closeScene();
+                    case 'create':
+                        return await this.createScene(args.sceneName, args.savePath);
+                    case 'save_as':
+                        return await this.saveSceneAs(args.path);
+                    default:
+                        return {
+                            success: false,
+                            error: `Unknown scene.management action: ${args.action}`,
+                            errorCode: 'INVALID_PARAMS'
+                        } as any;
+                }
             default:
                 throw new Error(`Unknown tool: ${toolName}`);
         }
