@@ -97,7 +97,7 @@ npm run build
 3. 控制台出现:
    ```
    [MCPServer] ✅ HTTP server started successfully on http://127.0.0.1:3000
-   [MCPServer] Setup tools: 115 tools available (disabled scopes: [rare])
+   [MCPServer] Setup tools: 116 tools available (disabled scopes: [rare])
    ```
 
 ### 5. 链接 AI 客户端
@@ -135,14 +135,14 @@ claude mcp add --transport http cocos-creator http://127.0.0.1:3000/mcp
 
 | Scope | 默认 category | 工具数 | 用途 |
 |---|---|---:|---|
-| `core` | scene / node / component / prefab / project / debug / assetAdvanced / sceneAdvanced / ui | 112 | 高频核心 |
+| `core` | scene / node / component / prefab / project / debug / assetAdvanced / sceneAdvanced / ui | 112 (+1 per-tool: `server_get_server_status`) | 高频核心 |
 | `optional` | validation | 3 | 偶尔使用 |
 | `rare` | preferences / server / broadcast / sceneView / referenceImage | 50 | 实战几乎不触 |
 
 **推荐组合**:
 - `"disabledScopes": []` → 165 tools(全量,~13,111 token)
-- `"disabledScopes": ["rare"]` → 115 tools(~11,084 token,-15%)**← 本仓库默认推荐**
-- `"disabledScopes": ["rare", "optional"]` → 112 tools(~10,860 token)
+- `"disabledScopes": ["rare"]` → 116 tools(~11,100 token,-15%)**← 本仓库默认推荐**(含 P2.E 提升到 core 的 `server_get_server_status`)
+- `"disabledScopes": ["rare", "optional"]` → 113 tools(~10,870 token)
 
 详见 [`TOKEN_BUDGET_ANALYSIS.md`](TOKEN_BUDGET_ANALYSIS.md)。
 

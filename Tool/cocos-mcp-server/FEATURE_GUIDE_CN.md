@@ -1538,7 +1538,7 @@ rare 分类的依据:在实战项目(kingDianPuzzle 星星之路 20+ commit)中�
 保存后**重启 MCP server**(或在扩展管理器中点"重启插件"),启动日志出现:
 
 ```
-[MCPServer] Setup tools: 115 tools available (disabled scopes: [rare])
+[MCPServer] Setup tools: 116 tools available (disabled scopes: [rare])
 ```
 
 ### A.4 per-tool 覆盖
