@@ -1454,9 +1454,17 @@ export class PrefabTools implements ToolExecutor {
 
     private async getPrefabInfo(prefabPath: string): Promise<ToolResponse> {
         return new Promise((resolve) => {
+            // Sentinel used to short-circuit the promise chain with a clean
+            // NOT_FOUND response instead of a thrown Error that loses shape.
+            const NOT_FOUND_MARK = Symbol('prefab_not_found');
             Editor.Message.request('asset-db', 'query-asset-info', prefabPath).then((assetInfo: any) => {
                 if (!assetInfo) {
-                    throw new Error('Prefab not found');
+                    resolve(createErrorResponse(
+                        ERROR_CODES.NOT_FOUND,
+                        'Prefab not found',
+                        { relatedAssets: [prefabPath], suggestion: '用 prefab_get_prefab_list 或 find_asset_by_name 核对 db:// URL' }
+                    ));
+                    throw NOT_FOUND_MARK;
                 }
 
                 return Editor.Message.request('asset-db', 'query-asset-meta', assetInfo.uuid);
@@ -1471,8 +1479,14 @@ export class PrefabTools implements ToolExecutor {
                     dependencies: metaInfo.depends || []
                 };
                 resolve({ success: true, data: info });
-            }).catch((err: Error) => {
-                resolve({ success: false, error: err.message });
+            }).catch((err: any) => {
+                // Swallow the NOT_FOUND sentinel — resolve already happened above.
+                if (err === NOT_FOUND_MARK) return;
+                resolve(createErrorResponse(
+                    ERROR_CODES.EDITOR_API_ERROR,
+                    err?.message || String(err),
+                    { relatedAssets: [prefabPath] }
+                ));
             });
         });
     }
@@ -1528,16 +1542,18 @@ export class PrefabTools implements ToolExecutor {
                             ));
                         }
                     }).catch((error: any) => {
-                        resolve({
-                            success: false,
-                            error: `读取预制体文件失败: ${error.message}`
-                        });
+                        resolve(createErrorResponse(
+                            ERROR_CODES.IO_ERROR,
+                            `读取预制体文件失败: ${error.message}`,
+                            { relatedAssets: [prefabPath], suggestion: '如文件被外部脚本污染(ERR-002/005),用 git checkout/reset 还原;或删除后重建' }
+                        ));
                     });
                 }).catch((error: any) => {
-                    resolve({
-                        success: false,
-                        error: `查询预制体信息失败: ${error.message}`
-                    });
+                    resolve(createErrorResponse(
+                        ERROR_CODES.EDITOR_API_ERROR,
+                        `查询预制体信息失败: ${error.message}`,
+                        { relatedAssets: [prefabPath] }
+                    ));
                 });
             } catch (error) {
                 resolve({
@@ -1592,57 +1608,19 @@ export class PrefabTools implements ToolExecutor {
         };
     }
 
-    private async duplicatePrefab(args: any): Promise<ToolResponse> {
-        return new Promise(async (resolve) => {
-            try {
-                const { sourcePrefabPath, targetPrefabPath, newPrefabName } = args;
-                
-                // 读取源预制体
-                const sourceInfo = await this.getPrefabInfo(sourcePrefabPath);
-                if (!sourceInfo.success) {
-                    resolve({
-                        success: false,
-                        error: `无法读取源预制体: ${sourceInfo.error}`
-                    });
-                    return;
-                }
-
-                // 读取源预制体内容
-                const sourceContent = await this.readPrefabContent(sourcePrefabPath);
-                if (!sourceContent.success) {
-                    resolve({
-                        success: false,
-                        error: `无法读取源预制体内容: ${sourceContent.error}`
-                    });
-                    return;
-                }
-
-                // 生成新的UUID
-                const newUuid = this.generateUUID();
-                
-                // 修改预制体数据
-                const modifiedData = this.modifyPrefabForDuplication(sourceContent.data, newPrefabName, newUuid);
-                
-                // 创建新的meta数据
-                const newMetaData = this.createMetaData(newPrefabName || 'DuplicatedPrefab', newUuid);
-                
-                // 预制体复制功能暂时禁用，因为涉及复杂的序列化格式
-                resolve({
-                    ...createErrorResponse(
-                        ERROR_CODES.INVALID_STATE,
-                        '预制体复制功能暂时不可用',
-                        { suggestion: '编辑器 GUI 中手动复制(资源管理器右键复制/粘贴)' }
-                    ),
-                    instruction: '请在 Cocos Creator 编辑器中手动复制预制体：\n1. 在资源管理器中选择要复制的预制体\n2. 右键选择复制\n3. 在目标位置粘贴'
-                });
-
-            } catch (error) {
-                resolve({
-                    success: false,
-                    error: `复制预制体时发生错误: ${error}`
-                });
-            }
-        });
+    private async duplicatePrefab(_args: any): Promise<ToolResponse> {
+        // This API is intentionally disabled (prefab serialization is complex
+        // and unsafe to auto-generate). Short-circuit at the top so the caller
+        // gets a clean INVALID_STATE + instruction before any Editor API hits,
+        // matching what FEATURE_GUIDE_CN.md Appendix B documents.
+        return {
+            ...createErrorResponse(
+                ERROR_CODES.INVALID_STATE,
+                '预制体复制功能暂时不可用',
+                { suggestion: '编辑器 GUI 中手动复制(资源管理器右键复制/粘贴)' }
+            ),
+            instruction: '请在 Cocos Creator 编辑器中手动复制预制体：\n1. 在资源管理器中选择要复制的预制体\n2. 右键选择复制\n3. 在目标位置粘贴'
+        };
     }
 
     private async readPrefabContent(prefabPath: string): Promise<{ success: boolean; data?: any; error?: string }> {
