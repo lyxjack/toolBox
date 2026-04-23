@@ -215,7 +215,7 @@ export class AssetAdvancedTools implements ToolExecutor {
             },
             {
                 name: 'batch_configure',
-                description: 'Batch-fix meta fields (type / wrapMode) on multiple assets in one call. Collapses the common "refresh → reimport × N → save_asset_meta × N" 15-call workflow into 2 calls. See FEATURE_GUIDE_CN.md Appendix C.',
+                description: 'Batch-fix meta (type / wrapMode) on N assets. Collapses 15-call workflow to 2. See FEATURE_GUIDE §附录 C.',
                 inputSchema: {
                     type: 'object',
                     properties: {

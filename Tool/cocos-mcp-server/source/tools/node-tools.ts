@@ -144,7 +144,7 @@ export class NodeTools implements ToolExecutor {
             },
             {
                 name: 'set_node_property',
-                description: 'Set node property value (prefer using set_node_transform for active/layer/mobility/position/rotation/scale)',
+                description: 'Set a node property. For transform/active/layer/mobility, prefer set_node_transform.',
                 inputSchema: {
                     type: 'object',
                     properties: {

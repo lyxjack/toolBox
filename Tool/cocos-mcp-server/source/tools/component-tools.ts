@@ -6,7 +6,7 @@ export class ComponentTools implements ToolExecutor {
         return [
             {
                 name: 'add_component',
-                description: 'Add a component to a specific node. IMPORTANT: You must provide the nodeUuid parameter to specify which node to add the component to.',
+                description: 'Add a component to a node. Requires nodeUuid.',
                 inputSchema: {
                     type: 'object',
                     properties: {
@@ -24,7 +24,7 @@ export class ComponentTools implements ToolExecutor {
             },
             {
                 name: 'remove_component',
-                description: 'Remove a component from a node. componentType must be the component\'s classId (cid, i.e. the type field from getComponents), not the script name or class name. Use getComponents to get the correct cid.',
+                description: 'Remove a component. componentType must be cid from getComponents, not script/class name.',
                 inputSchema: {
                     type: 'object',
                     properties: {
@@ -74,7 +74,7 @@ export class ComponentTools implements ToolExecutor {
             },
             {
                 name: 'set_component_property',
-                description: 'Set component property values for UI components or custom script components. Supports setting properties of built-in UI components (e.g., cc.Label, cc.Sprite) and custom script components. Note: For node basic properties (name, active, layer, etc.), use set_node_property. For node transform properties (position, rotation, scale, etc.), use set_node_transform.',
+                description: 'Set a component property (cc.Label / cc.Sprite / custom). For node fields use set_node_property / set_node_transform. See FEATURE_GUIDE §3.5.',
                 inputSchema: {
                     type: 'object',
                     properties: {
@@ -182,7 +182,7 @@ export class ComponentTools implements ToolExecutor {
             },
             {
                 name: 'batch_set_properties',
-                description: 'Set multiple properties on a single component in one call. Wraps set_component_property N times — all properties target the same (nodeUuid, componentType). Failures on individual properties are isolated; the batch returns succeeded/failed lists. Preferred for UI construction (saves N-1 MCP round-trips).',
+                description: 'Set N properties on one component in a single call. Per-property failures are isolated (succeeded/failed lists). Preferred over N separate set_component_property calls.',
                 inputSchema: {
                     type: 'object',
                     properties: {
