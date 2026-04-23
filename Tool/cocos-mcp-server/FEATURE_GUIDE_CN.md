@@ -1504,7 +1504,7 @@ Cocos Creator 使用 `db://` 前缀的资源URL格式：
 
 ### A.1 背景
 
-MCP client 首次连接时会拉取所有工具的 `inputSchema` 并注入对话上下文。当前 server 暴露 **160 个工具**(14 category),全量加载约 **14,000 tokens**。在长对话中这是固定税,影响有效上下文。
+MCP client 首次连接时会拉取所有工具的 `inputSchema` 并注入对话上下文。当前 server 暴露 **165 个工具**(15 category,含 v1.5.0 新增 `ui` 类),实测 HTTP `tools/list` 响应 ~13,111 tokens。在长对话中这是固定税,影响有效上下文。
 
 ### A.2 scope 元数据
 
@@ -1538,7 +1538,7 @@ rare 分类的依据:在实战项目(kingDianPuzzle 星星之路 20+ commit)中�
 保存后**重启 MCP server**(或在扩展管理器中点"重启插件"),启动日志出现:
 
 ```
-[MCPServer] Setup tools: 110 tools available (disabled scopes: [rare])
+[MCPServer] Setup tools: 115 tools available (disabled scopes: [rare])
 ```
 
 ### A.4 per-tool 覆盖

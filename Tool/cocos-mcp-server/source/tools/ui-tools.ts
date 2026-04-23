@@ -110,6 +110,17 @@ export class UITools implements ToolExecutor {
                 { suggestion: 'Use get_all_nodes or find_node_by_name to obtain the UUID' }
             );
         }
+        // Cheap shape check so obvious garbage ("fake", "abc") is rejected as
+        // INVALID_PARAMS instead of falling through to Editor.Message and being
+        // packaged as EDITOR_API_ERROR (P2.C fix). Covers both standard UUID
+        // (36 chars with dashes) and Cocos compressed form (base64-ish, 5+ chars).
+        if (!/^[A-Za-z0-9+/=_\-]{8,}$/.test(nodeUuid)) {
+            return createErrorResponse(
+                ERROR_CODES.INVALID_PARAMS,
+                `nodeUuid "${nodeUuid}" does not look like a valid Cocos UUID`,
+                { suggestion: 'UUID must be at least 8 chars, alphanumeric + [+/=_-]. Use get_all_nodes or find_node_by_name to obtain a real UUID.' }
+            );
+        }
         return null;
     }
 

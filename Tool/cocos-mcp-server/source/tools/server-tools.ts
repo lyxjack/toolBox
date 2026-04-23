@@ -30,6 +30,11 @@ export class ServerTools implements ToolExecutor {
             {
                 name: 'get_server_status',
                 description: 'Get comprehensive server status information',
+                // Per-tool scope override: even though `server` category defaults to
+                // 'rare', get_server_status is a legitimate health-check entry point
+                // and must stay loaded when settings.disabledScopes excludes the rare
+                // category. (Phase 2 P2.E fix.)
+                scope: 'core',
                 inputSchema: {
                     type: 'object',
                     properties: {}

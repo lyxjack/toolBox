@@ -1145,6 +1145,14 @@ export class ComponentTools implements ToolExecutor {
                 { suggestion: 'Use get_all_nodes or find_node_by_name to obtain the UUID' }
             );
         }
+        // Shape check for obvious garbage (P2.C fix — consistent with UITools).
+        if (!/^[A-Za-z0-9+/=_\-]{8,}$/.test(nodeUuid)) {
+            return createErrorResponse(
+                ERROR_CODES.INVALID_PARAMS,
+                `nodeUuid "${nodeUuid}" does not look like a valid Cocos UUID`,
+                { suggestion: 'UUID must be at least 8 chars, alphanumeric + [+/=_-].' }
+            );
+        }
         if (!componentType || typeof componentType !== 'string') {
             return createErrorResponse(
                 ERROR_CODES.INVALID_PARAMS,
@@ -1195,7 +1203,10 @@ export class ComponentTools implements ToolExecutor {
             return createErrorResponse(
                 ERROR_CODES.EDITOR_API_ERROR,
                 `All ${failed.length} property write(s) failed on ${componentType}`,
-                { failed, suggestion: 'Verify componentType exists on the node (get_components) and property names are correct' }
+                {
+                    failed,
+                    suggestion: `Verify componentType exists on the node (try get_components first) and property names are correct. If the component is not attached, run component_add_component({ nodeUuid, componentType: '${componentType}' }) before batch_set_properties.`
+                }
             );
         }
         return {

@@ -138,6 +138,27 @@ describe('Phase 0A: scope filter algorithm', () => {
         const disabled = new Set<ToolScope>(['rare']);
         expect(isScopeDisabled('unknownCat', {}, disabled)).toBe(false);
     });
+
+    // P2.E: get_server_status has scope: 'core' override so it survives
+    // disabledScopes: ['rare']. Verified via per-tool override precedence.
+    it('P2.E — server_get_server_status with scope:"core" stays loaded when rare disabled', () => {
+        const disabled = new Set<ToolScope>(['rare']);
+        // server category is rare by default, so every other server tool should be dropped
+        expect(isScopeDisabled('server', {}, disabled)).toBe(true);
+        // but get_server_status has per-tool scope override
+        expect(isScopeDisabled('server', { scope: 'core' }, disabled)).toBe(false);
+    });
+});
+
+describe('Phase 0A: per-tool scope override in source', () => {
+    const serverToolsSrc = fs.readFileSync(path.join(SOURCE_DIR, 'tools', 'server-tools.ts'), 'utf-8');
+
+    it('server-tools.ts marks get_server_status as scope: "core" (P2.E)', () => {
+        // Comment block + schema may span ~800 chars for this tool definition.
+        const start = serverToolsSrc.indexOf("name: 'get_server_status'");
+        const block = serverToolsSrc.slice(start, start + 1000);
+        expect(block).toMatch(/scope:\s*'core'/);
+    });
 });
 
 describe('Phase 0A: source file structure', () => {

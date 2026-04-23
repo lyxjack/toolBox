@@ -157,20 +157,45 @@ describe('Phase 1: UITools validation short-circuits', () => {
     });
 
     it('set_label rejects when nodeUuid present but all other fields undefined', async () => {
-        const r = await ui.execute('set_label', { nodeUuid: 'fake' });
+        // Must use UUID-shape-valid string so we short-circuit past P2.C's shape
+        // check and actually reach the "no label fields supplied" branch.
+        const r = await ui.execute('set_label', { nodeUuid: 'looks-like-uuid-xx' });
         expect(r.success).toBe(false);
         expect(r.errorCode).toBe(ERROR_CODES.INVALID_PARAMS);
         expect(r.error).toMatch(/Label fields/i);
     });
 
     it('set_layout rejects when nodeUuid present but all other fields undefined', async () => {
-        const r = await ui.execute('set_layout', { nodeUuid: 'fake' });
+        const r = await ui.execute('set_layout', { nodeUuid: 'looks-like-uuid-xx' });
         expect(r.success).toBe(false);
         expect(r.errorCode).toBe(ERROR_CODES.INVALID_PARAMS);
     });
 
     it('set_sprite rejects when nodeUuid present but all other fields undefined', async () => {
-        const r = await ui.execute('set_sprite', { nodeUuid: 'fake' });
+        // With P2.C, "fake" (4 chars) now fails UUID shape check first.
+        // This still yields INVALID_PARAMS — the test remains valid.
+        const r = await ui.execute('set_sprite', { nodeUuid: 'looks-like-uuid-xx' });
+        expect(r.success).toBe(false);
+        expect(r.errorCode).toBe(ERROR_CODES.INVALID_PARAMS);
+    });
+
+    // P2.C: reject obviously non-UUID strings up-front with INVALID_PARAMS,
+    // not EDITOR_API_ERROR from a downstream Editor.Message failure.
+    it('set_label rejects bad-format UUID "fake" with INVALID_PARAMS (P2.C)', async () => {
+        const r = await ui.execute('set_label', { nodeUuid: 'fake', string: 'x' });
+        expect(r.success).toBe(false);
+        expect(r.errorCode).toBe(ERROR_CODES.INVALID_PARAMS);
+        expect(r.error).toMatch(/does not look like a valid Cocos UUID/);
+    });
+
+    it('set_label rejects too-short UUID "abc" with INVALID_PARAMS', async () => {
+        const r = await ui.execute('set_label', { nodeUuid: 'abc', string: 'x' });
+        expect(r.success).toBe(false);
+        expect(r.errorCode).toBe(ERROR_CODES.INVALID_PARAMS);
+    });
+
+    it('set_label rejects UUID with forbidden chars like spaces', async () => {
+        const r = await ui.execute('set_label', { nodeUuid: 'has space in it', string: 'x' });
         expect(r.success).toBe(false);
         expect(r.errorCode).toBe(ERROR_CODES.INVALID_PARAMS);
     });
@@ -197,17 +222,17 @@ describe('Phase 1: UITools delegation + entry building', () => {
 
     it('set_label delegates to batch_set_properties on cc.Label', async () => {
         const { ui, getCapture } = makeStubbedUITools();
-        await ui.execute('set_label', { nodeUuid: 'n1', string: 'hi', fontSize: 20 });
+        await ui.execute('set_label', { nodeUuid: 'mock-node-uuid-01', string: 'hi', fontSize: 20 });
         const { tool, args } = getCapture();
         expect(tool).toBe('batch_set_properties');
-        expect(args.nodeUuid).toBe('n1');
+        expect(args.nodeUuid).toBe('mock-node-uuid-01');
         expect(args.componentType).toBe('cc.Label');
     });
 
     it('set_label builds entries with correct propertyType per field', async () => {
         const { ui, getCapture } = makeStubbedUITools();
         await ui.execute('set_label', {
-            nodeUuid: 'n1',
+            nodeUuid: 'mock-node-uuid-01',
             string: 'hi',
             fontSize: 20,
             isBold: true,
@@ -223,7 +248,7 @@ describe('Phase 1: UITools delegation + entry building', () => {
 
     it('set_label skips undefined fields (partial update)', async () => {
         const { ui, getCapture } = makeStubbedUITools();
-        await ui.execute('set_label', { nodeUuid: 'n1', fontSize: 14 });
+        await ui.execute('set_label', { nodeUuid: 'mock-node-uuid-01', fontSize: 14 });
         const entries = getCapture().args.properties;
         expect(entries.length).toBe(1);
         expect(entries[0].property).toBe('fontSize');
@@ -231,7 +256,7 @@ describe('Phase 1: UITools delegation + entry building', () => {
 
     it('set_layout delegates on cc.Layout with numeric propertyTypes', async () => {
         const { ui, getCapture } = makeStubbedUITools();
-        await ui.execute('set_layout', { nodeUuid: 'n1', type: 1, spacingX: 10, paddingLeft: 4 });
+        await ui.execute('set_layout', { nodeUuid: 'mock-node-uuid-01', type: 1, spacingX: 10, paddingLeft: 4 });
         const { args } = getCapture();
         expect(args.componentType).toBe('cc.Layout');
         const entries = args.properties;
@@ -244,7 +269,7 @@ describe('Phase 1: UITools delegation + entry building', () => {
     it('set_sprite delegates on cc.Sprite with spriteFrame propertyType for spriteFrame field', async () => {
         const { ui, getCapture } = makeStubbedUITools();
         await ui.execute('set_sprite', {
-            nodeUuid: 'n1',
+            nodeUuid: 'mock-node-uuid-01',
             spriteFrame: 'db://a.png/a',
             sizeMode: 1,
             color: { r: 255, g: 255, b: 255, a: 255 }
@@ -259,7 +284,7 @@ describe('Phase 1: UITools delegation + entry building', () => {
 
     it('set_sprite forwards spriteFrame value verbatim (UUID or URL string)', async () => {
         const { ui, getCapture } = makeStubbedUITools();
-        await ui.execute('set_sprite', { nodeUuid: 'n1', spriteFrame: 'abc-uuid-123' });
+        await ui.execute('set_sprite', { nodeUuid: 'mock-node-uuid-01', spriteFrame: 'abc-uuid-123' });
         const byName = Object.fromEntries(getCapture().args.properties.map((e: any) => [e.property, e]));
         expect(byName.spriteFrame.value).toBe('abc-uuid-123');
     });
