@@ -22,6 +22,30 @@
 
 ## 更新日志
 
+### v1.6.1 (2026-04-22) — 6 P2 ergonomics 修复
+
+集成测试 `V1.6.0_INTEGRATION_TEST.md` 发现的 6 条非阻塞 P2 瑕疵本次一次修完,纯 patch,不改 tool 数量或对外契约。
+
+| # | 修复 | 改动位点 |
+|---|---|---|
+| P2-1 | `reset({action:"property"})` 补 path/uuid 预校验,Cocos API 异常包成 `EDITOR_API_ERROR` + suggestion | `source/tools/scene-advanced-tools.ts:resetNodeProperty` |
+| P2-2 | `node_lifecycle({action:"duplicate"})` 在 Cocos 未返 UUID 时 response 带 `warning` 引导 `node_get_all_nodes` 查找副本 | `source/tools/node-tools.ts:duplicateNode` |
+| P2-3 | `server_get_server_status.mcpServerPort` 改从 `MCPServerSettings.port` 注入,不再硬编码 3000 | `source/tools/server-tools.ts` + `mcp-server.ts` |
+| P2-4 | `debug_logs({action:"console"})` 空 buffer 时 response 带 `warning`,提示 fallback 到 `project`/`search` | `source/tools/debug-tools.ts:getConsoleLogs` |
+| P2-5 | `scene_management` 未知 action 错误响应补 `details.suggestion`,shape 对齐其他 5 组 | `source/tools/scene-tools.ts` |
+| P2-6 | 4 个 mutating 合并工具(batch/management/lifecycle/reset)description 末尾加"⚠ 不要并发调用"警示;2 个 read-only(query/logs)明示"Safe for parallel" | 6 个 tool files 的 description |
+
+#### 🧪 测试
+
+- 新增 `tests/v1.6.1-p2-fixes.test.ts` — **20 cases** 覆盖 6 个 P2 的行为 + 源码结构断言
+- 测试总数 342 → **362**(+20)
+
+#### 🚚 迁移
+
+无 breaking。旧工具名继续通过内部 fallback 路由;client 无需任何改动。
+
+---
+
 ### v1.6.0 (2026-04-22) — P1 + P2 工具合并
 
 > 依 [`TOOL_CONSOLIDATION_ANALYSIS.md`](TOOL_CONSOLIDATION_ANALYSIS.md) §4 推荐路径执行。工具数 **165 → 151**(-14);rare-off 下 116 → **~102**;token 实测降幅约 **-6.5%** 叠加在 v1.5.0 的 -15% 之上。集成测试 Cocos 端无需任何 prompt 改动,除非 AI 硬编码了本次合并的旧工具名(下方"迁移指南")。

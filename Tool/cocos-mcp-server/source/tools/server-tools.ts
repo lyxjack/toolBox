@@ -1,6 +1,19 @@
 import { ToolDefinition, ToolResponse, ToolExecutor } from '../types';
 
 export class ServerTools implements ToolExecutor {
+    // P2-3 fix (v1.6.1): carry the real MCP HTTP port through from MCPServer so
+    // get_server_status doesn't hand back a hardcoded 3000. mcp-server.ts passes
+    // settings.port at construction time.
+    private mcpPort: number;
+
+    constructor(mcpPort: number = 3000) {
+        this.mcpPort = mcpPort;
+    }
+
+    public setMcpPort(port: number): void {
+        this.mcpPort = port;
+    }
+
     getTools(): ToolDefinition[] {
         return [
             {
@@ -165,7 +178,7 @@ export class ServerTools implements ToolExecutor {
                 }
 
                 // Add additional server info
-                status.mcpServerPort = 3000; // Our MCP server port
+                status.mcpServerPort = this.mcpPort; // Real MCP HTTP listen port (set by MCPServer on construction — P2-3 fix)
                 status.editorVersion = (Editor as any).versions?.cocos || 'Unknown';
                 status.platform = process.platform;
                 status.nodeVersion = process.version;

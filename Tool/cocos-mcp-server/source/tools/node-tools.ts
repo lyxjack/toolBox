@@ -1,5 +1,6 @@
 import { ToolDefinition, ToolResponse, ToolExecutor, NodeInfo } from '../types';
 import { ComponentTools } from './component-tools';
+import { createErrorResponse, ERROR_CODES } from '../utils/error-response';
 
 export class NodeTools implements ToolExecutor {
     private componentTools = new ComponentTools();
@@ -206,7 +207,7 @@ export class NodeTools implements ToolExecutor {
             },
             {
                 name: 'lifecycle',
-                description: 'Unified node lifecycle ops (v1.6.0). action=delete/move/duplicate. NOTE: create_node stays independent because its schema (components/initialTransform/prefab-instantiation) is too rich to merge cleanly.',
+                description: 'Unified node lifecycle (v1.6.0). action=delete/move/duplicate. create_node stays independent (rich schema). ⚠ Do not invoke in parallel with other mutating tools — Cocos IPC serializes and concurrent calls time out.',
                 inputSchema: {
                     type: 'object',
                     properties: {
@@ -985,18 +986,30 @@ export class NodeTools implements ToolExecutor {
     }
 
     private async duplicateNode(uuid: string, includeChildren: boolean = true): Promise<ToolResponse> {
+        // P2-2 fix (v1.6.1): Cocos 'duplicate-node' does not reliably return
+        // the new node's UUID in all versions. If result.uuid is missing,
+        // surface a `warning` telling the caller to locate the copy via
+        // node_get_all_nodes (the duplicate typically adopts <name>-001 suffix).
         return new Promise((resolve) => {
             // Note: includeChildren parameter is accepted for future use but not currently implemented
             Editor.Message.request('scene', 'duplicate-node', uuid).then((result: any) => {
-                resolve({
-                    success: true,
-                    data: {
-                        newUuid: result.uuid,
-                        message: 'Node duplicated successfully'
-                    }
-                });
-            }).catch((err: Error) => {
-                resolve({ success: false, error: err.message });
+                const newUuid = result?.uuid ?? null;
+                const data: any = {
+                    newUuid,
+                    message: 'Node duplicated successfully'
+                };
+                const response: ToolResponse = { success: true, data };
+                if (!newUuid) {
+                    data.rawResult = result;
+                    response.warning = 'Cocos duplicate-node did not return a UUID. Call node_get_all_nodes and look for a node named `<original>-001` to locate the duplicate.';
+                }
+                resolve(response);
+            }).catch((err: any) => {
+                resolve(createErrorResponse(
+                    ERROR_CODES.EDITOR_API_ERROR,
+                    err?.message ?? String(err),
+                    { relatedAssets: [uuid], suggestion: 'Verify the source node UUID exists (use get_all_nodes or find_node_by_name)' }
+                ));
             });
         });
     }

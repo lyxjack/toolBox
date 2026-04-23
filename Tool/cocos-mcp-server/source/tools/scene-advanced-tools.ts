@@ -1,11 +1,12 @@
 import { ToolDefinition, ToolResponse, ToolExecutor } from '../types';
+import { createErrorResponse, ERROR_CODES } from '../utils/error-response';
 
 export class SceneAdvancedTools implements ToolExecutor {
     getTools(): ToolDefinition[] {
         return [
             {
                 name: 'reset',
-                description: 'Unified reset (v1.6.0). action=property: reset a node property by path. action=transform: reset position/rotation/scale. action=component: reset a component to defaults.',
+                description: 'Unified reset (v1.6.0). action=property: reset node property by path. action=transform: reset position/rotation/scale. action=component: reset component to defaults. ⚠ Do not invoke in parallel with other mutating tools — Cocos IPC serializes and concurrent calls time out.',
                 inputSchema: {
                     type: 'object',
                     properties: {
@@ -397,18 +398,44 @@ export class SceneAdvancedTools implements ToolExecutor {
     }
 
     private async resetNodeProperty(uuid: string, path: string): Promise<ToolResponse> {
+        // P2-1 fix (v1.6.1): Cocos's reset-property can throw raw JS errors
+        // (e.g. "Cannot read properties of undefined (reading 'indexOf')") when
+        // path is unknown or malformed. Pre-validate + wrap the .catch in
+        // createErrorResponse so callers see a structured errorCode + suggestion
+        // instead of an untagged string.
+        if (!uuid || typeof uuid !== 'string') {
+            return createErrorResponse(
+                ERROR_CODES.INVALID_PARAMS,
+                'uuid must be a non-empty string',
+                { suggestion: 'Use get_all_nodes or find_node_by_name to obtain a valid node UUID' }
+            );
+        }
+        if (!path || typeof path !== 'string') {
+            return createErrorResponse(
+                ERROR_CODES.INVALID_PARAMS,
+                'path must be a non-empty property path',
+                { suggestion: 'Valid paths look like "position" / "rotation" / "scale" / a component property name' }
+            );
+        }
         return new Promise((resolve) => {
-            Editor.Message.request('scene', 'reset-property', { 
-                uuid, 
-                path, 
-                dump: { value: null } 
+            Editor.Message.request('scene', 'reset-property', {
+                uuid,
+                path,
+                dump: { value: null }
             }).then(() => {
                 resolve({
                     success: true,
                     message: `Property '${path}' reset to default value`
                 });
-            }).catch((err: Error) => {
-                resolve({ success: false, error: err.message });
+            }).catch((err: any) => {
+                resolve(createErrorResponse(
+                    ERROR_CODES.EDITOR_API_ERROR,
+                    err?.message ?? String(err),
+                    {
+                        relatedAssets: [uuid],
+                        suggestion: `Cocos scene.reset-property rejected path "${path}". Verify the path exists on the node (try get_node_info first) and uses the exact case Cocos expects.`
+                    }
+                ));
             });
         });
     }

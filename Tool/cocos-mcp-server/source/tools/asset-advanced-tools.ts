@@ -168,7 +168,7 @@ export class AssetAdvancedTools implements ToolExecutor {
             },
             {
                 name: 'batch',
-                description: 'Unified asset batch ops (v1.6.0). action=configure: fix meta fields (type/wrapMode) — see FEATURE_GUIDE §C. action=import: copy assets from a source directory. action=delete: remove N assets by URL.',
+                description: 'Unified asset batch ops (v1.6.0). action=configure: fix meta (type/wrapMode, see FEATURE_GUIDE §C). action=import: copy from source dir. action=delete: remove by URL. ⚠ Do not invoke in parallel with other mutating tools — Cocos IPC serializes and concurrent calls time out.',
                 inputSchema: {
                     type: 'object',
                     properties: {

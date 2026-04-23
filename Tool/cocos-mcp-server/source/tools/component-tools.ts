@@ -137,7 +137,7 @@ export class ComponentTools implements ToolExecutor {
             },
             {
                 name: 'query',
-                description: 'Unified component query (v1.6.0). action=list: all components on a node. action=info: one specific component. action=available: list of available component types by category.',
+                description: 'Unified component query (v1.6.0, read-only). action=list: all components on a node. action=info: one specific component. action=available: component types by category. Safe for parallel calls (no mutation).',
                 inputSchema: {
                     type: 'object',
                     properties: {

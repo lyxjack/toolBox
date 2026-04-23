@@ -282,8 +282,8 @@ describe('v1.5.0 invariants — documentation guards (P2.B)', () => {
 describe('v1.5.0 invariants — package version', () => {
     const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf-8'));
 
-    it('I10 — package.json version is 1.6.0 (consolidation release)', () => {
-        expect(pkg.version).toBe('1.6.0');
+    it('I10 — package.json version is 1.6.1 (P2 polish patch)', () => {
+        expect(pkg.version).toBe('1.6.1');
     });
 
     it('I10b — runtime dependencies are minimal (uuid/fs-extra/vue only)', () => {

@@ -1,4 +1,5 @@
 import { ToolDefinition, ToolResponse, ToolExecutor, SceneInfo } from '../types';
+import { createErrorResponse, ERROR_CODES } from '../utils/error-response';
 
 export class SceneTools implements ToolExecutor {
     getTools(): ToolDefinition[] {
@@ -21,7 +22,7 @@ export class SceneTools implements ToolExecutor {
             },
             {
                 name: 'management',
-                description: 'Unified scene CRUD (v1.6.0). action=open/save/close/create/save_as. Each action has its own side-effect profile — open/close switch current scene state; create/save_as write new file; save writes current.',
+                description: 'Unified scene CRUD (v1.6.0). action=open/save/close/create/save_as. Each has distinct side-effects — open/close switch current state; create/save_as write new file; save writes current. ⚠ Do not invoke in parallel with other mutating tools — Cocos IPC serializes and concurrent calls time out.',
                 inputSchema: {
                     type: 'object',
                     properties: {
@@ -87,11 +88,11 @@ export class SceneTools implements ToolExecutor {
                     case 'save_as':
                         return await this.saveSceneAs(args.path);
                     default:
-                        return {
-                            success: false,
-                            error: `Unknown scene.management action: ${args.action}`,
-                            errorCode: 'INVALID_PARAMS'
-                        } as any;
+                        return createErrorResponse(
+                            ERROR_CODES.INVALID_PARAMS,
+                            `Unknown scene.management action: ${args.action}`,
+                            { suggestion: 'Use action: "open" | "save" | "close" | "create" | "save_as"' }
+                        );
                 }
             default:
                 throw new Error(`Unknown tool: ${toolName}`);

@@ -118,7 +118,7 @@ export class DebugTools implements ToolExecutor {
             },
             {
                 name: 'logs',
-                description: 'Unified log access (v1.6.0). action=console: editor console lines. action=project: read project.log tail. action=search: regex search across project.log. NOTE: return shape differs per action — console/project return log arrays, search returns match objects with location/context.',
+                description: 'Unified log access (v1.6.0, read-only). action=console: editor console lines (buffered). action=project: tail project.log. action=search: regex across project.log. Return shape differs per action: console/project return log arrays, search returns match objects with location/context. Safe for parallel calls.',
                 inputSchema: {
                     type: 'object',
                     properties: {
@@ -197,14 +197,20 @@ export class DebugTools implements ToolExecutor {
 
     private async getConsoleLogs(limit: number = 100, filter: string = 'all'): Promise<ToolResponse> {
         let logs = this.consoleMessages;
-        
+
         if (filter !== 'all') {
             logs = logs.filter(log => log.type === filter);
         }
 
         const recentLogs = logs.slice(-limit);
-        
-        return {
+
+        // P2-4 fix (v1.6.1): the console capture hook is a placeholder (see
+        // setupConsoleCapture); the buffer only fills when addConsoleMessage is
+        // called externally. If a caller hits this during a fresh editor
+        // session, the empty result can be misread as "no errors" when it
+        // really means "capture not hooked up yet". Surface a warning so AI
+        // agents know to fall back to project-log / search actions.
+        const response: ToolResponse = {
             success: true,
             data: {
                 total: logs.length,
@@ -212,6 +218,10 @@ export class DebugTools implements ToolExecutor {
                 logs: recentLogs
             }
         };
+        if (recentLogs.length === 0) {
+            response.warning = 'Console capture buffer is empty. This is expected on a fresh editor session (capture hook is a placeholder). For recent events, use debug_logs({action:"project"}) or debug_logs({action:"search"}) which read from project.log directly.';
+        }
+        return response;
     }
 
     private async clearConsole(): Promise<ToolResponse> {

@@ -61,7 +61,7 @@ export class MCPServer {
             this.tools.project = new ProjectTools();
             this.tools.debug = new DebugTools();
             this.tools.preferences = new PreferencesTools();
-            this.tools.server = new ServerTools();
+            this.tools.server = new ServerTools(this.settings.port);
             this.tools.broadcast = new BroadcastTools();
             this.tools.sceneAdvanced = new SceneAdvancedTools();
             this.tools.sceneView = new SceneViewTools();
