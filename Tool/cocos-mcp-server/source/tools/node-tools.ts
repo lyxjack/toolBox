@@ -2,6 +2,20 @@ import { ToolDefinition, ToolResponse, ToolExecutor, NodeInfo } from '../types';
 import { ComponentTools } from './component-tools';
 import { createErrorResponse, ERROR_CODES } from '../utils/error-response';
 
+/**
+ * REQ-20260511-234213 / NEW-3 — cc.Node 字段类型注册表。
+ * Cocos set-property dump 对 Boolean / String / Number 等基础类型需要显式带 type 元数据，
+ * 否则会被反序列化为不可预期的 truthy/falsy 值（症状：set active=false 静默 no-op）。
+ * 未在此表中的属性走 catch-all（不附 type），保留旧行为。
+ */
+const CC_NODE_PROPERTY_TYPES: Record<string, string> = {
+    active: 'Boolean',
+    name: 'String',
+    layer: 'Number',
+    mobility: 'Number',
+    siblingIndex: 'Number'
+};
+
 export class NodeTools implements ToolExecutor {
     private componentTools = new ComponentTools();
     getTools(): ToolDefinition[] {
@@ -694,52 +708,124 @@ export class NodeTools implements ToolExecutor {
     }
 
     private async setNodeProperty(uuid: string, property: string, value: any): Promise<ToolResponse> {
-        return new Promise((resolve) => {
+        return new Promise(async (resolve) => {
+            // 按 CC_NODE_PROPERTY_TYPES 注册表 wrap dump.type — Bug #2 修复
+            const registeredType = CC_NODE_PROPERTY_TYPES[property];
+
+            // REQ-20260511-234213 修复: MCP HTTP wire 把 boolean 字符串化为 "false"/"true"，
+            // 但 JS Boolean("false") === true（非空字符串 truthy 坑），故对 Boolean 字段显式 string parse
+            let coercedValue = value;
+            if (registeredType === 'Boolean') {
+                if (typeof value === 'boolean') {
+                    coercedValue = value;
+                } else if (typeof value === 'string') {
+                    const lower = value.toLowerCase();
+                    if (lower === 'true' || value === '1') {
+                        coercedValue = true;
+                    } else if (lower === 'false' || value === '0') {
+                        coercedValue = false;
+                    } else {
+                        resolve(createErrorResponse(
+                            ERROR_CODES.INVALID_PARAMS,
+                            `Property '${property}' on cc.Node expects boolean (true/false), got string '${value}'`,
+                            { property, intendedType: 'boolean', actualType: 'string', value }
+                        ));
+                        return;
+                    }
+                } else {
+                    resolve(createErrorResponse(
+                        ERROR_CODES.INVALID_PARAMS,
+                        `Property '${property}' on cc.Node expects boolean, got ${typeof value}`,
+                        { property, intendedType: 'boolean', actualType: typeof value, value }
+                    ));
+                    return;
+                }
+            }
+
+            const dump: any = registeredType ? { value: coercedValue, type: registeredType } : { value: coercedValue };
+
+            // UX-1 修复 (REQ-20260511-234213): 取 before 快照，set 后做 before/after diff
+            let beforeValue: any = undefined;
+            try {
+                const beforeNodeData: any = await Editor.Message.request('scene', 'query-node', uuid);
+                if (beforeNodeData && property in beforeNodeData) {
+                    const beforeField = beforeNodeData[property];
+                    beforeValue = beforeField && typeof beforeField === 'object' && 'value' in beforeField ? beforeField.value : beforeField;
+                }
+            } catch {
+                // before-snapshot 失败不阻塞 set 操作，仅 diff 无 before 字段
+            }
+
             // 尝试直接使用 Editor API 设置节点属性
             Editor.Message.request('scene', 'set-property', {
                 uuid: uuid,
                 path: property,
-                dump: {
-                    value: value
-                }
-            }).then(() => {
-                // Get comprehensive verification data including updated node info
-                this.getNodeInfo(uuid).then((nodeInfo) => {
+                dump
+            }).then(async () => {
+                // UX-1: 等 200ms 让 Cocos 完成更新，重新查询验证实际值
+                await new Promise(r => setTimeout(r, 200));
+                try {
+                    const afterNodeData: any = await Editor.Message.request('scene', 'query-node', uuid);
+                    const afterField = afterNodeData?.[property];
+                    const actualValue = afterField && typeof afterField === 'object' && 'value' in afterField ? afterField.value : afterField;
+                    // 用 coercedValue（已解析）对比 actual，避免 wire-stringified "false" vs boolean false 的假阴性
+                    const intendedJson = JSON.stringify(coercedValue);
+                    const actualJson = JSON.stringify(actualValue);
+                    const verified = intendedJson === actualJson;
+
+                    if (!verified) {
+                        resolve(createErrorResponse(
+                            ERROR_CODES.EDITOR_API_ERROR,
+                            `set node.${property} appears to have silently no-op'd — cocos accepted the call but post-set value did not match intended.`,
+                            {
+                                nodeUuid: uuid,
+                                property,
+                                intended: coercedValue,
+                                before: beforeValue,
+                                actual: actualValue,
+                                rawInput: value,
+                                suggestion: registeredType
+                                    ? `Property is registered as ${registeredType}. Verify the value shape matches.`
+                                    : `Property '${property}' is not in CC_NODE_PROPERTY_TYPES; cocos may need explicit type metadata.`
+                            }
+                        ));
+                        return;
+                    }
+
                     resolve({
                         success: true,
-                        message: `Property '${property}' updated successfully`,
+                        message: `Property '${property}' set successfully`,
                         data: {
                             nodeUuid: uuid,
-                            property: property,
-                            newValue: value
-                        },
-                        verificationData: {
-                            nodeInfo: nodeInfo.data,
-                            changeDetails: {
-                                property: property,
-                                value: value,
-                                timestamp: new Date().toISOString()
-                            }
+                            property,
+                            actualValue,
+                            changed: JSON.stringify(beforeValue) !== actualJson
                         }
                     });
-                }).catch(() => {
-                    resolve({
-                        success: true,
-                        message: `Property '${property}' updated successfully (verification failed)`
-                    });
-                });
+                } catch (verifyErr: any) {
+                    // verify 失败仍 fail-safe 返结构化错误，不再像旧版 "verification failed but success: true" 静默成功
+                    resolve(createErrorResponse(
+                        ERROR_CODES.EDITOR_API_ERROR,
+                        `Property '${property}' set call succeeded but post-verify query-node failed: ${verifyErr?.message || String(verifyErr)}`,
+                        { nodeUuid: uuid, property, intended: coercedValue, before: beforeValue, rawInput: value }
+                    ));
+                }
             }).catch((err: Error) => {
                 // 如果直接设置失败，尝试使用场景脚本
                 const options = {
                     name: 'cocos-mcp-server',
                     method: 'setNodeProperty',
-                    args: [uuid, property, value]
+                    args: [uuid, property, coercedValue]
                 };
-                
+
                 Editor.Message.request('scene', 'execute-scene-script', options).then((result: any) => {
                     resolve(result);
                 }).catch((err2: Error) => {
-                    resolve({ success: false, error: `Direct API failed: ${err.message}, Scene script failed: ${err2.message}` });
+                    resolve(createErrorResponse(
+                        ERROR_CODES.EDITOR_API_ERROR,
+                        `set-property failed both via direct API and scene script`,
+                        { nodeUuid: uuid, property, directApiError: err.message, sceneScriptError: err2.message }
+                    ));
                 });
             });
         });
@@ -817,48 +903,31 @@ export class NodeTools implements ToolExecutor {
                 }
                 
                 await Promise.all(updatePromises);
-                
-                // Verify the changes by getting updated node info
-                const updatedNodeInfo = await this.getNodeInfo(uuid);
+
+                // UX-1 修复 (REQ-20260511-234213): 不再返 nodeInfo / beforeAfterComparison 膨胀（每次 set 多 4000+ tokens）；
+                // 仅在 caller 显式需要时由 caller 自己再调 get_node_info。
                 const response: any = {
                     success: true,
                     message: `Transform properties updated: ${updates.join(', ')} ${is2DNode ? '(2D node)' : '(3D node)'}`,
-                    updatedProperties: updates,
                     data: {
                         nodeUuid: uuid,
                         nodeType: is2DNode ? '2D' : '3D',
-                        appliedChanges: updates,
-                        transformConstraints: {
-                            position: is2DNode ? 'x, y only (z ignored)' : 'x, y, z all used',
-                            rotation: is2DNode ? 'z only (x, y ignored)' : 'x, y, z all used',
-                            scale: is2DNode ? 'x, y main, z typically 1' : 'x, y, z all used'
-                        }
-                    },
-                    verificationData: {
-                        nodeInfo: updatedNodeInfo.data,
-                        transformDetails: {
-                            originalNodeType: is2DNode ? '2D' : '3D',
-                            appliedTransforms: updates,
-                            timestamp: new Date().toISOString()
-                        },
-                        beforeAfterComparison: {
-                            before: nodeInfo,
-                            after: updatedNodeInfo.data
-                        }
+                        appliedChanges: updates
                     }
                 };
-                
+
                 if (warnings.length > 0) {
                     response.warning = warnings.join('; ');
                 }
-                
+
                 resolve(response);
-                
+
             } catch (err: any) {
-                resolve({ 
-                    success: false, 
-                    error: `Failed to update transform: ${err.message}` 
-                });
+                resolve(createErrorResponse(
+                    ERROR_CODES.EDITOR_API_ERROR,
+                    `Failed to update transform: ${err.message}`,
+                    { nodeUuid: uuid, attemptedFields: updates }
+                ));
             }
         });
     }

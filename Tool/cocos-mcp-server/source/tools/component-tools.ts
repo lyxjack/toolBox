@@ -137,7 +137,7 @@ export class ComponentTools implements ToolExecutor {
             },
             {
                 name: 'query',
-                description: 'Unified component query (v1.6.0, read-only). action=list: all components on a node. action=info: one specific component. action=available: component types by category. Safe for parallel calls (no mutation).',
+                description: 'Unified component query (v1.6.0, read-only). action=list: all components on a node. action=info: one specific component. action=available: component types by category. Safe for parallel calls (no mutation). v1.6.2: action=list 默认 mode="minimal"（80-95% token 节省），需要完整字段元数据时传 mode="full"。',
                 inputSchema: {
                     type: 'object',
                     properties: {
@@ -153,6 +153,12 @@ export class ComponentTools implements ToolExecutor {
                             enum: ['all', 'renderer', 'ui', 'physics', 'animation', 'audio'],
                             description: 'For available: filter by category',
                             default: 'all'
+                        },
+                        mode: {
+                            type: 'string',
+                            enum: ['full', 'minimal', 'values_only'],
+                            description: 'For action=list: response detail level. minimal (default) strips i18n keys / defaults / enumList / _prefix duplicates / extends / 9-field sub-meta wrappers — keeps only `value` (+ `type` on cc.* references). full returns the raw Cocos dump (~10K tokens/component). values_only flattens to pure key-value pairs.',
+                            default: 'minimal'
                         }
                     },
                     required: ['action']
@@ -203,7 +209,7 @@ export class ComponentTools implements ToolExecutor {
             case 'remove_component':
                 return await this.removeComponent(args.nodeUuid, args.componentType);
             case 'get_components':
-                return await this.getComponents(args.nodeUuid);
+                return await this.getComponents(args.nodeUuid, args.mode);
             case 'get_component_info':
                 return await this.getComponentInfo(args.nodeUuid, args.componentType);
             case 'set_component_property':
@@ -218,7 +224,7 @@ export class ComponentTools implements ToolExecutor {
                 // v1.6.0 unified action-code dispatcher
                 switch (args.action) {
                     case 'list':
-                        return await this.getComponents(args.nodeUuid);
+                        return await this.getComponents(args.nodeUuid, args.mode);
                     case 'info':
                         return await this.getComponentInfo(args.nodeUuid, args.componentType);
                     case 'available':
@@ -317,55 +323,132 @@ export class ComponentTools implements ToolExecutor {
             // 1. 查找节点上的所有组件
             const allComponentsInfo = await this.getComponents(nodeUuid);
             if (!allComponentsInfo.success || !allComponentsInfo.data?.components) {
-                resolve({ success: false, error: `Failed to get components for node '${nodeUuid}': ${allComponentsInfo.error}` });
+                resolve(createErrorResponse(
+                    ERROR_CODES.EDITOR_API_ERROR,
+                    `Failed to get components for node '${nodeUuid}': ${allComponentsInfo.error}`
+                ));
                 return;
             }
-            // 2. 只查找type字段等于componentType的组件（即cid）
-            const exists = allComponentsInfo.data.components.some((comp: any) => comp.type === componentType);
-            if (!exists) {
-                resolve({ success: false, error: `Component cid '${componentType}' not found on node '${nodeUuid}'. 请用getComponents获取type字段（cid）作为componentType。` });
+            // 2. 找到匹配 cid 的组件 + 其数组 index（getComponents 保持 __comps__ 原顺序）
+            const components = allComponentsInfo.data.components;
+            const matchedIndex = components.findIndex((comp: any) => comp.type === componentType);
+            if (matchedIndex < 0) {
+                resolve(createErrorResponse(
+                    ERROR_CODES.NOT_FOUND,
+                    `Component cid '${componentType}' not found on node '${nodeUuid}'. 请用 getComponents 取 type 字段（cid）作为 componentType。`,
+                    { nodeUuid, componentType, availableCids: components.map((c: any) => c.type) }
+                ));
                 return;
             }
-            // 3. 官方API直接移除
+            const matched = components[matchedIndex];
+
+            // 3. 构造候选 identifier 列表 — 自定义脚本的 cid 通常被 Cocos 拒绝，需 fallback
+            //    顺序经验依据：组件实例 uuid → properties.uuid（备用提取路径）→ __comps__.N path → 数字 index → 老 cid（回退保底）
+            const candidates: Array<{ label: string; payload: any }> = [];
+            const seenPayloads = new Set<string>();
+            const tryPush = (label: string, payload: any) => {
+                const key = `${typeof payload}:${String(payload)}`;
+                if (seenPayloads.has(key)) return;
+                seenPayloads.add(key);
+                candidates.push({ label, payload });
+            };
+            if (matched.uuid) tryPush(`component uuid (${matched.uuid})`, matched.uuid);
+            // properties.uuid 是 Cocos value 嵌套里的另一个 uuid 字段，部分自定义脚本只在这里有
+            const innerUuid = (matched as any).properties?.uuid;
+            if (innerUuid && typeof innerUuid === 'string') tryPush(`properties.uuid (${innerUuid})`, innerUuid);
+            tryPush(`__comps__.${matchedIndex} path`, `__comps__.${matchedIndex}`);
+            tryPush(`array index ${matchedIndex}`, matchedIndex);
+            tryPush(`cid (${componentType})`, componentType);
+
+            // 4. 依次尝试 remove-component，任一成功即返
+            const triedIdentifiers: Array<{ identifier: string; outcome: string }> = [];
+            for (const candidate of candidates) {
+                try {
+                    await Editor.Message.request('scene', 'remove-component', {
+                        uuid: nodeUuid,
+                        component: candidate.payload
+                    });
+                    // verify by re-querying
+                    const afterRemoveInfo = await this.getComponents(nodeUuid);
+                    const stillExists = afterRemoveInfo.success
+                        && afterRemoveInfo.data?.components?.some((comp: any) => comp.type === componentType);
+                    if (!stillExists) {
+                        resolve({
+                            success: true,
+                            message: `Component cid '${componentType}' removed via remove-component(${candidate.label})`,
+                            data: { nodeUuid, componentType, identifierUsed: candidate.label, strategy: 'remove-component' }
+                        });
+                        return;
+                    }
+                    triedIdentifiers.push({ identifier: candidate.label, outcome: 'cocos accepted call but component still present after re-query' });
+                } catch (err: any) {
+                    triedIdentifiers.push({ identifier: candidate.label, outcome: `threw: ${err?.message || String(err)}` });
+                }
+            }
+
+            // 5. 最后 fallback: 用 scene > remove-array-element 直接从 __comps__ 数组剥掉。
+            //    Cocos 自定义脚本对 remove-component 不响应（接受调用但不删），
+            //    array-element 是绕过这个限制的可靠路径（已在 REQ-20260511-234213 实测）。
             try {
-                await Editor.Message.request('scene', 'remove-component', {
+                await Editor.Message.request('scene', 'remove-array-element', {
                     uuid: nodeUuid,
-                    component: componentType
+                    path: '__comps__',
+                    index: matchedIndex
                 });
-                // 4. 再查一次确认是否移除
                 const afterRemoveInfo = await this.getComponents(nodeUuid);
-                const stillExists = afterRemoveInfo.success && afterRemoveInfo.data?.components?.some((comp: any) => comp.type === componentType);
-                if (stillExists) {
-                    resolve({ success: false, error: `Component cid '${componentType}' was not removed from node '${nodeUuid}'.` });
-                } else {
+                const stillExists = afterRemoveInfo.success
+                    && afterRemoveInfo.data?.components?.some((comp: any) => comp.type === componentType);
+                if (!stillExists) {
                     resolve({
                         success: true,
-                        message: `Component cid '${componentType}' removed successfully from node '${nodeUuid}'`,
-                        data: { nodeUuid, componentType }
+                        message: `Component cid '${componentType}' removed via remove-array-element(__comps__[${matchedIndex}])`,
+                        data: { nodeUuid, componentType, identifierUsed: `__comps__[${matchedIndex}]`, strategy: 'remove-array-element' }
                     });
+                    return;
                 }
+                triedIdentifiers.push({ identifier: `__comps__[${matchedIndex}] via remove-array-element`, outcome: 'cocos accepted call but component still present' });
             } catch (err: any) {
-                resolve({ success: false, error: `Failed to remove component: ${err.message}` });
+                triedIdentifiers.push({ identifier: `__comps__[${matchedIndex}] via remove-array-element`, outcome: `threw: ${err?.message || String(err)}` });
             }
+
+            // 6. 全部失败 — 返结构化错误，让 caller 知道每个 identifier 是怎么挂的
+            resolve(createErrorResponse(
+                ERROR_CODES.EDITOR_API_ERROR,
+                `Component cid '${componentType}' could not be removed from node '${nodeUuid}' after trying ${triedIdentifiers.length} identifier strategies (incl. remove-array-element).`,
+                { nodeUuid, componentType, triedIdentifiers }
+            ));
         });
     }
 
-    private async getComponents(nodeUuid: string): Promise<ToolResponse> {
+    private async getComponents(nodeUuid: string, mode: 'full' | 'minimal' | 'values_only' = 'minimal'): Promise<ToolResponse> {
         return new Promise((resolve) => {
             // 优先尝试直接使用 Editor API 查询节点信息
             Editor.Message.request('scene', 'query-node', nodeUuid).then((nodeData: any) => {
                 if (nodeData && nodeData.__comps__) {
-                    const components = nodeData.__comps__.map((comp: any) => ({
-                        type: comp.__type__ || comp.cid || comp.type || 'Unknown',
-                        uuid: comp.uuid?.value || comp.uuid || null,
-                        enabled: comp.enabled !== undefined ? comp.enabled : true,
-                        properties: this.extractComponentProperties(comp)
-                    }));
-                    
+                    const components = nodeData.__comps__.map((comp: any) => {
+                        const rawProperties = this.extractComponentProperties(comp);
+                        const properties = mode === 'full' ? rawProperties : this.compactProperties(rawProperties, mode);
+                        // REQ-20260511-234213 修复: 组件实例 uuid 实际在 comp.value.uuid（Cocos 嵌套结构）
+                        // 顶层 comp.uuid 通常未定义 — 之前 fallback chain 一直 null
+                        const instanceUuid =
+                            comp.value?.uuid?.value ||
+                            comp.value?.uuid ||
+                            comp.uuid?.value ||
+                            comp.uuid ||
+                            null;
+                        return {
+                            type: comp.__type__ || comp.cid || comp.type || 'Unknown',
+                            uuid: typeof instanceUuid === 'string' ? instanceUuid : null,
+                            enabled: comp.enabled !== undefined ? comp.enabled : true,
+                            properties
+                        };
+                    });
+
                     resolve({
                         success: true,
                         data: {
                             nodeUuid: nodeUuid,
+                            mode,
                             components: components
                         }
                     });
@@ -455,9 +538,43 @@ export class ComponentTools implements ToolExecutor {
         });
     }
 
+    /**
+     * OPT-1 (REQ-20260511-234213) — minimal/values_only 模式下压缩 properties。
+     * Cocos 编辑器返回的每个 property 是 `{value, type, readonly, visible, animatable, displayName, tooltip, default, extends, enumList, ...}` 9-字段包装；
+     * Agent 99% 只需要 `value`（和 `type` 在复杂引用上）。本方法剥离 i18n key、default、enumList、_前缀重复字段、extends 等。
+     * 单点压缩比通常 80-95%（实测：3-组件节点从 ~30K tokens → ~3K tokens）。
+     */
+    private compactProperties(rawProperties: Record<string, any>, mode: 'minimal' | 'values_only'): Record<string, any> {
+        if (!rawProperties || typeof rawProperties !== 'object') return rawProperties;
+        const compact: Record<string, any> = {};
+        for (const [key, propMeta] of Object.entries(rawProperties)) {
+            // 跳过 _ 前缀重复字段（如 _color / _enabled，与无前缀版本同信息）
+            if (key.startsWith('_') && key !== '__scriptAsset' && key !== '__prefab') continue;
+            // sub-meta 9-字段包装：取 value，丢弃 displayName/tooltip/default/extends/readonly/visible/animatable/enumList
+            if (propMeta && typeof propMeta === 'object' && 'value' in propMeta) {
+                const innerValue = propMeta.value;
+                if (mode === 'values_only') {
+                    compact[key] = innerValue;
+                } else {
+                    // minimal: 保留 value + 在引用类型上保留 type
+                    const propType = (propMeta as any).type;
+                    if (propType && typeof propType === 'string' && propType.startsWith('cc.')) {
+                        compact[key] = { value: innerValue, type: propType };
+                    } else {
+                        compact[key] = innerValue;
+                    }
+                }
+            } else {
+                // 非 sub-meta 包装（直接值），原样保留
+                compact[key] = propMeta;
+            }
+        }
+        return compact;
+    }
+
     private extractComponentProperties(component: any): Record<string, any> {
         console.log(`[extractComponentProperties] Processing component:`, Object.keys(component));
-        
+
         // 检查组件是否有 value 属性，这通常包含实际的组件属性
         if (component.value && typeof component.value === 'object') {
             console.log(`[extractComponentProperties] Found component.value with properties:`, Object.keys(component.value));
@@ -620,7 +737,15 @@ export class ComponentTools implements ToolExecutor {
                         processedValue = Number(value);
                         break;
                     case 'boolean':
-                        processedValue = Boolean(value);
+                        // REQ-20260511-234213 修复: JS Boolean("false") === true（非空字符串 truthy 坑），
+                        // 所以 MCP wire 把 false 字符串化后这里会反 flip。显式 string parse 规避。
+                        if (typeof value === 'boolean') {
+                            processedValue = value;
+                        } else if (typeof value === 'string') {
+                            processedValue = value.toLowerCase() === 'true' || value === '1';
+                        } else {
+                            processedValue = Boolean(value);
+                        }
                         break;
                     case 'color':
                         if (typeof value === 'string') {
@@ -870,6 +995,25 @@ export class ComponentTools implements ToolExecutor {
                             type: 'cc.Color'
                         }
                     });
+                } else if (propertyType === 'boolean') {
+                    // 修复 Bug #2 (REQ-20260511-234213): boolean 字段必须显式带 type: 'Boolean'，
+                    // 否则 Cocos set-property dump 反序列化把它当 truthy/falsy 任意值，导致静默 no-op。
+                    // 之前因为这里没有 boolean 分支，落到末尾 catch-all (没有 type)，所以 active/enabled 等切换全部失败。
+                    if (typeof processedValue !== 'boolean') {
+                        return resolve(createErrorResponse(
+                            ERROR_CODES.INVALID_PARAMS,
+                            `Property '${property}' on '${componentType}' expects a boolean value, got ${typeof processedValue}: ${JSON.stringify(processedValue)}`,
+                            { componentType, property, intendedType: 'boolean', actualType: typeof processedValue }
+                        ));
+                    }
+                    await Editor.Message.request('scene', 'set-property', {
+                        uuid: nodeUuid,
+                        path: propertyPath,
+                        dump: {
+                            value: processedValue,
+                            type: 'Boolean'
+                        }
+                    });
                 } else if (propertyType === 'vec3' && processedValue && typeof processedValue === 'object') {
                     // 特殊处理Vec3属性
                     const vec3Value = {
@@ -1094,9 +1238,31 @@ export class ComponentTools implements ToolExecutor {
                 
                 // Step 5: 等待Editor完成更新，然后验证设置结果
                 await new Promise(resolve => setTimeout(resolve, 200)); // 等待200ms让Editor完成更新
-                
+
                 const verification = await this.verifyPropertyChange(nodeUuid, componentType, property, originalValue, actualExpectedValue);
-                
+
+                // UX-1 修复 (REQ-20260511-234213): 静默成功根因 — 如果 cocos 接受了 set-property 调用但实际值没变（典型如 Bug #2 的 boolean），
+                // 必须返 success: false 而非旧的"无论 verified 真假都返 true"。caller 凭此才能知道 silent no-op。
+                if (!verification.verified) {
+                    resolve(createErrorResponse(
+                        ERROR_CODES.EDITOR_API_ERROR,
+                        `set ${componentType}.${property} appears to have silently no-op'd — cocos accepted the call but post-set value did not match intended.`,
+                        {
+                            nodeUuid,
+                            componentType,
+                            property,
+                            propertyType,
+                            intended: actualExpectedValue,
+                            before: originalValue,
+                            actual: verification.actualValue,
+                            suggestion: propertyType === 'boolean'
+                                ? 'Verify the property is actually boolean on this component; cocos may need a different propertyType.'
+                                : 'Check that propertyType matches the actual field type, and that the value shape is correct.'
+                        }
+                    ));
+                    return;
+                }
+
                 resolve({
                     success: true,
                     message: `Successfully set ${componentType}.${property}`,
@@ -1105,16 +1271,17 @@ export class ComponentTools implements ToolExecutor {
                         componentType,
                         property,
                         actualValue: verification.actualValue,
-                        changeVerified: verification.verified
+                        changed: JSON.stringify(originalValue) !== JSON.stringify(verification.actualValue)
                     }
                 });
-                
+
             } catch (error: any) {
                 console.error(`[ComponentTools] Error setting property:`, error);
-                resolve({
-                    success: false,
-                    error: `Failed to set property: ${error.message}`
-                });
+                resolve(createErrorResponse(
+                    ERROR_CODES.EDITOR_API_ERROR,
+                    `Failed to set property ${componentType}.${property}: ${error.message}`,
+                    { nodeUuid, componentType, property, propertyType }
+                ));
             }
         });
     }
@@ -1223,10 +1390,10 @@ export class ComponentTools implements ToolExecutor {
             // 从脚本路径提取组件类名
             const scriptName = scriptPath.split('/').pop()?.replace('.ts', '').replace('.js', '');
             if (!scriptName) {
-                resolve({ success: false, error: 'Invalid script path' });
+                resolve(createErrorResponse(ERROR_CODES.INVALID_PARAMS, 'Invalid script path', { scriptPath }));
                 return;
             }
-            // 先查找节点上是否已存在该脚本组件
+            // 先查找节点上是否已存在该脚本组件（按 scriptName 匹配；自定义脚本 type 是 cid，所以这里其实只能命中"已知 cid → scriptName"特殊情况）
             const allComponentsInfo = await this.getComponents(nodeUuid);
             if (allComponentsInfo.success && allComponentsInfo.data?.components) {
                 const existingScript = allComponentsInfo.data.components.find((comp: any) => comp.type === scriptName);
@@ -1243,6 +1410,11 @@ export class ComponentTools implements ToolExecutor {
                     return;
                 }
             }
+            // Bug #3 修复 (REQ-20260511-234213): 记录 attach 前组件数量，作为 verify 基线
+            const componentsBefore: any[] = allComponentsInfo.success ? allComponentsInfo.data?.components || [] : [];
+            const countBefore = componentsBefore.length;
+            const cidsBefore = new Set(componentsBefore.map((c: any) => c.type));
+
             // 首先尝试直接使用脚本名称作为组件类型
             Editor.Message.request('scene', 'create-component', {
                 uuid: nodeUuid,
@@ -1253,22 +1425,29 @@ export class ComponentTools implements ToolExecutor {
                 // 重新查询节点信息验证脚本是否真的添加成功
                 const allComponentsInfo2 = await this.getComponents(nodeUuid);
                 if (allComponentsInfo2.success && allComponentsInfo2.data?.components) {
-                    const addedScript = allComponentsInfo2.data.components.find((comp: any) => comp.type === scriptName);
-                    if (addedScript) {
+                    const componentsAfter = allComponentsInfo2.data.components;
+                    // Bug #3 修复: 改用组件数量增量判断 — 自定义脚本的 comp.type 是 cid hash，
+                    // 不可能等于 scriptName，所以原来的 find(c => c.type === scriptName) 永远 false。
+                    // 改为查"新增了哪些 cid"，第一个非旧 cid 的就是新加的脚本。
+                    const newCids = componentsAfter.filter((c: any) => !cidsBefore.has(c.type));
+                    if (componentsAfter.length >= countBefore + 1 && newCids.length > 0) {
                         resolve({
                             success: true,
-                            message: `Script '${scriptName}' attached successfully`,
+                            message: `Script '${scriptName}' attached successfully (new cid: ${newCids[0].type})`,
                             data: {
                                 nodeUuid: nodeUuid,
                                 componentName: scriptName,
+                                newComponentCid: newCids[0].type,
+                                newComponentUuid: newCids[0].uuid,
                                 existing: false
                             }
                         });
                     } else {
-                        resolve({
-                            success: false,
-                            error: `Script '${scriptName}' was not found on node after addition. Available components: ${allComponentsInfo2.data.components.map((c: any) => c.type).join(', ')}`
-                        });
+                        resolve(createErrorResponse(
+                            ERROR_CODES.EDITOR_API_ERROR,
+                            `Script '${scriptName}' attach was accepted by Cocos but component count did not increase (before=${countBefore}, after=${componentsAfter.length}). The script may have failed silently — check that the script class extends cc.Component and exported correctly.`,
+                            { scriptName, scriptPath, countBefore, countAfter: componentsAfter.length, availableCids: componentsAfter.map((c: any) => c.type) }
+                        ));
                     }
                 } else {
                     resolve({
