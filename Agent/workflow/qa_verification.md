@@ -138,3 +138,37 @@ Execution 完成 Gate③ 后交接,`state.json` 的 `currentState` 为 `QA_VERIF
 - ❌ 修改需求或计划
 - ❌ 放行无 change_manifest 或无 handoff 的交付
 - ❌ 驳回时不带 reason_code(Iron Law 07)
+
+---
+
+## Micro Path（complexity = micro 时启用）
+
+> 由 PM Step 4.5 决定 `complexity = micro` 后激活。本路径绕过独立的 `qa_report.md` 产出，但 IL05/IL06/IL07（QA IS A GATE / NO CI-ONLY APPROVAL / REJECTION REQUIRES REASON CODE）**全部仍然生效** — 5 层验证项不能砍，只是 evidence 形式精简为 1 个 5 行表。
+
+### 行为差异
+
+| 阶段 | standard | micro |
+|------|----------|-------|
+| Step 1 收集证据 | 检查 5 个工件齐全（req/plan/dag/change/handoff） | 只检查 `requirement_package_micro.md` 一个文件齐全 + Plan 段非空 |
+| Step 2 L1 Build | 跑完整构建/测试套件 | 跑必要的 build/typecheck/lint（如改 .ts 文件） — micro 任务多为静态属性可 N/A |
+| Step 3 L2 Requirement | 逐条对照 AC | 逐条对照（AC 一般 ≤ 3 条） |
+| Step 4 L3 Behavior | 边界 + 异常 + 集成 | 核心路径目检 / 运行时（manual 项标 PENDING USER） |
+| Step 5 L4 Isolation | 对比 change_manifest vs git diff | `git diff` 仅命中 Touched Files 段列出的路径 |
+| Step 6 L5 Evidence | 7 工件齐全 checklist | `requirement_package_micro.md` 落盘 + state.json history 完整 |
+| Step 7 产出 | `qa_report.md`（按模板）| **不产新文件**，直接 Edit `requirement_package_micro.md` 的 **QA Evidence** 5 行表（每层填 PASS / FAIL / PENDING / N/A） |
+| Step 8 Verdict 路由 | 同 standard（PASS → JOINT_APPROVAL；FAIL → REWORK + reason_code + rework_order）| 同；FAIL 时仍创建 `rework_orders/rework_{N}.json`（IL07 不可缩）|
+
+### Gate③ Micro 检查清单
+- [ ] QA Evidence 5 行表全填（不能留空格；可填 N/A，但必须解释）
+- [ ] 任一 FAIL → 路由到 rework，且产 `rework_order.json`
+- [ ] 任一 PENDING USER → state → `QA_DONE_AWAITING_USER_VISUAL`，不能直接 APPROVED
+- [ ] 仍处于 micro 范围 — 若 QA 阶段发现需要重写 / 跨层影响，**立即升级 standard 重补 qa_report.md**
+
+### Failure Memory 沉淀
+- micro PASS 时若发现可沉淀错题 → 仍要追加 `KI/Error_Book/entries/ERR-*.md`（IL05 / Failure Memory 沉淀机制不变）
+- 只是 qa_report 这一个工件被合并；错题本是独立资产，不省
+
+### 禁止
+- ❌ 在 micro path 里偷偷创建空 `qa_report.md` 占位
+- ❌ 跳过 5 层中的任何一层（即使是 N/A 也要填理由）
+- ❌ 驳回不带 reason_code（IL07 在所有 tier 生效）

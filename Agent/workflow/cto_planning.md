@@ -146,3 +146,35 @@ PM 完成 Gate① 后交接,`state.json` 的 `currentState` 为 `CTO_PLANNING`�
 - ❌ 删除或修改原始 skill 源文件
 - ❌ 在 task >= 3 且无依赖时仍选择串行模式
 - ❌ 工件仅在对话中输出而不写入 `.in-process/`
+
+---
+
+## Micro Path（complexity = micro 时启用）
+
+> 由 PM Step 4.5 决定 `complexity = micro` 后激活。本路径绕过独立的 `execution_plan.md` + `task_dag.json` 产出，但 IL02（NO PLAN, NO CODE）**仍然生效** — plan 内联到 `requirement_package_micro.md` 的 **Plan** 段。
+
+### 行为差异
+
+| 阶段 | standard | micro |
+|------|----------|-------|
+| Step 2 Reuse Audit | 写入 `execution_plan.md` Reuse Audit 表 | 一行写在 micro 模板 Plan 段的 "Reuse 引用" |
+| Step 3 执行模式 | 强制 quantitative + 必填表格 | **跳过**（micro 默认 Serial，单段步骤） |
+| Step 4 Task DAG | 必须 `task_dag.json` | **跳过** — micro 模板 Plan 段写 ≤ 5 步即可（无 DAG） |
+| Step 5 Risk | 写 Risk Assessment 表 | 一行写在 micro 模板 Risk / Note 段 |
+| Step 6 Verification Plan | 写在 `execution_plan.md` | 内联到 micro 模板 QA Evidence 段的 5 层表预期项 |
+| Step 7 Minimal Change Rationale | 必须章节 | 一行写在 Plan 段末尾即可（"改 N 文件，无可减少"）|
+| Step 8 落盘 | `execution_plan.md` + `task_dag.json` | **不产新文件**，CTO 直接 Edit `requirement_package_micro.md` 的 Plan 段 |
+| Step 9 Gate② | 8 项 checklist | 简化 3 项：Plan 段非空 / Reuse 引用非空 / 升级触发条件无命中 |
+
+### Gate② Micro 检查清单
+- [ ] `requirement_package_micro.md` 的 Plan 段已填（工具 + 步骤 + Reuse 引用）
+- [ ] 仍处于 micro 范围（≤ 2 文件 / ≤ 30 行 / 单层 / 无新 KI / 无 storage / 无安全敏感）— 若已超出，**立即升级 standard** 走 `pm_workflow.md` Step 4.5d
+- [ ] Verification Plan（5 层预期）已填到 QA Evidence 段
+
+通过 → state → `EXECUTION`，移交 Execution。
+不通过 → 补段；若是范围爆了 → 升级 standard。
+
+### 禁止
+- ❌ 在 micro path 里偷偷创建 `execution_plan.md` / `task_dag.json` 占位空文件（要么 micro 路径不产，要么升级 standard 产完整版）
+- ❌ Plan 段超过 5 步（超出说明该升级）
+- ❌ 跳过 Reuse 引用（IL03 仍生效）

@@ -1,5 +1,7 @@
 # Iron Laws — 不可违反的铁律
-# Version: 2.0 | 生效方式: 总门禁 via CLAUDE.md + 子门禁 via workflow 前置约束
+# Version: 2.1 | 生效方式: 总门禁 via CLAUDE.md + 子门禁 via workflow 前置约束
+
+> **2.1 注脚（complexity tier）**：以下所有铁律对 `complexity = micro / standard / major` **三档全部生效**，**语义不变**。仅 evidence 形式不同：standard / major 用独立工件（requirement_package.md + execution_plan.md + task_dag.json + verification_log.md + qa_report.md），micro 把它们合并到单一 `requirement_package_micro.md`。**不存在"micro 跳过铁律"这种情况**。分档规则见 `PM/pm_workflow.md` Step 4.5。
 
 ---
 

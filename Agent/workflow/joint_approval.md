@@ -79,3 +79,54 @@ PM 视角审查:
 - 将 `.in-process/active/{session_id}/` 移至 `.in-process/archive/{session_id}/`
 - 更新 `.in-process/index/archive_manifest.json`
 - session 目录保留作为审计记录
+
+---
+
+## Micro Path（complexity = micro 时启用）
+
+> 由 PM Step 4.5 决定 `complexity = micro` 后激活。本路径绕过独立 `delivery_cert.md` 产出，CTO + PM 双签 inline 进 `state.json.history`，或合并产一个极简 `delivery_cert_micro.md` (≤ 600 字符)。**双否决权 + 双 verdict 机制保留**（不削弱 PM/CTO 任一方的真实否决权）。
+
+### 数据源映射（micro 没 qa_report / execution_plan / change_manifests）
+
+| Joint Approval 字段 | standard 数据源 | micro 数据源 |
+|--------------------|----------------|--------------|
+| 1a Req↔Impl Matrix | qa_report Layer 2 | `requirement_package_micro.md` 的 **AC 段** + **QA Evidence 段 L2 行** |
+| 1b Error↔Fix Matrix | rework_orders/*.json 汇总 | 通常 N/A（micro 无返工；有返工 = 已升级 standard）。若有就读 `rework_orders/*.json` |
+| 1c Test Results | change_manifests testResults 聚合 | `requirement_package_micro.md` 的 **QA Evidence 段 L1+L3 行** |
+| 1d Minimal Change Cert | execution_plan Minimal Change Rationale | `requirement_package_micro.md` 的 **Plan 段末尾**（"改 N 文件，无可减少"那行） |
+
+### 行为差异
+
+| 阶段 | standard | micro |
+|------|----------|-------|
+| Step 1 生成草稿 | 按 `Agent/templates/delivery_cert.tmpl.md` 模板产 `delivery_cert.md`（4 子段独立 ~2-3KB） | **二选一**：(a) 极简 `delivery_cert_micro.md` ≤ 600 字符，仅含 Verdict + CTO Notes + PM Notes + 1 句 Req/Impl 摘要；(b) **直接 inline** 到 `state.json.history` 最后一个事件的 `notes` 字段（推荐用 b，更省） |
+| Step 2 CTO 审批 | 4 项 checklist + Verdict + Notes | 同 4 项（不能砍），但 Verdict + Notes 写到 state.json.history 而不是 delivery_cert |
+| Step 3 PM 审批 | 4 项 checklist + Verdict + Notes | 同上 |
+| Step 4 最终判定 | 双 APPROVE → 写 delivery_cert.md → state → DELIVERED | 双 APPROVE → state.json 加 `{from: JOINT_APPROVAL, to: APPROVED, gate: "Joint: PASS (CTO+PM both)", notes: "<内联 verdict 摘要>"}` |
+| Step 5 归档 | 同 | 同（micro 工件少，归档更轻）|
+
+### Step 4 micro 最终判定具体形态
+
+**双方 APPROVE**（推荐路径 b，inline state.json.history）：
+```json
+{
+  "from": "JOINT_APPROVAL",
+  "to": "APPROVED",
+  "timestamp": "...",
+  "gate": "Joint: PASS",
+  "notes": "CTO ✅ <技术 1 句>; PM ✅ <需求 1 句>; AC 全 PASS; minimal change: <N 文件 M 行>"
+}
+```
+
+**任一 REJECT**：仍创建 `rework_orders/rework_{N}.json`（IL07 不可缩），state → `REWORK`。reject 触发即说明 micro 假设破裂 → **强制升级 standard 再返工**（不允许在 micro 里挂返工）。
+
+### Gate Joint Micro 检查
+- [ ] AC-1~N 在 micro 模板 AC 段全 ✅
+- [ ] QA Evidence 5 层无 FAIL（PENDING USER 视情况升级，不能直接 APPROVED）
+- [ ] CTO Notes + PM Notes 都写了（即使一句话）
+- [ ] 仍在 micro 范围（任一 reject 即升 standard）
+
+### 禁止
+- ❌ 跳过 CTO 或 PM 任一方的审批表态（双签机制是 Joint Approval 的核心，三档都不能砍）
+- ❌ 在 micro path 偷偷产 `delivery_cert.md` 占位
+- ❌ micro reject 后留在 micro 路径继续返工（必须升 standard）

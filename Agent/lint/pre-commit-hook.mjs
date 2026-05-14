@@ -14,11 +14,14 @@
  * Linter 使用绝对路径调用，规则从 toolBox 加载，变更检测在当前项目 cwd 执行。
  */
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { execSync } from 'node:child_process';
 
 const LINTER_PATH = resolve(import.meta.dirname, 'error-book-linter.mjs');
+// 只跑 unit test，不跑 integration test —— integration 会递归 spawn hook 进程，
+// 制造混乱状态。Integration test 留给手工 `node --test` 单独跑。
+const COMPLEXITY_TEST_PATH = resolve(import.meta.dirname, '..', 'tests', 'test_complexity_gate.mjs');
 
 // 读取 stdin
 let input = '';
@@ -52,10 +55,6 @@ try {
     encoding: 'utf-8',
     stdio: ['pipe', 'pipe', 'pipe'],
   });
-
-  // lint 通过
-  console.log(JSON.stringify({ decision: 'approve' }));
-  process.exit(0);
 } catch (err) {
   // lint 失败（exit 1 = 有 blocking violations）
   const stderr = err.stderr || '';
@@ -68,3 +67,34 @@ try {
   }));
   process.exit(0);
 }
+
+// Linter 通过后，追跑 Complexity Gate 单元测试（regression guard）
+// graceful skip：测试文件不存在（老 toolBox 版本）→ 跳过仅算 lint 结果
+//
+// 关键：清掉 NODE_TEST_CONTEXT 等 node:test runner 内部 env，
+// 否则当 hook 被 node --test 调用时，子 node --test 进程继承到 child-v8
+// 上下文会进入子模式而不报失败 — 已踩坑确认。
+if (existsSync(COMPLEXITY_TEST_PATH)) {
+  const cleanEnv = { ...process.env };
+  delete cleanEnv.NODE_TEST_CONTEXT;
+  delete cleanEnv.NODE_TEST_TARGET;
+  try {
+    execSync(`node --test "${COMPLEXITY_TEST_PATH}"`, {
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: cleanEnv,
+    });
+  } catch (err) {
+    const stdout = err.stdout || '';
+    const reason = `Complexity Gate 测试拦截:\n${stdout.replace(/\x1b\[[0-9;]*m/g, '').slice(-2000)}`.trim();
+    console.log(JSON.stringify({
+      decision: 'block',
+      reason,
+    }));
+    process.exit(0);
+  }
+}
+
+// 两个检查都通过
+console.log(JSON.stringify({ decision: 'approve' }));
+process.exit(0);
