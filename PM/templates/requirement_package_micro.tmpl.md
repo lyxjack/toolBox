@@ -8,6 +8,11 @@
 ### Intent
 {用户原始请求一行 + PM 澄清后的真实意图一行}
 
+### Hidden Assumptions
+> 挂载 P9 (Assumption Transparency)。micro tier 弱化:允许 `None identified`。
+
+`None identified` — 或一行假设(若触及新功能/新接口/业务/跨层/schema/storage 关键词,**禁止** None identified,改填至少 1 条;否则升级 standard)。
+
 ### Scope
 - {改动 1}
 - {改动 2}（≤ 2 文件 / ≤ 30 行）

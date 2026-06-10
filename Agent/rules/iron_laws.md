@@ -100,3 +100,17 @@ Agent Skills 的增删改必须遵守以下治理流程,违反触发 ISO-003。
 - 禁止在 `Tool/` 以外的任何位置存放 skill 源仓库。
 - 禁止绕过索引系统直接引用 `Tool/` 中的 skill 文件。
 - 禁止在根目录或其他层创建 skill 相关的冗余副本。
+
+---
+
+## Related Principles
+
+> 以下 Constitution Principle 与 Iron Laws 互补:Iron Laws 是"不可违反的红线",Principle 是"必须遵守的行为方式"。Gate 自检通过两者共同保证。
+
+| Principle | 路径 | 一句话 | 主要挂载点 |
+|-----------|------|--------|-----------|
+| **P9 — Assumption Transparency** | `Agent/rules/constitution.md#p9--assumption-transparency` | 显式列出假设,可疑时回退澄清 | PM Step 5/6/Gate① + CTO Step 1/Gate② + QA Step 7 |
+| **P10 — Simplicity Discipline** | `Agent/rules/constitution.md#p10--simplicity-discipline` | 代码本身最小;无未请求的抽象/配置/防御 | CTO Step 7 + Execution + QA Layer 4 |
+| **P11 — Surgical Scope** | `Agent/rules/constitution.md#p11--surgical-scope` | 每行 diff 可追溯到 task / AC,不漂移 | Execution + QA Layer 4 Surgical Trace Check |
+
+知识源(rationale 与示例): `KI/External_KI/skills/workflow/workflow.md` §10 (Karpathy Coding Discipline)。

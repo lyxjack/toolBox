@@ -146,10 +146,10 @@
   {
     "path": "KI/External_KI/skills/workflow/workflow.md",
     "name": "workflow",
-    "totalLines": 588,
-    "sizeBytes": 20536,
-    "h2Count": 10,
-    "h3Count": 40,
+    "totalLines": 648,
+    "sizeBytes": 22500,
+    "h2Count": 11,
+    "h3Count": 43,
     "codeBlocks": 8,
     "codeLanguages": "bash,markdown,python",
     "hasFrontmatter": true,
@@ -162,10 +162,12 @@
     "isDeprecated": false,
     "companionFiles": 0,
     "companionDirs": 0,
-    "bulletCount": 84,
+    "bulletCount": 105,
     "rawScore": 62,
     "confidence": 0.62,
-    "breakdown": "frontmatter:4 | name:2 | desc:0 | whenToUse:4 | headings5+:4 | h3depth:4 | code8+:12 | goodBad:0 | multiLang:5 | examples:0 | checklist:0 | bash:4 | tables:4 | bullets20+:4 | antiPatterns:3 | lines300+:8 | companions:0 | companionDirs:0 | references:4"
+    "breakdown": "frontmatter:4 | name:2 | desc:0 | whenToUse:4 | headings5+:4 | h3depth:4 | code8+:12 | goodBad:0 | multiLang:5 | examples:0 | checklist:0 | bash:4 | tables:4 | bullets20+:4 | antiPatterns:3 | lines300+:8 | companions:0 | companionDirs:0 | references:4",
+    "lastAuditUpdate": "2026-05-17",
+    "updateNote": "Incremental update via /find: +60 lines new §10 'Coding Discipline (Karpathy)' — think-before-coding, simplicity-first, surgical-changes. Source: andrej-karpathy-skills (confidence 0.35). Goal-driven-execution module skipped (already covered by §2 Planning TDD task structure)."
   },
   {
     "path": "KI/External_KI/skills/language-specific/language-specific.md",

@@ -8,10 +8,10 @@
     "skills": [
         {
             "name": "workflow",
-            "description": "Unified workflow anchor: parallel agent dispatching, git branching, worktrees, code review, search-first methodology, plan writing/execution, subagent-driven development, strategic compaction, verification-before-completion, and brainstorming.",
+            "description": "Unified workflow anchor: parallel agent dispatching, git branching, worktrees, code review, search-first methodology, plan writing/execution, subagent-driven development, strategic compaction, verification-before-completion, brainstorming, and Karpathy coding discipline (think-before-coding, simplicity-first, surgical-changes).",
             "anchorBase": "dispatching-parallel-agents",
             "confidence": 0.57,
-            "mergedCount": 12,
+            "mergedCount": 13,
             "mergedFrom": [
                 "dispatching-parallel-agents",
                 "finishing-a-development-branch",
@@ -24,7 +24,8 @@
                 "verification-before-completion",
                 "requesting-code-review",
                 "executing-plans",
-                "brainstorming"
+                "brainstorming",
+                "karpathy-guidelines"
             ]
         }
     ]

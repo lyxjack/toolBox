@@ -43,6 +43,24 @@ Plan 和 Audit 是正式工件,拥有生命周期状态和保留规则。
 审计记录永不删除。临时文件必须在 session 结束前 promote 或清理。
 详见 `artifact_lifecycle.md`。
 
+### P9 — Assumption Transparency
+PM/CTO/QA 在每个 Step 输出工件时,必须显式列出本次决策的隐含假设,标注信源(用户已确认 / 文档推断 / PM 推断)和是否待澄清。
+**何时生效**: PM Step 5 输出 requirement_package、CTO Step 1 评审需求、QA Step 7 产 qa_report。
+**违反后果**: Gate①/②/③ 自检失败,触发返工到 PM_ANALYSIS。CTO 发现 PM 假设缺失或可疑时**必须**回退,不得自行填补。
+**知识源**: `KI/External_KI/skills/workflow/workflow.md` §10 (K-M1 Think Before Coding)。
+
+### P10 — Simplicity Discipline
+默认追求"满足需求的最小代码"。在 P2 (Minimal Change By Default) 关注**文件数最小**之外,P10 关注**代码本身最小**:无未请求的抽象 / 配置项 / 错误处理 / 防御性分支。如果 200 行能压成 50 行,必须重写。
+**何时生效**: CTO Step 7 (Minimal Change Rationale 扩展为 Simplicity Justification)、Execution 写代码时、QA Layer 4 评估。
+**违反后果**: Gate② Simplicity Justification 段缺失 → 返工 CTO。QA 发现过度抽象/未使用配置/不可达防御代码 → REJECT with BHV-002 (CODE-BLOAT)。micro tier 弱化:< 30 行变更默认免检。
+**知识源**: `KI/External_KI/skills/workflow/workflow.md` §10 (K-M2 Simplicity First)。
+
+### P11 — Surgical Scope
+每行改动必须可追溯到一个明确的 task / AC。在 P4 (No Silent Scope Expansion) 关注**task 边界外不扩**之外,P11 关注**task 内不漂移**:不"顺手"格式化、重命名、清理注释、改 import 顺序,除非该改动本身就是 task 目标。
+**何时生效**: Execution 编辑时、QA Layer 4 Surgical Trace Check。
+**违反后果**: QA Layer 4 扫 git diff 时发现未在 change_manifest 显式声明的行 → REJECT with ISO-004 (DRIVE-BY)。允许例外:本 task 创造的孤儿 import / 变量必须清理。
+**知识源**: `KI/External_KI/skills/workflow/workflow.md` §10 (K-M3 Surgical Changes)。
+
 ## 3. 文件分层
 
 | 层 | 位置 | Owner | 生命周期 |

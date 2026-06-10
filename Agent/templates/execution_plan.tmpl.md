@@ -34,4 +34,13 @@
 - [ ] VP-2: {验证点}
 
 ### Minimal Change Rationale
-{论证为什么当前方案是最小化修改。如果不是最小修改,说明原因。}
+{论证为什么当前方案是最小化修改(P2 — 文件数)。如果不是最小修改,说明原因。}
+
+## Simplicity Justification
+> 挂载 P10 (Simplicity Discipline)。**必填**。standard tier 需多行,micro tier 一行即可。
+
+- 代码本身能否更简洁(200 行能否压到 50)?
+- 有无未请求的抽象 / 配置项 / 错误处理 / 防御性分支?
+- 自检:"senior engineer 会说这过度复杂吗" → {Y/N + 理由}
+
+micro tier 示例:`< 30 行变更,无抽象/配置项膨胀嫌疑`

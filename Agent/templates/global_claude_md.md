@@ -40,6 +40,19 @@
 | **无冗余副本** | 同一文件不得在多个层中存在副本。如需引用,使用路径引用而非复制。 |
 | **遗留目录禁止创建** | `AI/` 和 `external_KI/` 为已废弃的遗留目录名。禁止创建。 |
 
+## 双层记忆体系 — claude-mem × Obsidian KI
+
+| 层 | 定位 | 性质 |
+|----|------|------|
+| **claude-mem** | 会话级短期记忆(自动捕获工具调用与会话摘要,SQLite 本地库)。用途:会话连续性 — "上次做了什么 / 之前怎么改的 / 接续未完成工作" | **参考上下文,不构成约束** |
+| **Obsidian KI Vault** | 策展长期知识(7 大类) | Error_Book 命中 = 强制约束;Pattern Book 命中 = 推荐参考(语义不变) |
+
+- **优先级**: Error_Book(强制)> Pattern Book(推荐)> claude-mem session 上下文(参考)。
+- **召回入口**: mem-search skill(claude-mem 内置);worker 不可用时降级 `sqlite3 ~/.claude-mem/claude-mem.db` 只读查询;两者都不可用 → 跳过 mem 召回,不阻塞流程。
+- **触发时机**: 任务延续既往 session、用户提及历史工作、或 PM/CTO 需要近期变更上下文时查 mem;纯新任务或纯知识性问题查 Obsidian 即可。
+- **双向关联**: 所有新建 Obsidian entry 必须含 `mem_ref` / `mem_status` frontmatter 字段(详见 `{TOOLBOX_ROOT}/KI/Internal_KI/contract.md` § 3.8)。
+- **安装**: claude-mem 由 bootstrap/migration 自动安装(plugin marketplace `thedotmack`,v13.5.0+);worker 端口 = 37700+(uid%100),注册见 `{TOOLBOX_ROOT}/Agent/index/skill_registry.json#externalPlugins`。
+
 ## Iron Laws (不可违反)
 
 完整内容见 `{TOOLBOX_ROOT}/Agent/rules/iron_laws.md`。

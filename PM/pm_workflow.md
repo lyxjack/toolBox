@@ -44,6 +44,7 @@ description: 唯一入口。用户提交需求后,PM 分析需求、召回上下
 2. **KI Summaries**: 检查对话中提供的 Knowledge Item 摘要,识别相关 KI
 3. **Skills Index**: 读取 `{TOOLBOX}/KI/External_KI/master_index.json`,在 `quickLookup` 中识别可能相关的 skill 类别(**不深入读 skill 内容,只做初步标记**)
 4. **Project Rules**: 如果存在 `Agent/rules/project_rules.md`,读取项目规则
+5. **claude-mem 会话记忆**(补充召回源): 当任务延续既往 session 或用户提及历史工作时,用 mem-search skill 召回近期 session 上下文(worker 不可用时降级 `sqlite3 ~/.claude-mem/claude-mem.db` 只读查询);性质为**参考上下文,不构成约束**(优先级: Error_Book 强制 > Pattern Book 推荐 > mem 参考);两者都不可用 → 跳过,不阻塞流程
 
 ### Step 4.5: Complexity Classification（强制 Gate，输出 `complexity` 字段）
 
@@ -207,6 +208,26 @@ micro 是"狭窄通道"，不是"默认路径"。
 - 识别隐含的约束条件
 - 确定明确的 scope 边界和 out of scope
 
+#### Step 5.5: Hidden Assumptions(强制,挂载 P9 Assumption Transparency)
+
+> 引用:`Agent/rules/constitution.md` § P9 — Assumption Transparency。
+> 目的:把 PM 理解需求时的隐含假设**显式化**,让 CTO 能精准识别哪些是用户已确认、哪些是 PM 推断的。
+
+PM 在产出 requirement_package 前,必须列出本次需求分析的所有**隐含假设**,每条标注:
+- **假设内容**:一句话
+- **信源**:`用户已确认` / `文档推断({path})` / `PM 推断`
+- **待澄清?**:`是` / `否`(后者意味 PM 自信此假设无误,愿承担误判后果)
+
+格式(standard tier):
+
+| # | 假设 | 信源 | 待澄清? |
+|---|------|------|---------|
+| A1 | {一句话} | {信源} | 是/否 |
+
+**micro tier 弱化**:允许 `None identified`(单行),但若该 micro 任务涉及**任一**关键词(新功能 / 新接口 / 业务领域 / 跨层 / schema / storage key),**禁止**写 `None identified`,必须至少列 1 条假设 — 否则触发 micro→standard 升级条件。
+
+**违反后果**: Gate① 自检失败,返工到 Step 5。
+
 ### Step 6: 输出 requirement_package(_micro).md
 
 按 Step 4.5 的 `complexity` 分类选择模板：
@@ -220,6 +241,7 @@ micro 是"狭窄通道"，不是"默认路径"。
 
 必须确保以下字段非空:
 - [ ] Clarified Intent
+- [ ] **Hidden Assumptions**(至少 1 条 或 `None identified`,见 Step 5.5 micro 例外)
 - [ ] Scope (至少 1 条)
 - [ ] Out of Scope (至少 1 条)
 - [ ] Constraints (至少 1 条)
@@ -232,6 +254,7 @@ micro 是"狭窄通道"，不是"默认路径"。
 - Scope 是否明确?
 - AC 是否可验证(不是模糊的"应该好用")?
 - Out of Scope 是否覆盖了容易 creep 的项?
+- **Hidden Assumptions 段已填写**(挂载 P9,见 Step 5.5)
 - **requirement_package.md 是否已写入 `.in-process/active/{session_id}/`?**
 
 **通过** → 转交 CTO Planning(更新 state → `CTO_PLANNING`)

@@ -255,13 +255,14 @@ describe('findPendingMigrations', () => {
     if (!existsSync(migrationsDir)) {
       mkdirSync(migrationsDir, { recursive: true });
     }
-    const testFile = join(migrationsDir, 'v1.5.0.mjs');
+    // fixture 用 v99.x 区间,避免与真实 migration(如 v1.3.0.mjs)撞名互删
+    const testFile = join(migrationsDir, 'v99.5.0.mjs');
     writeFileSync(testFile, '// test migration\n');
 
     try {
-      const result = findPendingMigrations('1.0.0', '2.0.0');
-      const found = result.find(r => r.version === '1.5.0');
-      assert.ok(found, 'Should find v1.5.0.mjs migration');
+      const result = findPendingMigrations('99.0.0', '100.0.0');
+      const found = result.find(r => r.version === '99.5.0');
+      assert.ok(found, 'Should find v99.5.0.mjs migration');
       assert.equal(found.type, 'mjs');
     } finally {
       unlinkSync(testFile);
@@ -275,13 +276,13 @@ describe('findPendingMigrations', () => {
     if (!existsSync(migrationsDir)) {
       mkdirSync(migrationsDir, { recursive: true });
     }
-    const testFile = join(migrationsDir, 'v3.0.0.mjs');
+    const testFile = join(migrationsDir, 'v300.0.0.mjs');
     writeFileSync(testFile, '// test migration\n');
 
     try {
-      const result = findPendingMigrations('1.0.0', '2.0.0');
-      const found = result.find(r => r.version === '3.0.0');
-      assert.equal(found, undefined, 'Should not find v3.0.0 (out of range)');
+      const result = findPendingMigrations('99.0.0', '100.0.0');
+      const found = result.find(r => r.version === '300.0.0');
+      assert.equal(found, undefined, 'Should not find v300.0.0 (out of range)');
     } finally {
       unlinkSync(testFile);
       if (!dirExisted) {
@@ -294,13 +295,13 @@ describe('findPendingMigrations', () => {
     if (!existsSync(migrationsDir)) {
       mkdirSync(migrationsDir, { recursive: true });
     }
-    const testFile = join(migrationsDir, 'v1.3.0.sh');
+    const testFile = join(migrationsDir, 'v99.3.0.sh');
     writeFileSync(testFile, '#!/bin/bash\n');
 
     try {
-      const result = findPendingMigrations('1.0.0', '2.0.0');
-      const found = result.find(r => r.version === '1.3.0');
-      assert.ok(found, 'Should find v1.3.0.sh migration');
+      const result = findPendingMigrations('99.0.0', '100.0.0');
+      const found = result.find(r => r.version === '99.3.0');
+      assert.ok(found, 'Should find v99.3.0.sh migration');
       assert.equal(found.type, 'sh');
     } finally {
       unlinkSync(testFile);
@@ -314,15 +315,15 @@ describe('findPendingMigrations', () => {
     if (!existsSync(migrationsDir)) {
       mkdirSync(migrationsDir, { recursive: true });
     }
-    const files = ['v1.3.0.mjs', 'v1.1.0.mjs', 'v1.7.0.mjs'];
+    const files = ['v99.3.0.mjs', 'v99.1.0.mjs', 'v99.7.0.mjs'];
     for (const f of files) {
       writeFileSync(join(migrationsDir, f), '// test\n');
     }
 
     try {
-      const result = findPendingMigrations('1.0.0', '2.0.0');
+      const result = findPendingMigrations('99.0.0', '100.0.0');
       const versions = result.map(r => r.version);
-      assert.deepEqual(versions, ['1.1.0', '1.3.0', '1.7.0']);
+      assert.deepEqual(versions, ['99.1.0', '99.3.0', '99.7.0']);
     } finally {
       for (const f of files) {
         unlinkSync(join(migrationsDir, f));

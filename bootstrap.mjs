@@ -28,6 +28,8 @@ import {
   runMigrations,
   checkNodeVersion,
   prompt,
+  ensureClaudeMemPlugin,
+  patchGlobalClaudeMdMemSection,
 } from './Agent/lib/bootstrap-utils.mjs';
 
 // --- Parse flags ---
@@ -112,9 +114,10 @@ let REPORT_HOOKS = '';
 let REPORT_STRUCTURE = '';
 let REPORT_KI_MODE = '';
 let REPORT_GLOBAL_CLAUDE = '';
+let REPORT_CLAUDE_MEM = '';
 
 // --- Step 1: Detect OS ---
-logStep('Step 1/8: Detecting OS');
+logStep('Step 1/9: Detecting OS');
 switch (OS) {
   case 'macos':
     logOk('macOS detected');
@@ -134,7 +137,7 @@ switch (OS) {
 }
 
 // --- Step 2: Check prerequisites ---
-logStep('Step 2/8: Checking prerequisites');
+logStep('Step 2/9: Checking prerequisites');
 
 // git
 if (checkCommand('git')) {
@@ -186,7 +189,7 @@ if (checkCommand('claude')) {
 }
 
 // --- Step 3: Validate directory structure ---
-logStep('Step 3/8: Validating directory structure');
+logStep('Step 3/9: Validating directory structure');
 if (validateStructure()) {
   REPORT_STRUCTURE = 'valid';
 } else {
@@ -195,7 +198,7 @@ if (validateStructure()) {
 }
 
 // --- Step 4: Configure Claude Code hooks ---
-logStep('Step 4/8: Configuring Claude Code hooks');
+logStep('Step 4/9: Configuring Claude Code hooks');
 
 const SETTINGS_LOCAL = join(TOOLBOX_ROOT, '.claude', 'settings.local.json');
 
@@ -247,7 +250,7 @@ if (hooksAlreadyConfigured()) {
 }
 
 // --- Step 5: Knowledge management mode ---
-logStep('Step 5/8: Knowledge management setup');
+logStep('Step 5/9: Knowledge management setup');
 
 async function setupKnowledgeManagement() {
   if (SKIP_OBSIDIAN) {
@@ -390,9 +393,19 @@ async function setupKnowledgeManagement() {
   }
 }
 
-// --- Step 6: Global CLAUDE.md ---
+// --- Step 6: claude-mem persistent memory (双层记忆体系第二层) ---
+function setupClaudeMem() {
+  logStep('Step 6/9: claude-mem persistent memory');
+  const result = ensureClaudeMemPlugin();
+  REPORT_CLAUDE_MEM = { already: 'installed', installed: 'installed' }[result] || result;
+  // 已有全局 CLAUDE.md 的机器(模板生成路径覆盖不到)幂等补「双层记忆体系」节
+  const patch = patchGlobalClaudeMdMemSection();
+  if (patch === 'patched') REPORT_GLOBAL_CLAUDE = 'mem-section patched';
+}
+
+// --- Step 7: Global CLAUDE.md ---
 async function setupGlobalClaudeMd() {
-  logStep('Step 6/8: Global CLAUDE.md configuration');
+  logStep('Step 7/9: Global CLAUDE.md configuration');
 
   const homeDir = process.env.HOME || process.env.USERPROFILE || '';
   const globalClaude = join(homeDir, '.claude', 'CLAUDE.md');
@@ -441,9 +454,9 @@ async function setupGlobalClaudeMd() {
   }
 }
 
-// --- Step 7: Validation ---
+// --- Step 8: Validation ---
 function runValidation() {
-  logStep('Step 7/8: Running validation');
+  logStep('Step 8/9: Running validation');
 
   let localErrors = 0;
 
@@ -477,9 +490,9 @@ function runValidation() {
   }
 }
 
-// --- Step 8: Finalize & Report ---
+// --- Step 9: Finalize & Report ---
 function printReport() {
-  logStep('Step 8/8: Finalizing');
+  logStep('Step 9/9: Finalizing');
   setLocalVersion(REPO_VERSION);
   logOk(`Local version set to ${REPO_VERSION}`);
 
@@ -502,6 +515,7 @@ function printReport() {
   console.log(`|${pad('Structure:', REPORT_STRUCTURE || 'N/A')}|`);
   console.log(`|${pad('KI Mode:', REPORT_KI_MODE || 'N/A')}|`);
   console.log(`|${pad('Global CLAUDE:', REPORT_GLOBAL_CLAUDE || 'N/A')}|`);
+  console.log(`|${pad('claude-mem:', REPORT_CLAUDE_MEM || 'N/A')}|`);
   console.log(`|${pad('Version:', `v${REPO_VERSION}`)}|`);
   console.log('+==============================================+');
   console.log('|  toolBox is ready. Run \'claude\' to start.   |');
@@ -512,6 +526,7 @@ function printReport() {
 // --- Main (async wrapper for interactive prompts) ---
 async function main() {
   await setupKnowledgeManagement();
+  setupClaudeMem();
   await setupGlobalClaudeMd();
   runValidation();
   printReport();

@@ -3,8 +3,8 @@
         "description": "Tool/ 外部库溯源与更新追踪。/find-update 工作流的核心数据源。",
         "version": "1.0",
         "lastFullScan": "2026-03-19",
-        "totalDirs": 15,
-        "totalUpstreams": 8
+        "totalDirs": 16,
+        "totalUpstreams": 9
     },
     "upstreams": [
         {
@@ -71,6 +71,14 @@
             "extractPattern": "/",
             "trackMethod": "releases+commits",
             "dirs": ["ui-ux-pro-max-skill"]
+        },
+        {
+            "id": "multica-karpathy-skills",
+            "github": "https://github.com/multica-ai/andrej-karpathy-skills",
+            "type": "standalone",
+            "extractPattern": "skills/{skillDir}/",
+            "trackMethod": "commits",
+            "dirs": ["andrej-karpathy-skills"]
         }
     ],
     "repos": [
@@ -208,6 +216,15 @@
             "lastCommitHash": "07f4ef3",
             "lastChecked": "2026-03-19",
             "notes": "Updated. 72 files changed. v2.5.0: 6 new skills (banner-design, slides, brand, design, design-system, ui-styling)."
+        },
+        {
+            "dir": "andrej-karpathy-skills",
+            "upstream": "multica-karpathy-skills",
+            "subpath": "skills/karpathy-guidelines",
+            "currentVersion": "1.0.0",
+            "lastCommitHash": "2c60614",
+            "lastChecked": "2026-05-17",
+            "notes": "Initial /find ingest. 4 principles (think-before-coding, simplicity-first, surgical-changes, goal-driven-execution); first 3 merged into workflow anchor §10. Goal-driven skipped (already covered by §2 Planning's TDD task structure)."
         }
     ]
 }

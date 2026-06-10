@@ -3,7 +3,7 @@
         "description": "toolBox skill registry. Anchor-based architecture — 13 anchors, one per category.",
         "version": "2.0",
         "architecture": "anchor-based",
-        "lastUpdated": "2026-03-21",
+        "lastUpdated": "2026-05-17",
         "totalAnchors": 13
     },
     "anchors": [
@@ -84,9 +84,10 @@
             "category": "workflow",
             "anchorBase": "dispatching-parallel-agents",
             "confidence": 0.57,
-            "mergedCount": 12,
+            "mergedCount": 13,
+            "lastUpdated": "2026-05-17",
             "path": "KI/External_KI/skills/workflow/workflow.md",
-            "usageNotes": "Planning, execution, code review, branching, parallel agents, git worktrees, verification."
+            "usageNotes": "Planning, execution, code review, branching, parallel agents, git worktrees, verification, plus Karpathy coding discipline (think-before-coding, simplicity-first, surgical-changes)."
         },
         {
             "name": "content",
@@ -124,6 +125,29 @@
             "mergedCount": 2,
             "path": "KI/External_KI/skills/game-development/game-development.md",
             "usageNotes": "Universal game dev fundamentals (loops, physics, collision, ECS, rendering, controls) + Cocos Creator 3.x TypeScript standards. Extensible for Unity/Godot/Unreal."
+        }
+    ],
+    "externalPlugins": [
+        {
+            "name": "claude-mem",
+            "version": "13.5.0",
+            "type": "claude-code-plugin",
+            "source": "marketplace:thedotmack",
+            "sourceRepo": "https://github.com/thedotmack/claude-mem",
+            "installPath": "~/.claude/plugins/ (Claude Code 托管，toolBox 不存副本)",
+            "dataPath": "~/.claude-mem/claude-mem.db",
+            "workerPort": 37701,
+            "workerPortNote": "固定分配 37700+(uid%100)，本机 uid=501 → 37701。端口确定后不再更改（ERR-006 预防规则）；健康检查 http://127.0.0.1:37701/health",
+            "capabilities": [
+                "session-memory-capture (5 lifecycle hooks: SessionStart/UserPromptSubmit/PreToolUse/PostToolUse/Stop)",
+                "session-context-injection (SessionStart 注入近 10 session 摘要)",
+                "mem-search (FTS5 全文检索 skill: search/timeline/get_observations)",
+                "sqlite-readonly-query (sqlite3 ~/.claude-mem/claude-mem.db, 表 sdk_sessions)"
+            ],
+            "usageEntry": "mem-search skill（plugin 内置）；降级路径 sqlite3 只读查询",
+            "registeredAt": "2026-06-10",
+            "requirementRef": "REQ-20260609-210628",
+            "governanceNote": "运行时 plugin 而非知识文本，不适用 anchor 知识合并（skill_ingestion Phase 3 对象为 markdown 切片）。plugin 本体由 Claude Code 管理，遵守五层架构无冗余副本规则。"
         }
     ]
 }

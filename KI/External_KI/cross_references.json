@@ -3,7 +3,7 @@
         "description": "Cross-reference mapping for anchor-based architecture. Intra-category overlaps eliminated by merge. Only inter-category references remain.",
         "architecture": "anchor-based",
         "totalAnchors": 13,
-        "lastUpdated": "2026-03-21"
+        "lastUpdated": "2026-05-17"
     },
     "interCategoryReferences": [
         {

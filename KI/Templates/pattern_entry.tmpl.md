@@ -10,8 +10,11 @@ tags:
   - ki/pattern
 complements:
   - "[[ERR-{NNN}__slug|ERR-{NNN}]]"
+trigger_condition: "user_explicit"  # Cat 3 (业务硬逻辑) 用 user_explicit; Cat 7 (代码可复用) 用 quality_audit; 两者都用 both
 aliases:
   - "PAT-{NNN}"
+mem_ref: "{content_session_id | null}"  # claude-mem 双向关联：产出本条的 session（sdk_sessions.content_session_id）；降级时 null
+mem_status: "{linked | unavailable}"    # linked=写入时已验证存在；unavailable=claude-mem 不可用（降级，不阻塞）
 ---
 
 # {模式标题}

@@ -260,6 +260,87 @@ export function checkNodeVersion(requiredMajor = 18) {
   }
 }
 
+// --- claude-mem 双层记忆体系 (v1.3.0+, REQ-20260609-210628) ---
+export const CLAUDE_MEM_MARKER = '## 双层记忆体系 — claude-mem × Obsidian KI';
+const CLAUDE_MEM_MARKETPLACE_URL = 'https://github.com/thedotmack/claude-mem'; // HTTPS 而非 SSH,避免无 SSH key 机器失败
+
+/**
+ * 幂等安装 claude-mem plugin(marketplace: thedotmack)。
+ * 返回: 'already' | 'installed' | 'failed-cli' | 'failed-install'
+ */
+export function ensureClaudeMemPlugin() {
+  if (!checkCommand('claude')) {
+    logWarn('Claude Code CLI 不可用,无法自动安装 claude-mem');
+    return 'failed-cli';
+  }
+  try {
+    if (/claude-mem@thedotmack/.test(run('claude plugin list'))) {
+      logOk('claude-mem plugin already installed');
+      return 'already';
+    }
+  } catch { /* list 失败不致命,继续走安装 */ }
+  try {
+    run(`claude plugin marketplace add ${CLAUDE_MEM_MARKETPLACE_URL}`, { stdio: 'pipe' });
+  } catch { /* marketplace 已注册或临时失败 — 由下方 install + verify 最终判定 */ }
+  try {
+    run('claude plugin install claude-mem@thedotmack --scope user', { stdio: 'pipe' });
+    if (!/claude-mem@thedotmack/.test(run('claude plugin list'))) {
+      throw new Error('安装后 plugin list 中未见 claude-mem');
+    }
+    logOk('claude-mem installed (marketplace: thedotmack)');
+    logInfo('重启 Claude Code 后 hooks 生效;首次会话自动初始化 ~/.claude-mem(如提示则运行: npx claude-mem repair)');
+    return 'installed';
+  } catch (e) {
+    logError(`claude-mem 自动安装失败: ${e.message}`);
+    console.log('  手动安装:');
+    console.log(`    claude plugin marketplace add ${CLAUDE_MEM_MARKETPLACE_URL}`);
+    console.log('    claude plugin install claude-mem@thedotmack --scope user');
+    return 'failed-install';
+  }
+}
+
+/**
+ * 给已存在的 ~/.claude/CLAUDE.md 幂等补「双层记忆体系」节(内容唯一来源: 全局模板)。
+ * 新用户走模板生成路径,模板已含本节,无需本函数。
+ * 返回: 'patched' | 'already' | 'absent' | 'failed'
+ */
+export function patchGlobalClaudeMdMemSection() {
+  const homeDir = process.env.HOME || process.env.USERPROFILE || '';
+  const globalClaude = join(homeDir, '.claude', 'CLAUDE.md');
+  if (!existsSync(globalClaude)) return 'absent';
+
+  const content = readFileSync(globalClaude, 'utf8');
+  if (content.includes(CLAUDE_MEM_MARKER)) {
+    logOk('全局 CLAUDE.md 已含双层记忆体系节');
+    return 'already';
+  }
+  const tmplPath = join(TOOLBOX_ROOT, 'Agent', 'templates', 'global_claude_md.md');
+  if (!existsSync(tmplPath)) {
+    logWarn('模板缺失: Agent/templates/global_claude_md.md,无法补节');
+    return 'failed';
+  }
+  const tmpl = readFileSync(tmplPath, 'utf8');
+  const start = tmpl.indexOf(CLAUDE_MEM_MARKER);
+  if (start === -1) {
+    logWarn('模板内未找到双层记忆体系节,无法补节');
+    return 'failed';
+  }
+  let end = tmpl.indexOf('\n## ', start + CLAUDE_MEM_MARKER.length);
+  if (end === -1) end = tmpl.length;
+  const section = tmpl.slice(start, end)
+    .replace(/\{TOOLBOX_ROOT\}/g, TOOLBOX_ROOT.split('\\').join('/'))
+    .trimEnd();
+
+  // 与模板顺序一致:插在 Iron Laws 节之前;用户自定义文件找不到该节则追加到末尾
+  const ironIdx = content.indexOf('\n## Iron Laws');
+  const updated = ironIdx !== -1
+    ? `${content.slice(0, ironIdx)}\n${section}\n${content.slice(ironIdx)}`
+    : `${content.trimEnd()}\n\n${section}\n`;
+  writeFileSync(globalClaude, updated);
+  logOk('全局 CLAUDE.md 已补双层记忆体系节(插于 Iron Laws 前)');
+  return 'patched';
+}
+
 // --- Readline helper (cross-platform interactive prompt) ---
 import { createInterface } from 'readline';
 

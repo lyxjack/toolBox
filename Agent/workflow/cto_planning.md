@@ -20,6 +20,7 @@ PM 完成 Gate① 后交接,`state.json` 的 `currentState` 为 `CTO_PLANNING`�
 - `{TOOLBOX}/KI/External_KI/master_index.json`
 - `{TOOLBOX}/KI/Error_Book/index.json`
 - `{TOOLBOX}/Agent/orchestrator/strategy.md`(执行模式选择指南)
+- claude-mem 近期 session 上下文(可选,mem-search skill / `sqlite3 ~/.claude-mem/claude-mem.db` 只读;**参考性质,不构成约束**,不可用则跳过)
 
 ## 步骤
 
@@ -31,6 +32,20 @@ PM 完成 Gate① 后交接,`state.json` 的 `currentState` 为 `CTO_PLANNING`�
 
 **如果不可行或自相矛盾** → 更新 state → `PM_ANALYSIS`,退回 PM 并说明原因。
 
+#### Step 1.5: Assumption Pushback Gate(挂载 P9 Assumption Transparency)
+
+> 引用:`Agent/rules/constitution.md` § P9。
+> 目的:CTO 不得在 PM Hidden Assumptions 不完整时自行填补假设。
+
+CTO 必须检查 PM 的 Hidden Assumptions 段:
+
+- **缺失关键假设**(PM 没列但 CTO 规划时需依赖) → state → `PM_ANALYSIS` 返工,**禁止** CTO 自行假设
+- **假设可疑**(PM 标 `用户已确认` 但与对话记录不符) → state → `PM_ANALYSIS` 返工
+- **假设有冲突**(A1 与 A3 互斥) → state → `PM_ANALYSIS` 返工
+- **全部假设合理且完整** → 进入 Step 2
+
+**违反后果**: 若 CTO 跳过此 gate 自行假设,QA Layer 4 发现 plan 引用了未声明假设 → REJECT with REQ-003 (HIDDEN-ASSUMPTION-FILLED-BY-CTO)。
+
 ### Step 2: Reuse Audit(Iron Law 03) — Anchor 架构
 1. 读取 `{TOOLBOX}/KI/External_KI/master_index.json`
 2. 根据需求关键词,在 `quickLookup` 中定位相关 **Category**(12 类之一)
@@ -38,6 +53,7 @@ PM 完成 Gate① 后交接,`state.json` 的 `currentState` 为 `CTO_PLANNING`�
 4. 确认该 Category 的 **Anchor** 文件路径(每个 Category 有且仅有一个 Anchor md)
 5. 检查 `{TOOLBOX}/KI/External_KI/cross_references.json` 确认跨类别引用关系
 6. 扫描项目现有代码,检查是否有可复用的模块
+7. 如任务延续既往 session,用 mem-search(降级 sqlite 只读)查 claude-mem 近期观察,避免重复劳动(**参考,不构成约束**,优先级低于 Error_Book 强制与 Pattern Book 推荐;不可用跳过)
 
 > **CTO 职责边界**: CTO 只选定相关的 Category 及其 Anchor 路径,**不深入读取 Anchor 内容**。具体使用 Anchor 中的哪些知识切片(section / tier),由 Executor 在执行阶段根据 Anchor 内部索引(frontmatter 的 tier_index / section line ranges)自主抉择。
 
@@ -108,10 +124,23 @@ PM 完成 Gate① 后交接,`state.json` 的 `currentState` 为 `CTO_PLANNING`�
 - 指明哪些需要自动化测试,哪些需要手动验证
 - 标明 Layer 3(行为正确性)的关键检查点
 
-### Step 7: Minimal Change Rationale(Iron Law 02 / 10)
-论证当前方案是最小化修改:
+### Step 7: Minimal Change Rationale + Simplicity Justification(Iron Law 02 / 10 + P10 Simplicity Discipline)
+
+> Step 7 在 P2 (Minimal Change By Default) 之外,挂载 P10 (Simplicity Discipline):**P2 看文件数,P10 看代码本身**。
+
+**Part A — Minimal Change Rationale** (P2):
 - 为什么不能更少?
 - 如果修改文件 > 5 个,说明为什么每个都必须改
+
+**Part B — Simplicity Justification** (P10):
+- 代码本身能否更简洁(200 行能否压到 50)?
+- 有无未请求的抽象 / 配置项 / 错误处理 / 防御性分支?
+- 通过自检: "senior engineer 会说这过度复杂吗"
+- 写入 `execution_plan.md` 的 `## Simplicity Justification` 段(必填)
+
+**micro tier 弱化**: Part B 允许一行,如 "< 30 行变更,无抽象/配置项膨胀嫌疑"。
+
+**违反后果**: Gate② Simplicity Justification 段缺失 / Part A 与 Part B 都未填 → Gate② FAIL,返工 CTO。
 
 ### Step 8: 输出 execution_plan.md
 按 `{TOOLBOX}/Agent/templates/execution_plan.tmpl.md` 模板填写。
@@ -125,6 +154,8 @@ PM 完成 Gate① 后交接,`state.json` 的 `currentState` 为 `CTO_PLANNING`�
 - [ ] task_dag.json 中每个 task 有 anchorRef(Category + Anchor 路径)或明确说明为何不需要
 - [ ] 每个 task 有 verificationCriteria
 - [ ] Minimal Change Rationale 存在
+- [ ] **Simplicity Justification 段已写入 execution_plan.md**(挂载 P10,见 Step 7 Part B)
+- [ ] **Step 1.5 Assumption Pushback Gate 已执行**(挂载 P9,无可疑/缺失假设;若有,已 state→PM_ANALYSIS)
 - [ ] Verification Plan 存在
 - [ ] **execution_plan.md 已写入 `.in-process/active/{session_id}/`**
 

@@ -22,6 +22,12 @@ const LINTER_PATH = resolve(import.meta.dirname, 'error-book-linter.mjs');
 // 只跑 unit test，不跑 integration test —— integration 会递归 spawn hook 进程，
 // 制造混乱状态。Integration test 留给手工 `node --test` 单独跑。
 const COMPLEXITY_TEST_PATH = resolve(import.meta.dirname, '..', 'tests', 'test_complexity_gate.mjs');
+const GOVERNANCE_TEST_PATH = resolve(import.meta.dirname, '..', 'tests', 'test_p9_p11_governance.mjs');
+const OBSIDIAN_STRUCTURE_TEST_PATH = resolve(import.meta.dirname, '..', 'tests', 'test_obsidian_structure.mjs');
+const DISTILL_TEST_PATH = resolve(import.meta.dirname, '..', 'tests', 'test_distill_structure.mjs');
+const DISTILL_OUTPUT_AUDIT_PATH = resolve(import.meta.dirname, '..', 'tests', 'test_distill_output_audit.mjs');
+const P3_SELF_CHECK_PATH = resolve(import.meta.dirname, '..', 'tests', 'test_p3_schema_self_check.mjs');
+const MEM_LINK_TEST_PATH = resolve(import.meta.dirname, '..', 'tests', 'test_mem_link.mjs');
 
 // 读取 stdin
 let input = '';
@@ -74,10 +80,11 @@ try {
 // 关键：清掉 NODE_TEST_CONTEXT 等 node:test runner 内部 env，
 // 否则当 hook 被 node --test 调用时，子 node --test 进程继承到 child-v8
 // 上下文会进入子模式而不报失败 — 已踩坑确认。
+const cleanEnv = { ...process.env };
+delete cleanEnv.NODE_TEST_CONTEXT;
+delete cleanEnv.NODE_TEST_TARGET;
+
 if (existsSync(COMPLEXITY_TEST_PATH)) {
-  const cleanEnv = { ...process.env };
-  delete cleanEnv.NODE_TEST_CONTEXT;
-  delete cleanEnv.NODE_TEST_TARGET;
   try {
     execSync(`node --test "${COMPLEXITY_TEST_PATH}"`, {
       encoding: 'utf-8',
@@ -95,6 +102,122 @@ if (existsSync(COMPLEXITY_TEST_PATH)) {
   }
 }
 
-// 两个检查都通过
+// Governance structure regression test (REQ-20260517-032402)
+// 验证 Constitution P9/P10/P11 + 5 个 workflow 挂载点结构未被破坏
+if (existsSync(GOVERNANCE_TEST_PATH)) {
+  try {
+    execSync(`node --test "${GOVERNANCE_TEST_PATH}"`, {
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: cleanEnv,
+    });
+  } catch (err) {
+    const stdout = err.stdout || '';
+    const reason = `Governance 结构测试拦截 (P9/P10/P11):\n${stdout.replace(/\x1b\[[0-9;]*m/g, '').slice(-2000)}`.trim();
+    console.log(JSON.stringify({
+      decision: 'block',
+      reason,
+    }));
+    process.exit(0);
+  }
+}
+
+// Obsidian Structure regression test (P0 — Obsidian 7-Category Layered Mgmt)
+// 验证 7 大类目录 / 模板 / contract / CLAUDE.md 结构未被破坏
+if (existsSync(OBSIDIAN_STRUCTURE_TEST_PATH)) {
+  try {
+    execSync(`node --test "${OBSIDIAN_STRUCTURE_TEST_PATH}"`, {
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: cleanEnv,
+    });
+  } catch (err) {
+    const stdout = err.stdout || '';
+    const reason = `Obsidian Structure 测试拦截 (P0 7-Category):\n${stdout.replace(/\x1b\[[0-9;]*m/g, '').slice(-2000)}`.trim();
+    console.log(JSON.stringify({
+      decision: 'block',
+      reason,
+    }));
+    process.exit(0);
+  }
+}
+
+// Distill Skill Structure regression test (REQ-20260517-043739 P2)
+if (existsSync(DISTILL_TEST_PATH)) {
+  try {
+    execSync(`node --test "${DISTILL_TEST_PATH}"`, {
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: cleanEnv,
+    });
+  } catch (err) {
+    const stdout = err.stdout || '';
+    const reason = `Distill Skill Structure 测试拦截 (P2 /distill):\n${stdout.replace(/\x1b\[[0-9;]*m/g, '').slice(-2000)}`.trim();
+    console.log(JSON.stringify({
+      decision: 'block',
+      reason,
+    }));
+    process.exit(0);
+  }
+}
+
+// Distill Output Audit (端到端验证 distill 产物符合 contract schema)
+if (existsSync(DISTILL_OUTPUT_AUDIT_PATH)) {
+  try {
+    execSync(`node --test "${DISTILL_OUTPUT_AUDIT_PATH}"`, {
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: cleanEnv,
+    });
+  } catch (err) {
+    const stdout = err.stdout || '';
+    const reason = `Distill Output Audit 测试拦截 (KI 笔记 schema 违规):\n${stdout.replace(/\x1b\[[0-9;]*m/g, '').slice(-2000)}`.trim();
+    console.log(JSON.stringify({
+      decision: 'block',
+      reason,
+    }));
+    process.exit(0);
+  }
+}
+
+// P3 Schema Self-Check (元一致性 — workflow / contract / audit-code 三方同步)
+if (existsSync(P3_SELF_CHECK_PATH)) {
+  try {
+    execSync(`node --test "${P3_SELF_CHECK_PATH}"`, {
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: cleanEnv,
+    });
+  } catch (err) {
+    const stdout = err.stdout || '';
+    const reason = `P3 Schema Self-Check 拦截 (workflow / contract / audit-code 元一致性脱钩):\n${stdout.replace(/\x1b\[[0-9;]*m/g, '').slice(-2000)}`.trim();
+    console.log(JSON.stringify({
+      decision: 'block',
+      reason,
+    }));
+    process.exit(0);
+  }
+}
+
+// Mem Link regression test (REQ-20260609-210628 — claude-mem 双向关联机制)
+if (existsSync(MEM_LINK_TEST_PATH)) {
+  try {
+    execSync(`node --test "${MEM_LINK_TEST_PATH}"`, {
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: cleanEnv,
+    });
+  } catch (err) {
+    const stdout = err.stdout || '';
+    const reason = `Mem Link 测试拦截 (claude-mem 双向关联结构破坏):\n${stdout.replace(/\x1b\[[0-9;]*m/g, '').slice(-2000)}`.trim();
+    console.log(JSON.stringify({
+      decision: 'block',
+      reason,
+    }));
+    process.exit(0);
+  }
+}
+
+// 八个检查都通过
 console.log(JSON.stringify({ decision: 'approve' }));
 process.exit(0);

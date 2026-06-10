@@ -1,7 +1,8 @@
 {
     "_meta": {
-        "version": "2.0.0",
+        "version": "2.0.1",
         "generated": "2026-03-21",
+        "lastUpdated": "2026-05-17",
         "architecture": "anchor-based",
         "totalSkills": 13,
         "totalCategories": 13,
@@ -119,7 +120,7 @@
             "anchorFile": "KI/External_KI/skills/workflow/workflow.md",
             "anchorBase": "dispatching-parallel-agents",
             "confidence": 0.57,
-            "mergedCount": 12
+            "mergedCount": 13
         },
         {
             "id": "meta_tooling",
@@ -169,5 +170,16 @@
         "meta-tooling": "meta_tooling",
         "business": "business",
         "game-development": "game_development"
-    }
+    },
+    "externalPlugins": [
+        {
+            "name": "claude-mem",
+            "version": "13.5.0",
+            "type": "claude-code-plugin",
+            "source": "marketplace:thedotmack",
+            "role": "会话级短期记忆层（双层记忆体系之一；Obsidian KI Vault 为长期策展知识层）",
+            "registryRef": "Agent/index/skill_registry.json#externalPlugins",
+            "registeredAt": "2026-06-10"
+        }
+    ]
 }

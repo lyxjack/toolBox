@@ -76,17 +76,32 @@ Execution 完成 Gate③ 后交接,`state.json` 的 `currentState` 为 `QA_VERIF
 ```
 **隔离违规** → REJECT with `ISO-00x`
 
+#### Step 5.5: Surgical Trace Check(挂载 P11 Surgical Scope)
+
+> 引用:`Agent/rules/constitution.md` § P11 — Surgical Scope。
+> 目的:在 Layer 4 task **边界** 检查之外,扫 task **内部** 的 drive-by 编辑。
+
+对每个 change_manifest 中声明改动的文件,执行:
+1. 跑 `git diff {file}` 拿到全部改动行
+2. 比对 change_manifest 的"intended changes"段(若 schema 含)或 task verificationCriteria
+3. 凡未在声明范围内的 drive-by 改动(顺手 reformat / rename / 改 import 顺序 / 清理无关注释)→ 列出
+4. 允许例外:本 task 创造的孤儿 import / 变量必须清理(P11 例外条款)
+
+**Drive-by 检测命中** → REJECT with `ISO-004` (DRIVE-BY)
+**micro tier 弱化**: < 30 行变更跳过 Step 5.5,L4 主体检查覆盖。
+
 ### Step 6: Layer 5 — Evidence Completeness
 检查所有必需工件:
 | 工件 | 必须存在 |
 |------|---------|
-| requirement_package.md | ✅ |
-| execution_plan.md | ✅ |
+| requirement_package.md(含 Hidden Assumptions 段,挂 P9)| ✅ |
+| execution_plan.md(含 Simplicity Justification 段,挂 P10)| ✅ |
 | task_dag.json | ✅ |
 | 每个 task 的 change_manifest | ✅ |
 | 每个 task 的 handoff | ✅ |
 | 测试结果记录 | ✅ |
 | Minimal Change Rationale | ✅ |
+| Surgical Trace Check 已执行(L4 Step 5.5,挂 P11)| ✅ |
 
 **缺失** → REJECT with `EVD-00x`
 

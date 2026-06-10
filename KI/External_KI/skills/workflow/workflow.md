@@ -5,7 +5,6 @@ type: anchor
 confidence: 0.57
 anchor_base: dispatching-parallel-agents
 created: 2026-03-11
-lastUpdated: 2026-03-11
 merged_from:
   - name: dispatching-parallel-agents
     confidence: 0.57
@@ -43,6 +42,11 @@ merged_from:
   - name: brainstorming
     confidence: 0.25
     origin: superpowers
+  - name: karpathy-guidelines
+    confidence: 0.35
+    origin: andrej-karpathy-skills
+    date: 2026-05-17
+lastUpdated: 2026-05-17
 iron_law: >
   This anchor file is the single source of truth for the workflow category.
   It MUST NOT be modified without explicit instruction. All original source
@@ -537,7 +541,66 @@ Suggest manual `/compact` at strategic workflow transition points rather than re
 
 ---
 
-## 10. Workflow Integration Map
+<!-- incremental: karpathy-guidelines, 2026-05-17 -->
+## 10. Coding Discipline — Karpathy Guidelines (Cross-Cutting)
+
+Behavioral guidelines applied **during implementation** (not just design or review). Bias toward caution over speed; for trivial tasks, use judgment.
+
+### Think Before Coding
+
+Don't assume. Don't hide confusion. Surface tradeoffs.
+
+- State assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them — don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+Distinct from §1 Brainstorming: brainstorming clarifies design before coding; this principle applies at every coding step — surfacing hidden assumptions as they arise mid-implementation.
+
+### Simplicity First
+
+Minimum code that solves the problem. Nothing speculative.
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+The test: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+### Surgical Changes
+
+Touch only what you must. Clean up only your own mess.
+
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it — don't delete it.
+
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: every changed line should trace directly to the user's request.
+
+### Working Indicators
+
+These guidelines are working if you see:
+- Fewer unnecessary changes in diffs — only requested changes appear
+- Fewer rewrites due to overcomplication — code is simple the first time
+- Clarifying questions come before implementation, not after mistakes
+- Clean, minimal PRs — no drive-by refactoring
+
+> Goal-Driven Execution (the 4th Karpathy principle: transform tasks into verifiable goals with red-green loops) is already covered by §2 Planning's task structure (write failing test → run → implement → verify → commit). See §2 for the implementation pattern.
+
+<!-- cross-ref: 2026-05-17 REQ-20260517-032402 -->
+**Rule layer**: K-M1/M2/M3 → `constitution.md` P9/P10/P11;挂 PM Step 5.5+Gate①, CTO Step 1.5/7+Gate②, QA Step 5.5 Surgical Trace.
+
+---
+
+## 11. Workflow Integration Map
 
 How the workflow components connect:
 

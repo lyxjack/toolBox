@@ -3,9 +3,9 @@
         "description": "Duplicate skill governance for toolBox. Anchor-based architecture — all intra-category duplicates resolved by merge into anchors.",
         "version": "2.0",
         "architecture": "anchor-based",
-        "lastUpdated": "2026-03-21",
+        "lastUpdated": "2026-05-17",
         "totalAnchors": 13,
-        "totalOriginalSkills": 86,
+        "totalOriginalSkills": 87,
         "migrationDate": "2026-03-11",
         "migrationNote": "All 84 individual skills merged into 12 category anchors. Intra-category dedup is now inherent in the anchor structure."
     },
@@ -57,7 +57,7 @@
         },
         {
             "anchor": "workflow",
-            "mergedCount": 12,
+            "mergedCount": 13,
             "anchorBase": "dispatching-parallel-agents",
             "mergedSkills": [
                 "dispatching-parallel-agents (0.57)",
@@ -71,7 +71,17 @@
                 "verification-before-completion (0.41)",
                 "requesting-code-review (0.36)",
                 "executing-plans (0.29)",
-                "brainstorming (0.25)"
+                "brainstorming (0.25)",
+                "karpathy-guidelines (0.35)"
+            ],
+            "incrementalIngestHistory": [
+                {
+                    "date": "2026-05-17",
+                    "source": "andrej-karpathy-skills (multica-ai)",
+                    "modulesAdded": ["think-before-coding", "simplicity-first", "surgical-changes"],
+                    "modulesSkipped": ["goal-driven-execution (anchor §2 Planning TDD task structure already covers verifiable success criteria with red-green loop)"],
+                    "linesAdded": 60
+                }
             ]
         },
         {

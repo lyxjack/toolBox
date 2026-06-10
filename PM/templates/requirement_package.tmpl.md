@@ -9,6 +9,16 @@
 ### Clarified Intent
 {PM 理解后的结构化表述。明确"用户真正想要什么"。}
 
+### Hidden Assumptions
+> 挂载 P9 (Assumption Transparency)。显式列出 PM 分析需求时的所有隐含假设。
+
+| # | 假设 | 信源 | 待澄清? |
+|---|------|------|---------|
+| A1 | {一句话} | 用户已确认 / 文档推断 / PM 推断 | 是 / 否 |
+| A2 | {一句话} | {信源} | {是/否} |
+
+> 若 standard tier 写 `None identified`,需在 Risk Notes 段说明理由。
+
 ### Scope
 - {明确包含的功能/变更范围}
 - {每项用一条 bullet}
