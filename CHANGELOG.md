@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-06-24
+
+### Added — codebase-memory-mcp 第三类记忆集成 (REQ-20260624-212600)
+- **codebase-memory-mcp-pro v0.8.1**（源码结构知识图谱引擎 tree-sitter+SQLite+Cypher）经 `/find` 入库 `Tool/`：作为**第三类记忆层**接入（claude-mem=会话记忆 / Obsidian KI=知识记忆 / codebase-memory=代码结构记忆）
+- **治理注册**: `master_index.json` + `skill_registry.json` 的 `externalPlugins` + `source_registry.json`（find-update 追踪）；循 claude-mem 先例**不走 anchor 知识合并**（运行时 MCP server 非 markdown 知识）
+- **CTO Planning Step 2.5**: 两级触发门禁（A 项目画像 P1-P3 决定是否索引 / B 项目内按问题选工具），经 fork+上游 README/官方 docs/DeepWiki/实践文 **5 源交叉验证**校正为 per-project index-once 模型；PM Step 4 候选标记
+- **部署**: `deploy_guide` 三装法（npx 首选 / fork 本地构建拿 explore / curl 不推荐）+ profile；档位 1 **延后安装、非全局常驻**；DEC-006 决策记录
+- **体积治理**: 1.2G clone 的 `internal/`+`vendored/`（生成 grammar）已 gitignore，仅提交 11M lean 参考面；移除 nested `.git` 匹配 vendoring 约定（ERR-035）
+
+### Added — PM Step 4.6 Dynamic Workflow / Ultracode 判定门 (REQ-20260624-231500)
+- **pm_workflow Step 4.6**: 咨询性 gate（**不自动 launch**，用户 opt-in）—— Qualify(W1-W5) + Necessity veto(N1-N4) + 模型分层（**haiku 广度 / sonnet 中段 / opus 4.8 收敛**）+ budget-parametric 预算计划（校准 Max 5x：fan-out 5-10 / slice-first / +200k-400k）
+- **衔接**: Gate① checklist 加 `workflowGate` 必填项；`cto_planning` Step 3 交叉引用（dynamic workflow ≈ 机械化 Swarm）；DEC-007 决策记录
+
+### Knowledge (KI 沉淀)
+- **Patterns**: PAT-014（外部 MCP server 入库为 externalPlugin）、PAT-015（dynamic workflow 模型分层 + 何时用）
+- **Error_Book**: ERR-035（大型仓 vendoring gitlink 陷阱 + 重目录 bloat）、ERR-036（state.json 状态转移追加重复 currentState 键，recurring + ci_rule）
+- **Decisions / Logs**: DEC-006、DEC-007；2 条 execution_log（REQ-212600 / 231500）
+
 ## [1.3.0] - 2026-06-10
 
 ### Added — claude-mem 双层记忆体系集成 (REQ-20260609-210628)
