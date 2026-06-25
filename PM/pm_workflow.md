@@ -203,6 +203,74 @@ micro 是"狭窄通道"，不是"默认路径"。
 - `preflight_evidence` 字段不能省，没跑 bash 也要写明"N/A 因 X"
 - 字段缺失或值无法落盘 → Gate① 不通过
 
+### Step 4.6: Dynamic Workflow / Ultracode Gate（咨询性，不自动触发）
+
+> 来源：REQ-20260624-231500。挂载 Claude 官方 dynamic workflows 文档（https://code.claude.com/docs/en/workflows）。
+> **本 gate 是咨询性的**：PM / Claude **不自动 launch workflow**（Workflow 工具按设计必须用户显式 opt-in）。Gate 只在任务合格时**向用户 surface 一个"建议块"**（是否开 ultracode + 模型分层 + 预算计划），由用户用 `ultracode` 关键词或 `/effort ultracode` 自行开启。
+> **本节是 workflow 判定的唯一权威定义**；DEC-007 / cto_planning 路径引用，不复制（无冗余副本）。
+
+#### 4.6a 判定（先 Qualify 再 weigh Necessity）
+
+**Step A — Qualification（命中任一 → 候选）**：任务"需要的 agent 数超出单次对话能协调"，或想把编排固化成可复跑脚本：
+
+| # | Qualifier | 例 |
+|---|-----------|----|
+| W1 | 跨库扫荡 | 全仓 bug sweep / 安全审计 / 死代码 / 命名一致性审计 |
+| W2 | 大规模迁移 / 广影响重构 | ~≥50–500 文件级改动 |
+| W3 | 多源交叉验证研究 | 直接用 bundled `/deep-research` |
+| W4 | 大型新代码项目分析 / onboarding | 广度优先理解陌生大库（与 Step 2.5 codebase-memory 协同）|
+| W5 | 难规划，值得多角度各起一稿再择优 | 架构方案对比、硬方案 |
+
+**Step B — Necessity veto（命中任一 → 不建议开，走常规）**：
+
+| # | 否决项 |
+|---|--------|
+| N1 | 单文件 / 局部改、例行 / 机械、纯对话澄清（官方：每请求更费 token、更慢）|
+| N2 | complexity = micro/standard 且无 W1–W5 宽度特征 |
+| N3 | 已被现有 Serial/Parallel 执行模式低成本覆盖（workflow ≈ 机械化 Swarm，不是所有 Swarm 都值得上）|
+| N4 | token 预算紧 + 收益低 → 先 conversation，或先跑"一个目录/一个窄问题"的小切片探成本（挂 [[ERR-032]] token 纪律）|
+
+**判定**：Qualify 命中 ≥1 且 Necessity 全不命中 → **建议开 workflow**；否则不建议，正常流程。通常 **major tier + W1–W5** 才建议；micro/standard 默认不建议（除非显式宽度任务如 W3 研究）。
+
+#### 4.6b 若建议开 → 产出"建议块"（给用户，PM 不自动执行）
+
+1. **开启方式（按场景三选一）**：
+   - 单个合格任务（一次性）→ prompt 里写 `ultracode` 关键词（不改 session effort，scoped，最省）
+   - 一连串重活（整段 session）→ `/effort ultracode`（xhigh + 每个实质任务自动编排；完事 `/effort high` 退回）
+   - 现成 → bundled `/deep-research` 或已 save 的 `/workflow-name`
+2. **模型分层计划**（官方："route a stage to a different model"；用 `agent({model, effort})` 逐阶段路由）：
+
+   | 阶段性质 | 模型 | effort | 典型工作 |
+   |---------|------|--------|---------|
+   | 广度 / 扫描 / 机械提取 | **haiku** | low | 扫 N 个文件找模式、每维度首遍 finding、批量转换、清点 |
+   | 中段分析 | **sonnet** | medium | 单模块理解、归类、结构化抽取 |
+   | 收敛 / 裁决 / 对抗验证 / 终稿 | **opus 4.8** | high–max | 综合各路 finding、逐条对抗式 verify、择优、终稿方案 |
+
+3. **预算计划（已校准：用户 = Max 5x 中等档）**：
+   - 默认中 fan-out **5–10 并发**；重任务**先跑一个目录 / 一个窄问题的小切片探成本**，再决定全量
+   - 用 `+Nk` 预算指令（中型审计建议 **`+200k–400k`**）+ 脚本内 `budget.remaining()` 动态收敛
+   - 并发上限 16 / 单 run 上限 1000 agent（成本天花板）
+
+#### 4.6c 落盘（state.json）
+
+```json
+"workflowGate": {
+  "recommended": true,
+  "qualifiers_hit": ["W4"],
+  "necessity_vetoes": [],
+  "reason": "<一句话>",
+  "plan": { "enableVia": "ultracode-keyword | /effort ultracode | /deep-research",
+            "tiering": "haiku 广度 / sonnet 中段 / opus 收敛",
+            "fanout": "5-10", "budget": "slice-first → +300k" }
+}
+```
+
+非合格任务：`"workflowGate": {"recommended": false, "reason": "..."}` 一行即可。
+
+#### 4.6d 边界
+- PM **不** launch workflow，**不**改 effort / settings（用户在 CLI 侧操作）。
+- dynamic workflows 需 Claude Code v2.1.154+ / 付费套餐；不可用则跳过本 gate，不阻塞。
+
 ### Step 5: 分析与厘清
 - 理解用户真正的意图(而非字面请求)
 - 如果需求不清晰,**停下来向用户提问**,不要猜测
@@ -256,6 +324,7 @@ PM 在产出 requirement_package 前,必须列出本次需求分析的所有**�
 - AC 是否可验证(不是模糊的"应该好用")?
 - Out of Scope 是否覆盖了容易 creep 的项?
 - **Hidden Assumptions 段已填写**(挂载 P9,见 Step 5.5)
+- **Step 4.6 Workflow/Ultracode Gate 已判定并记录**(state.json 的 `workflowGate` 字段;不合格也要记 `recommended:false`)
 - **requirement_package.md 是否已写入 `.in-process/active/{session_id}/`?**
 
 **通过** → 转交 CTO Planning(更新 state → `CTO_PLANNING`)

@@ -102,6 +102,8 @@ CTO 必须检查 PM 的 Hidden Assumptions 段:
 
 参照 `{TOOLBOX}/Agent/orchestrator/strategy.md` 的决策矩阵和 `{TOOLBOX}/Agent/orchestrator/execution_modes.md` 的详细定义。
 
+> **与 dynamic workflow 衔接**:dynamic workflow ≈ **机械化的 Swarm**。若本任务 PM **Step 4.6 Workflow Gate** 已判 `recommended:true`(state.json.workflowGate),且此处选定 **Swarm**,则按 Step 4.6 的"模型分层 + 预算计划"执行(haiku 广度 / opus 收敛);但仍由**用户 opt-in** 开 ultracode,CTO 不自动 launch。权威定义见 `PM/pm_workflow.md` Step 4.6,本处不复制。
+
 **3a. 量化评估(必须完成)**
 1. 统计 task 总数
 2. 计算任务间文件重叠率(共享文件数 / 总涉及文件数)
