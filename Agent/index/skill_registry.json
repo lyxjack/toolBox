@@ -3,8 +3,9 @@
         "description": "toolBox skill registry. Anchor-based architecture — 13 anchors, one per category.",
         "version": "2.0",
         "architecture": "anchor-based",
-        "lastUpdated": "2026-05-17",
-        "totalAnchors": 13
+        "lastUpdated": "2026-06-24",
+        "totalAnchors": 13,
+        "externalPluginsCount": 2
     },
     "anchors": [
         {
@@ -148,6 +149,35 @@
             "registeredAt": "2026-06-10",
             "requirementRef": "REQ-20260609-210628",
             "governanceNote": "运行时 plugin 而非知识文本，不适用 anchor 知识合并（skill_ingestion Phase 3 对象为 markdown 切片）。plugin 本体由 Claude Code 管理，遵守五层架构无冗余副本规则。"
+        },
+        {
+            "name": "codebase-memory-mcp-pro",
+            "version": "0.8.1",
+            "type": "mcp-server",
+            "source": "github:win4r/codebase-memory-mcp-pro",
+            "sourceRepo": "https://github.com/win4r/codebase-memory-mcp-pro",
+            "upstream": "https://github.com/DeusData/codebase-memory-mcp",
+            "toolPath": "Tool/codebase-memory-mcp-pro/ (lean 参考面入 git；internal/+vendored/ 共 ~1.1G 生成 grammar 已 .gitignore)",
+            "installOptions": [
+                "A 首选: npx -y codebase-memory-mcp (或 uvx；上游 0.8.1，stdio，零本地构建)",
+                "B fork 增强: Tool/codebase-memory-mcp-pro/scripts/build.sh → build/c/codebase-memory-mcp (含 explore/blast-radius depth)",
+                "C 上游脚本: curl|bash (不推荐，供应链暴露)"
+            ],
+            "role": "代码结构记忆层（第三类记忆；claude-mem=会话记忆，Obsidian KI=知识记忆）",
+            "capabilities": [
+                "index_repository / list_projects / delete_project / index_status (建图与管理)",
+                "explore (fork: blast-radius+邻居+带行号源码一击) / trace_path (调用链 BFS) / detect_changes (git diff→受影响符号+风险分级)",
+                "get_architecture (架构/热点/死代码) / search_graph / search_code / query_graph (Cypher) / get_code_snippet",
+                "manage_adr / ingest_traces / get_graph_schema"
+            ],
+            "usageEntry": "CTO Planning Step 2.5 — A 级项目画像 P1-P3 命中则按项目 index；B 级项目内按问题选工具。同域与 claude-mem smart-explore 二选一。",
+            "trigger": "Agent/workflow/cto_planning.md Step 2.5",
+            "deployGuide": "Agent/mcp/deploy_guide.md#codebase-memory",
+            "profile": "Agent/mcp/profiles/codebase-memory.mcp.json",
+            "registeredAt": "2026-06-24",
+            "requirementRef": "REQ-20260624-212600",
+            "decisionRef": "KI/Internal_KI/decisions/DEC-006__codebase-memory-conditional-code-structure-memory.md",
+            "governanceNote": "运行时 MCP server / 第三方二进制，非 markdown 知识，不走 anchor 合并（同 claude-mem 先例）。延后安装、按合格代码项目注册、非全局常驻；toolBox 治理库本身 doc-only 不索引。"
         }
     ]
 }

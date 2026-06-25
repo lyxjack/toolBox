@@ -10,6 +10,12 @@
 # Tool layer: ignore nested .git dirs from cloned repos
 Tool/**/.git/
 
+# Tool layer: codebase-memory-mcp-pro — heavy build inputs only (158 generated tree-sitter
+# grammar parser.c, internal/=1.1G + vendored/=43M). Source files preserved on disk (IL04),
+# just never committed. Lean reference surface (README/docs/src/tools/scripts) stays tracked.
+Tool/codebase-memory-mcp-pro/internal/
+Tool/codebase-memory-mcp-pro/vendored/
+
 # Python
 __pycache__/
 *.pyc

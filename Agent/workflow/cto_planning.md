@@ -64,6 +64,40 @@ CTO 必须检查 PM 的 Hidden Assumptions 段:
 | testing | `KI/External_KI/skills/testing/testing.md` | 0.71 | Executor 按 tier_index 选取 |
 | backend | `KI/External_KI/skills/backend/backend.md` | 0.67 | Executor 按 section 选取 |
 
+### Step 2.5: 代码结构记忆启用判定(codebase-memory-mcp · 第三类记忆)
+
+> **本节是 trigger 的唯一权威定义**。PM/部署指南/决策记录(DEC-006)均**路径引用**本节,不得复制(无冗余副本硬约束)。
+> 背景:`codebase-memory-mcp-pro` 是源码结构知识图谱引擎(tree-sitter + SQLite + Cypher),把代码解析成调用图。它是"代码结构记忆",与 claude-mem(会话记忆)、Obsidian KI(知识记忆)并列为**第三类记忆**,**互补不互斥**。决策依据 + 多源交叉验证见 `KI/Internal_KI/decisions/DEC-006`。
+> **使用模型(经 fork/上游 README + 官方 docs + DeepWiki + 实践文章交叉验证)**:它不是"按任务临时调用",而是 **"每个值得的项目 `index_repository` 一次,之后在该项目内长期辅助"** —— 索引后还会以 `PreToolUse` hook 被动增强该项目内的 Grep/Glob。**因此判定是两级的:A 决定项目要不要索引(主判定),B 是索引后项目内怎么用(不再逐任务 gate)。**
+
+#### A. 项目级判定 —— 这个项目值不值得索引?(主判定,`index_repository` 一次)
+下列**画像三条全中**才索引(目标:真实代码 + 会反复结构化探索 + 持续工作):
+
+| 判据 | 命中条件 |
+|------|---------|
+| **P1 真实源码项目** | 游戏 TS / `cocos-mcp-server/source/` / `server/src/` 等**源码仓**;**排除** doc-only / 纯 markdown 仓 —— 含 **toolBox 治理库本身**(上游明示"documentation-centric projects" 属 *not first-class*) |
+| **P2 会反复探索** | 中大型 / 多文件 / 多语言 / monorepo;或"这东西在哪被用到 / 谁调用它"是高频问题;或 agent 反复读同一批文件吃 context(官方定位的核心场景) |
+| **P3 非一次性** | 该项目你会**持续工作**(不是看一眼就走,否则索引开销摊不平常驻成本) |
+
+→ 三条全中:在该项目 `index_repository` 一次(成本低:Django 量级 ~6s,内核级 28M LOC ~3min),后台 watcher 增量同步,**在该项目内长期可用**。任一不中 → 不索引,降级原生 grep/Read。
+
+#### B. 项目内使用 —— 索引后按问题选工具(不再逐任务开关)
+
+| 触发时刻 | 工具 | 答的问题 |
+|---------|------|---------|
+| 摸架构 / onboarding / 设计评审 | `get_architecture`(先跑一次) | 语言/包/路由/热点/集群/死代码总览 |
+| 理解某符号后再改它 | `explore` | 该符号的 blast-radius + 1-hop 邻居 + 带行号源码(替代盲读 Read)|
+| "谁调用了它 / 完整调用链" | `trace_path`(depth 1-5) | 入向/出向调用链 |
+| 改动影响面 / 提交或重构前 | `detect_changes` | git diff → 受影响符号 + blast radius + 风险分级 |
+| "X 在哪用到" / grep 替代 | `search_graph` / `search_code` | 结构化定位,~120x 少 token |
+
+#### 去冗余 / 安装 / Token —— 三条硬规则
+- **去冗余(同域二选一)**:在已索引项目内,结构化探索一律走 codebase-memory,**不再并行** claude-mem `smart-explore`/`learn-codebase`(同域,双开浪费 token)。
+- **延后安装(档位 1)**:不做全局常驻 MCP。**按合格项目**装/注册(项目根 `.mcp.json` 或在该项目工作期注册),装前用户确认(第三方 C 二进制,供应链,参照 security skill 告警)。runbook 见 `Agent/mcp/deploy_guide.md` 的 **codebase-memory** 章节;未装则降级 grep/smart-explore,不阻塞。
+- **Token 账(参照 ERR-032)**:索引便宜,价值是"结构化查询替代逐文件 grep 的 token 暴增"(官方 ~120x)。**唯一净亏 = 对 doc-only / 微型 / 看一眼即走的仓索引** → P1/P2/P3 就是为拦此而设。
+
+**记录格式**:在 `execution_plan.md` 写一行 `code-structure-memory: indexed <project> | n/a (reason: P1-P3 命中/未命中)`。
+
 ### Step 3: 执行模式选择(强制 Gate)
 
 参照 `{TOOLBOX}/Agent/orchestrator/strategy.md` 的决策矩阵和 `{TOOLBOX}/Agent/orchestrator/execution_modes.md` 的详细定义。
@@ -149,6 +183,7 @@ CTO 必须检查 PM 的 Hidden Assumptions 段:
 ### Step 9: Gate② 检查
 自检:
 - [ ] Reuse Audit 非空
+- [ ] **代码结构记忆判定已记录**(Step 2.5:`code-structure-memory: indexed <project> | n/a (reason)` 一行;A 级项目画像 P1-P3 任一不中即 n/a)
 - [ ] **执行模式已选定,包含 Task Count / File Overlap Rate / Data Dependencies / Rationale**
 - [ ] **模式选择符合 Step 3b 强制规则(串行需逐对证明依赖)**
 - [ ] task_dag.json 中每个 task 有 anchorRef(Category + Anchor 路径)或明确说明为何不需要

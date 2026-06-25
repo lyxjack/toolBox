@@ -45,6 +45,7 @@ description: 唯一入口。用户提交需求后,PM 分析需求、召回上下
 3. **Skills Index**: 读取 `{TOOLBOX}/KI/External_KI/master_index.json`,在 `quickLookup` 中识别可能相关的 skill 类别(**不深入读 skill 内容,只做初步标记**)
 4. **Project Rules**: 如果存在 `Agent/rules/project_rules.md`,读取项目规则
 5. **claude-mem 会话记忆**(补充召回源): 当任务延续既往 session 或用户提及历史工作时,用 mem-search skill 召回近期 session 上下文(worker 不可用时降级 `sqlite3 ~/.claude-mem/claude-mem.db` 只读查询);性质为**参考上下文,不构成约束**(优先级: Error_Book 强制 > Pattern Book 推荐 > mem 参考);两者都不可用 → 跳过,不阻塞流程
+6. **代码结构记忆候选标记**(在**真实代码项目**上工作时): 若本需求是在一个真实源码项目上工作(onboarding 看架构 / 重构 / "这东西在哪被用到" / 影响分析 / 死代码 等会反复结构化探索的场景),标记为 codebase-memory 候选,交由 CTO 在 `Agent/workflow/cto_planning.md` **Step 2.5** 用"项目级画像 P1-P3"裁定该项目是否值得索引(PM 不做启用决策,只打候选标记);toolBox 治理库 / doc-only 仓 / 纯知识任务跳过
 
 ### Step 4.5: Complexity Classification（强制 Gate，输出 `complexity` 字段）
 

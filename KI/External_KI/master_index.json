@@ -1,8 +1,8 @@
 {
     "_meta": {
-        "version": "2.0.1",
+        "version": "2.0.2",
         "generated": "2026-03-21",
-        "lastUpdated": "2026-05-17",
+        "lastUpdated": "2026-06-24",
         "architecture": "anchor-based",
         "totalSkills": 13,
         "totalCategories": 13,
@@ -180,6 +180,17 @@
             "role": "会话级短期记忆层（双层记忆体系之一；Obsidian KI Vault 为长期策展知识层）",
             "registryRef": "Agent/index/skill_registry.json#externalPlugins",
             "registeredAt": "2026-06-10"
+        },
+        {
+            "name": "codebase-memory-mcp-pro",
+            "version": "0.8.1",
+            "type": "mcp-server",
+            "source": "github:win4r/codebase-memory-mcp-pro (fork of DeusData/codebase-memory-mcp; npm/pypi: codebase-memory-mcp)",
+            "role": "代码结构记忆层（第三类记忆；claude-mem=会话记忆，Obsidian KI=知识记忆）。源码结构知识图谱(tree-sitter+SQLite+Cypher)，分析/重构/陌生项目 onboarding 用结构化查询替代逐文件 grep。",
+            "registryRef": "Agent/index/skill_registry.json#externalPlugins",
+            "trigger": "Agent/workflow/cto_planning.md Step 2.5（A 级项目画像 P1-P3 决定是否索引）",
+            "governanceRefs": ["KI/Internal_KI/decisions/DEC-006__codebase-memory-conditional-code-structure-memory.md", "Agent/mcp/deploy_guide.md#codebase-memory"],
+            "registeredAt": "2026-06-24"
         }
     ]
 }

@@ -3,8 +3,9 @@
         "description": "Tool/ 外部库溯源与更新追踪。/find-update 工作流的核心数据源。",
         "version": "1.0",
         "lastFullScan": "2026-03-19",
-        "totalDirs": 16,
-        "totalUpstreams": 9
+        "lastIncrementalAdd": "2026-06-24",
+        "totalDirs": 17,
+        "totalUpstreams": 10
     },
     "upstreams": [
         {
@@ -79,6 +80,14 @@
             "extractPattern": "skills/{skillDir}/",
             "trackMethod": "commits",
             "dirs": ["andrej-karpathy-skills"]
+        },
+        {
+            "id": "win4r-codebase-memory-pro",
+            "github": "https://github.com/win4r/codebase-memory-mcp-pro",
+            "type": "standalone",
+            "extractPattern": "/",
+            "trackMethod": "releases+commits",
+            "dirs": ["codebase-memory-mcp-pro"]
         }
     ],
     "repos": [
@@ -225,6 +234,15 @@
             "lastCommitHash": "2c60614",
             "lastChecked": "2026-05-17",
             "notes": "Initial /find ingest. 4 principles (think-before-coding, simplicity-first, surgical-changes, goal-driven-execution); first 3 merged into workflow anchor §10. Goal-driven skipped (already covered by §2 Planning's TDD task structure)."
+        },
+        {
+            "dir": "codebase-memory-mcp-pro",
+            "upstream": "win4r-codebase-memory-pro",
+            "subpath": "/",
+            "currentVersion": "0.8.1",
+            "lastCommitHash": "3ff76d2",
+            "lastChecked": "2026-06-24",
+            "notes": "Initial /find ingest (REQ-20260624-212600). MCP server(代码结构记忆/第三类记忆),注册为 externalPlugin 不走 anchor 合并(同 claude-mem 先例)。Shallow clone;internal/+vendored/(~1.1G 生成 grammar)已 .gitignore。运行体走 npx codebase-memory-mcp(上游 0.8.1)或 fork 本地构建。Trigger: cto_planning Step 2.5。"
         }
     ]
 }

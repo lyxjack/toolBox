@@ -1,0 +1,10 @@
+{
+  "_note": "按需触发模板。仅在 cto_planning.md Step 2.5 的 A 级项目画像(P1-P3)命中、决定为该项目索引后,复制到目标代码项目根的 .mcp.json。首选 npx(上游 codebase-memory-mcp，零本地构建);要 win4r fork 的 explore/blast-radius 增强则改用本地构建二进制(见 deploy_guide)。全局注册优先 `claude mcp add --scope user`。",
+  "mcpServers": {
+    "codebase-memory": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "codebase-memory-mcp"]
+    }
+  }
+}
