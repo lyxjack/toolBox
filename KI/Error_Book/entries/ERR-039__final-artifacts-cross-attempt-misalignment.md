@@ -1,22 +1,23 @@
 ---
 id: ERR-039
 type: error
-errorCode: "BHV-002"
-severity: "medium"
-status: "open"
+errorCode: BHV-002
+severity: medium
+status: resolved
 recurrence: 1
-firstSeen: "2026-07-05"
+firstSeen: 2026-07-05
 tags:
-  - "error/medium"
-  - "topic/pipeline-artifacts"
-  - "topic/llm-retry-loop"
-  - "errorCode/BHV-002"
+  - error/medium
+  - topic/pipeline-artifacts
+  - topic/llm-retry-loop
+  - errorCode/BHV-002
   - ki/error-book
-prevention: "多 attempt 生成管线的最终落盘工件（layout / validation / 渲染产物）必须锚定同一个 attempt。任何'最后一轮失败'分支都不得让后写的工件覆盖前一轮的可用版本——保留'最后可解析/可校验'快照作为 final。"
+prevention: 多 attempt 生成管线的最终落盘工件（layout / validation / 渲染产物）必须锚定同一个
+  attempt。任何'最后一轮失败'分支都不得让后写的工件覆盖前一轮的可用版本——保留'最后可解析/可校验'快照作为 final。
 aliases:
-  - "ERR-039"
-mem_ref: "93f1823f-1c87-45ad-9d47-a7dcab69da36"
-mem_status: "linked"
+  - ERR-039
+mem_ref: 93f1823f-1c87-45ad-9d47-a7dcab69da36
+mem_status: linked
 ---
 
 # LLM retry 管线最终工件跨 attempt 错位
@@ -31,7 +32,7 @@ catIdea E9 首验（REQ-20260705-150305）：`plan_async` 最后一轮 attempt �
 
 ## 解决方案
 
-（登记于 REQ-20260705-150305 report；修复 REQ 见 related commit——修复后本条转 resolved）方向：schema 失败分支不覆盖"最后可解析布局"；final 三件套（layout/validation/composite）统一从同一 attempt 快照产出。
+已修复（REQ-20260706-132251，catIdea commit 000d94a）：schema 失败分支不覆盖"最后可解析布局"；final 三件套（layout/validation/composite）统一从同一 attempt 快照产出。
 
 ## 预防规则
 

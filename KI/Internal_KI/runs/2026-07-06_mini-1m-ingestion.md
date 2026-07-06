@@ -136,6 +136,30 @@ memory 记载曾有一轮审计把"session-ingestion 二道防线 DLP 死代码"
 
 ---
 
+
+---
+
+## 运维遏制:SEC-0 出口 + Kill Switch 实拉演练(真机)
+
+**Kill-Switch 演练(5 个有强制点的 scope 全过):**
+| scope | 强制点 | engage→ | release→ |
+|---|---|---|---|
+| KILL_CAPTURE | ingestion /v1/events(kill 在 zod/creds 前) | **503** | 恢复 400 ✅ |
+| KILL_KNOWLEDGE_RETRIEVAL | retrieval /v1/tools/:tool [0](auth 前) | **503** | 恢复 ✅ |
+| KILL_MCP_TOOL | 同上(工具面总闸) | **503** | 恢复 ✅ |
+| KILL_EXTERNAL_AI | gateway /v1/messages(SEC-1 前) | **503** | 恢复 401 ✅ |
+| KILL_AUTO_PUBLISH | compiler route_status(代码已验,本轮未跑 compile 循环live验) | (代码) | — |
+- 2s TTL 缓存语义正确(engage/release 后 ~2.5s 生效)。**未接强制点的 2 个 scope**:KILL_EMPLOYEE_WORKSPACE / KILL_PROJECT_ACCESS——engage 后子系统无反应(employee-workspace / project-access 子系统在试点未建),**属已知空挡**(engage 即返回,无 UI/侧信道误导即可;建议治理 UI 对无强制点 scope 标注"未接线")。演练后 0 个未释放 kill 行。
+
+### F-8 [MED] 部署上 SEC-0 出口 allowlist 层未生效;knowledge-net 后端可任意出网
+
+真机 TCP 出网探针(→ 1.1.1.1 被 GFW 干扰,故改用域内 host 消歧):
+- **内网隔离成立**:governance-net(workers)/development-net(员工)= `internal:true` → 连 registry.npmmirror.com/baidu 均 **ENETUNREACH / EAI_AGAIN**(无路由、DNS 也不通)。核心"员工/worker 容器不能直接出网"**真机成立**。
+- **knowledge-net 后端开放出网**:ingestion-mcp 直达 npmmirror **REACHABLE**、baidu REACHABLE、DNS 正常。因 knowledge-net 是普通 bridge(非 internal)。
+- **SEC-0 出口 allowlist 层未部署**:egress-proxy(squid)/litellm/employee-sim **均未运行**(profile 门控);nftables VM 级规则是 Linux-VM 专属,**未在 Mac Mini(Docker Desktop)施加**。
+
+后果:knowledge-net 上的后端服务(ingestion/retrieval/task-context/gateway/pg/otel)**可直连任意外网**——正常运行不出网,但一旦某后端被供应链/依赖攻陷即可无约束外泄。**符合 [[keep-project]] 既定"SE守护/nftables 推到正式 Linux 服务器、试点软件降级"的取舍**,本次真机坐实。缓解不属简单代码修复:①试点若要收紧→激活 egress-proxy profile + 宿主/VM 防火墙约束 knowledge-net(注意别掐断 Mini 自身构建用的 npmmirror 出网);②正式 Linux 机必须启 nftables+egress-proxy(SEC-0 原设计);③或**显式接受并文档化**试点降级出口姿态(内网隔离仍护住 worker/员工侧)。
+
 ## 韧性 / 混沌测试(真机部署,SIGKILL 级故障注入)—— 全过,零发现
 
 **Test A:session-ingestion worker SIGKILL ×3 mid-drain**(非优雅重启,是硬杀)。写 20,507 事件,排空途中 SIGKILL+start 三次(pending 在两次杀之间可见下降 20057→16257→13007=证明确实在循环重启)。全排空后:**events=20507 == si_done=20507**(精确守恒,每事件恰 1 completed run),dead=0 / pend=0 / dup_event=0 / dup_run=0,**audit 断链=0**。→ durable outbox + workflow_run 状态机 + 幂等(input_hash/step idempotency)在硬崩溃下真的做到「至少一次投递 + 幂等 = 有效一次」。
