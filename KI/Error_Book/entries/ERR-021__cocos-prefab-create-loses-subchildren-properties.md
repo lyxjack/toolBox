@@ -4,7 +4,7 @@ type: error
 errorCode: BHV-005
 severity: high
 status: open
-recurrence: 1
+recurrence: 2
 firstSeen: 2026-05-15
 tags:
   - error/high
@@ -37,6 +37,12 @@ aliases:
 - 同样 maskPanel.Sprite.spriteFrame 也丢了
 
 副作用：依赖 sub-children 属性的功能 silent 失效（如 dim mask 没颜色 = 不渲染 = popup 没暗背景）。
+
+**复发实例 REQ-20260611-211308**（cocos-mcp-server 1.6.1，创建 `XXLEntryLayer_p.prefab`）：
+- mask 节点 `cc.Sprite.color` 在场景设 (0,0,0,140) → `prefab_create_prefab` 后磁盘 `_color = null`（丢失）
+- 本实例 **spriteFrame / contentSize / 脚本组件全部完好，仅丢 color** —— 说明丢失是字段级、不固定，必须逐字段审计
+- 按 SOP 重 `prefab_open_edit_mode` → `node_find_node_by_name('mask')` 取真根 → 重设 color (0,0,0,140) → save_edit → 磁盘只读复检通过
+- 印证：1.6.1 下 create_prefab 仍丢 `cc.Sprite.color`；叠加 [[ERR-034__cocos-mcp-server-161-property-whitelist-and-tool-gaps|ERR-034]] 的属性白名单，复杂弹窗须全程磁盘只读审计兜底
 
 ## 根因分析
 
