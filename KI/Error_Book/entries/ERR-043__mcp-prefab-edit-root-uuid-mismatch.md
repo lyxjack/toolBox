@@ -1,5 +1,5 @@
 ---
-id: ERR-019
+id: ERR-043
 type: error
 errorCode: BHV-003
 severity: high
@@ -15,7 +15,7 @@ tags:
   - ki/error-book
 prevention: "MCP prefab_open_edit_mode 返回的 rootNodeUuid 指向 edit-mode scene 的临时容器（cc.Canvas），不是 prefab 真正的根。任何 component_attach_script / component_add_component / set_*_property 之前，必须用 node_find_node_by_name('<prefab 根节点名>') 拿真根 UUID。错 UUID 的 attach 会被 v1.6.2 wrapper 接受为 success 但 close edit mode 时 silently 丢失（不写入 .prefab 文件）。"
 aliases:
-  - ERR-019
+  - ERR-043
 ---
 
 # MCP prefab_open_edit_mode 返回的 rootNodeUuid 不是 prefab 真正的根
@@ -111,7 +111,7 @@ for i,o in enumerate(d):
 
 ## 关联
 
-- ERR-002 / ERR-005: 禁止脚本写 .prefab JSON（本错题修复方式仍是 MCP，只是改 UUID 用法）
+- [[ERR-002__python-modify-cocos-prefab|ERR-002]] / [[ERR-005__python-json-dump-prefab-id-shift|ERR-005]]: 禁止脚本写 .prefab JSON（本错题修复方式仍是 MCP，只是改 UUID 用法）
 - ERR-015: prefab 节点改名/重排后 viewList 路径失效（同属"MCP prefab 操作"姊妹系列）
 - `.claude/Internal_KI/mcp_editor_flow_sop.md`: MCP 编辑器流 SOP（应加 "rootNodeUuid 不可信" 条款）
 - feedback_mcp_prefab_save: MCP 修改 prefab 必须 scene_save → prefab_update 两步才写入磁盘（本错题是该 feedback 的姊妹规则 —— prefab edit mode 流的细化）

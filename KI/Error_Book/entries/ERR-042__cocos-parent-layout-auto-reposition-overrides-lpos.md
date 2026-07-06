@@ -1,5 +1,5 @@
 ---
-id: ERR-018
+id: ERR-042
 type: error
 errorCode: BHV-002
 severity: high
@@ -15,7 +15,7 @@ tags:
   - ki/error-book
 prevention: "改子节点 lpos 前必须先 query 父节点 cc.Layout._layoutType。非 0 (HORIZONTAL/VERTICAL/GRID) 会在 prefab save/reopen 时自动按 _spacingX/Y 重排所有子节点，吃掉手动 lpos。若需手动定位，先把 _layoutType 改成 0 (NONE)。"
 aliases:
-  - ERR-018
+  - ERR-042
 ---
 
 # Cocos 父节点 cc.Layout 自动重排吃掉子节点手动 lpos
@@ -129,7 +129,7 @@ node_set_node_transform({uuid: <child>, position: {x: -138, y: -60, z: 0}})
 
 ## 关联
 
-- ERR-002: 严禁脚本写 .prefab/.scene（本条修复必须走 MCP）
-- ERR-013: 基于 prefab 模板裁剪兄弟节点忘记重算 position（不同根因 — ERR-013 是手动忘算，本条是 Layout 自动重算覆盖）
+- [[ERR-002__python-modify-cocos-prefab|ERR-002]]: 严禁脚本写 .prefab/.scene（本条修复必须走 MCP）
+- [[ERR-013__partial-prefab-copy-broken-layout|ERR-013]]: 基于 prefab 模板裁剪兄弟节点忘记重算 position（不同根因 — ERR-013 是手动忘算，本条是 Layout 自动重算覆盖）
 - `extensions/cocos-mcp-server/BUGS_TO_FIX.md` Bug #5: v1.6.2 setter 对原始类型属性失败 — 关 Layout 时被迫走 raw __comps__ 路径绕路
 - 项目惯例参考：`assets/resources/prefab/ui/staminaEmptyView.prefab` 的 btn 子节点 Layout 配置
