@@ -1,0 +1,21 @@
+# Vendored copy inside toolBox: LFS disabled (toolBox stays LFS-free so fresh
+# clones need no git-lfs). Binary CAD/render assets are marked -text so Windows
+# autocrlf never mangles them. Upstream demo GIFs (LFS-only, never pulled
+# locally) are dropped from this vendor copy.
+assets/** -text
+benchmarks/** -text
+assets/**/*.md text
+benchmarks/**/*.md text
+*.step -text
+*.stp -text
+*.stl -text
+*.3mf -text
+*.gcode -text
+*.gcode.3mf -text
+*.dxf -text
+*.glb -text
+*.gltf -text
+*.obj -text
+*.ply -text
+*.mp4 -text
+**/topology.bin -text
