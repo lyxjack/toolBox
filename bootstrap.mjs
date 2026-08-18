@@ -235,12 +235,15 @@ if (hooksAlreadyConfigured()) {
   // Use forward slashes for the hook command path (works on all platforms)
   const hookPath = join(TOOLBOX_ROOT, 'Agent', 'lint', 'pre-commit-hook.mjs').split(sep).join('/');
   const lintHook = `node ${hookPath}`;
-  const hasLint = settings.hooks.PreToolUse.some(h => h.hooks && h.hooks.includes(lintHook));
+  // Claude Code hooks 必须是 { type: 'command', command } 对象；兼容识别旧版误写的纯字符串形态
+  const hasLint = settings.hooks.PreToolUse.some(h => (h.hooks || []).some(
+    x => x === lintHook || (x && x.command === lintHook)
+  ));
 
   if (!hasLint) {
     settings.hooks.PreToolUse.push({
       matcher: 'Bash',
-      hooks: [lintHook],
+      hooks: [{ type: 'command', command: lintHook }],
     });
   }
 

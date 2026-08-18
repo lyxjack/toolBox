@@ -38,7 +38,7 @@ const RESET = '\x1b[0m';
 
 // ── YAML Frontmatter 简易解析器 ───────────────────────
 function parseFrontmatter(content) {
-  const match = content.match(/^---\n([\s\S]*?)\n---/);
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return {};
   return parseYaml(match[1]);
 }
@@ -54,7 +54,7 @@ function parseYaml(text) {
   let inNestedObject = false;
   let nestedObj = {};
 
-  for (const line of text.split('\n')) {
+  for (const line of text.split(/\r?\n/)) {
     // 数组项（嵌套对象内的字段）
     if (inNestedObject && /^\s{4,}\w/.test(line)) {
       const m = line.match(/^\s+(\w[\w_]*):\s*"?([^"]*)"?\s*$/);

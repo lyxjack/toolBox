@@ -317,7 +317,7 @@ describe('AC-6: 新建 KI entry mem 字段强制 (cutoff 2026-06-10)', () => {
         ['linked', 'unavailable'].includes(statusLine[1]),
         `${name} mem_status 必须为 linked | unavailable,实际 ${statusLine[1]}`
       );
-      const refLine = fm.match(/^mem_ref:\s*"?([^"\n]*)"?\s*$/m);
+      const refLine = fm.match(/^mem_ref:\s*"?([^"\r\n]*)"?\s*$/m);
       if (statusLine[1] === 'linked') {
         assert.ok(refLine && refLine[1] && refLine[1] !== 'null', `${name} linked 时 mem_ref 必须非 null`);
       } else {
