@@ -46,6 +46,13 @@ cd toolBox
 claude
 ```
 
+### Fresh-Clone Notes (all platforms)
+
+- **`Tool/awesome-copilot` 与 `Tool/theone-training-skills` 克隆后是空目录** — 历史 gitlink 遗留（无 `.gitmodules`）。两者的知识已蒸馏进 KI anchor，原始仓库为可选项；需要时用 `/find-update` 或按 `Agent/index/source_registry.json` 里的上游 URL 手动 `git clone` 到对应目录。
+- **`Tool/text-to-cad` 为精简 vendor（v0.3.10）** — `.venv` 不入库，CAD/DXF/URDF 等 skill 运行前需在该目录重建 Python 3.12 虚拟环境（见其 README 安装步骤）。CAD skill 需符号链接进 `~/.claude/skills`；**Windows 原生**创建符号链接需开启开发者模式或用管理员 `mklink /D`，不用 CAD 功能可整体跳过此步。
+- **`Tool/cocos-mcp-v1.7.9-internal-test-20260724.zip`** — Cocos MCP 内测包随仓分发，Cocos 项目部署 MCP 时按 `game-engine-mcp-deploy` skill 引导解包使用。
+- **Obsidian KI Vault** — bootstrap / `/init` 会引导；若 Claude Code 内 `obsidian_*` 工具不可用，跑 skill `obsidian-ki-setup` 完成 Obsidian 安装、打开 `toolBox/KI/` 为 vault、Local REST API 插件与 `claude mcp add --scope user` 全局注册（勿手写 `~/.claude/.mcp.json`，见 ERR-009）。
+
 ## Updating
 
 ```bash

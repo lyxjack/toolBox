@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-08-17
+
+### Added — 7-8 月知识批量沉淀
+- **Error_Book**: ERR-044~119 区间约 64 条新错题（掼蛋 100 桌压测硬化、KEEP/DPoP 安全、Cocos MCP 工艺、蒸馏治理等战役）
+- **Patterns**: PAT-020~046 共 27 个新模式（含 PAT-020 KI 重编号最小扰动手册、PAT-037 跨项目 CAD 共享运行时）
+- **Execution logs**: 11 份（2026-07-11 ~ 2026-08-08 各战役）
+- **新知识域**: cad-hardware（anchor + category）；SEC-002 安全条目
+- **层级文档**: Agent/README、PM/README、KI/README 补齐
+
+### Added — 治理与工具链
+- **KI 完整性 linter** `Agent/lint/ki-integrity-linter.mjs`（重复 ID / 断链 / 非法 mem 字段三类 error 级检查），`npm run lint:ki`
+- **Matt 双轨入口** `Agent/workflow/matt_entry.md`：/matt 与 /pm 对比实验
+- constitution / iron_laws（IL 13 prefab 编辑器实体节点铁律）/ distill 工作流与测试同步演进
+
+### Added — Tool 层新源
+- **text-to-cad v0.3.10**（earthtojake/text-to-cad）精简 vendor 65M：11 个 CAD/DXF/URDF/G-code skill 共享运行时；`.venv` 各机重建
+- **mattpocock-skills** vendor（1.2M）
+- **cocos-mcp v1.7.9 内测包** zip 入库（外网不可得）
+
+### Fixed — KI 治理
+- **ERR-051~054 重复 ID**（两会话撞号）：后到批次让号重编为 ERR-116~119，全库入站 wiki link / alias / index.json 同步（PAT-020 手册，防 ERR-044 断链复犯）
+- runs/2026-07-06_reasoning-audit-stress.md 非法 `mem_status: session_active` → `linked`
+
+### Docs — 新机部署引导
+- README 新增 **Fresh-Clone Notes**：gitlink 空目录说明、text-to-cad venv 重建与 Windows 符号链接注意事项、cocos-mcp 内测包用途、Obsidian KI Vault 引导入口
+
 ## [1.4.0] - 2026-06-24
 
 ### Added — codebase-memory-mcp 第三类记忆集成 (REQ-20260624-212600)
