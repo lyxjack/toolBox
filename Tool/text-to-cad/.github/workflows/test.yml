@@ -1,0 +1,62 @@
+name: Test
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - develop
+  push:
+    branches:
+      - develop
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  version:
+    name: Version Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check release version
+        run: |
+          scripts/release/check-version.sh
+          node scripts/release/sync-version.mjs --check
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check development layout
+        run: scripts/github-workflows/check-symlinks.sh
+
+      - name: Set up dependencies
+        uses: ./.github/actions/setup-deps
+
+      - name: Check generated outputs against sources
+        run: scripts/bundle/bundle.sh --check
+
+      - name: Bundle production outputs
+        run: scripts/bundle/bundle.sh --clean
+
+      - name: Check production bundle layout
+        run: scripts/github-workflows/check-builds.sh --skip-bundle-check
+
+      - name: Run documentation checks
+        run: scripts/test/test-docs.sh
+
+      - name: Run code tests
+        run: scripts/test/test.sh
