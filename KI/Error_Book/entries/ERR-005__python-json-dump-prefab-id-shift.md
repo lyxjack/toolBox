@@ -39,5 +39,5 @@ Cocos prefab 文件是一个 JSON 数组，节点间通过 `__id__` 引用数组
 
 ## 关联
 - [[ERR-002__python-modify-cocos-prefab|ERR-002]]: 禁止脚本写入 .prefab（本条是其复犯）
-- [[ERR-005__mcp-prefab-save-two-steps|ERR-005]]: MCP 保存两步规则
+- [[PAT-001__mcp-prefab-workflow|PAT-001]]: MCP 保存两步规则（scene_save + prefab_update，已内化于该模式步骤）
 - [[PAT-002__cocos-asset-operation|PAT-002]] — Cocos 资产文件操作原则

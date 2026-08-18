@@ -534,38 +534,7 @@ Pairs with PM2, systemd, container orchestrators, and CI/CD gates.
 
 ## 10. AI-First Engineering Process
 
-### Process Shifts
-
-1. Planning quality matters more than typing speed.
-2. Eval coverage matters more than anecdotal confidence.
-3. Review focus shifts from syntax to system behavior.
-
-### Agent-Friendly Architecture
-
-Prefer: explicit boundaries, stable contracts, typed interfaces, deterministic tests. Avoid implicit behavior spread across hidden conventions.
-
-### Task Decomposition
-
-Apply the 15-minute unit rule:
-- Each unit independently verifiable.
-- Each unit has a single dominant risk.
-- Each unit exposes a clear done condition.
-
-### Review Focus for AI-Generated Code
-
-Prioritize: invariants and edge cases, error boundaries, security and auth assumptions, hidden coupling and rollout risk. Minimize time on style issues already enforced by automation.
-
-### Testing Standard for Generated Code
-
-- Required regression coverage for touched domains.
-- Explicit edge-case assertions.
-- Integration checks for interface boundaries.
-
-### Session Strategy
-
-- Continue session for closely-coupled units.
-- Start fresh session after major phase transitions.
-- Compact after milestone completion, not during active debugging.
+本节仅保留独有的 Eval-First Loop；其余为 workflow/testing 的复述，权威见：任务粒度/拆解 → `workflow.md` §2 (Planning → Task Granularity)；session/compaction 策略 → `workflow.md` §9 (Context Management)；AI 生成代码的测试与审查标准 → `testing.md`（Tier 2 Peer Review / Tier 5 Unit Testing / §5.8 Coverage）。
 
 ### Eval-First Loop
 

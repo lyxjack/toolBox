@@ -391,65 +391,9 @@ Return: Summary of what you found and what you fixed.
 
 ## 7. Verification Before Completion
 
-Claiming work is complete without verification is dishonesty, not efficiency.
+**原则：无证据不得宣称完成（NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE）。**
 
-### The Iron Law
-
-```
-NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
-```
-
-If you have not run the verification command in this message, you cannot claim it passes.
-
-### The Gate Function
-
-1. IDENTIFY — what command proves this claim?
-2. RUN — execute the FULL command (fresh, complete)
-3. READ — full output, check exit code, count failures
-4. VERIFY — does output confirm the claim?
-5. ONLY THEN — make the claim
-
-### Verification Requirements
-
-| Claim | Requires | Not Sufficient |
-|-------|----------|----------------|
-| Tests pass | Test command output: 0 failures | Previous run, "should pass" |
-| Linter clean | Linter output: 0 errors | Partial check, extrapolation |
-| Build succeeds | Build command: exit 0 | Linter passing |
-| Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
-| Regression test works | Red-green cycle verified | Test passes once |
-| Agent completed | VCS diff shows changes | Agent reports "success" |
-| Requirements met | Line-by-line checklist | Tests passing |
-
-### Red Flags — STOP Immediately
-
-- Using "should", "probably", "seems to"
-- Expressing satisfaction before verification
-- About to commit/push/PR without verification
-- Trusting agent success reports without checking
-- Relying on partial verification
-- ANY wording implying success without having run verification
-
-### Rationalization Prevention
-
-| Excuse | Reality |
-|--------|---------|
-| "Should work now" | RUN the verification |
-| "I'm confident" | Confidence is not evidence |
-| "Just this once" | No exceptions |
-| "Linter passed" | Linter is not compiler |
-| "Agent said success" | Verify independently |
-| "Partial check is enough" | Partial proves nothing |
-
-### Key Patterns
-
-**Tests:** Run command, see output, then claim. Not "should pass now."
-
-**Regression tests (TDD Red-Green):** Write -> Run (pass) -> Revert fix -> Run (MUST FAIL) -> Restore -> Run (pass).
-
-**Requirements:** Re-read plan -> create checklist -> verify each item -> report gaps or completion.
-
-**Agent delegation:** Agent reports success -> check VCS diff -> verify changes -> report actual state.
+命令门禁清单唯一权威见 `testing.md` Tier 1 (Smoke Check)；证据纪律全文（Gate Function / Verification Requirements / Red Flags / Rationalization Prevention / Key Patterns）已并入 `testing.md`「Verification Evidence Discipline (cross-tier)」，见彼处。
 
 ---
 
@@ -644,8 +588,8 @@ Both execution modes and subagent-driven development share this rule: never star
 
 ### Skill Dispatch Rules
 
-- Brainstorming terminal state is planning (not implementation)
-- Planning hands off to either subagent-driven or executing-plans
-- Both execution paths end with finishing-a-development-branch
-- Code review is mandatory before merge, optional at other points
-- Verification is mandatory before any completion claim
+- Brainstorming (§1) 的终态是 Planning (§2)，不是直接实现
+- Planning (§2) 交接给 §3 Execution 的两条路径之一：Batch Execution (Executing Plans) 或 Subagent-Driven Development
+- 两条执行路径都以 §5 Branching 的 Finishing a Development Branch 收尾
+- Code Review (§4) 在 merge 前强制，其他时点可选
+- Verification (§7) 在任何完成宣称前强制

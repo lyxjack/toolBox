@@ -11,10 +11,11 @@ tags:
 complements:
   - "[[ERR-{NNN}__slug|ERR-{NNN}]]"
 trigger_condition: "user_explicit"  # Cat 3 (业务硬逻辑) 用 user_explicit; Cat 7 (代码可复用) 用 quality_audit; 两者都用 both
+leading_word: "{单个预训练概念词,承载模式核心行为;规范见 Error_Book contract §7.2.1}"
 aliases:
   - "PAT-{NNN}"
-mem_ref: "{content_session_id | null}"  # claude-mem 双向关联：产出本条的 session（sdk_sessions.content_session_id）；降级时 null
-mem_status: "{linked | unavailable}"    # linked=写入时已验证存在；unavailable=claude-mem 不可用（降级，不阻塞）
+mem_ref: "{content_session_id | null}"  # claude-mem 双向关联,规则见 Internal_KI contract §3.8
+mem_status: "{linked | unavailable}"    # 同上 §3.8(不可用→降级,不阻塞)
 ---
 
 # {模式标题}

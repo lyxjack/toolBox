@@ -253,5 +253,6 @@ server:
 ## 关联铁律
 
 - IL 03 REUSE BEFORE BUILD — 复用 server 端 checkpoint 已有的 advance 逻辑，不重写
-- 部署铁律（[[project_revision_cas_lessons]]）：server 先 client 后 + rsync chmod 644
+- 部署铁律（`project_revision_cas_lessons`，项目级 KI 未入本 vault）：server 先 client 后 + rsync chmod 644
+- [[ERR-025__server-save-fails-schema-field-out-of-sync|ERR-025]] — 同一项目存档链路的 server 侧错题
 - `[[feedback_snapshot_before_new_change]]`：动改前先 snapshot commit 旧 working tree

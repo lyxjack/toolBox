@@ -16,13 +16,13 @@ merged_from:
   - { name: systematic-debugging, confidence: 0.56, origin: superpowers }
   - { name: springboot-tdd, confidence: 0.37, origin: ECC }
 tier_index:
-  tier1_smoke: { lines: "30-85", trigger: "auto:files<3 AND low_complexity" }
-  tier2_peer_review: { lines: "87-155", trigger: "auto:files>=3" }
-  tier3_module_review: { lines: "157-310", trigger: "manual" }
-  tier4_arch_security_perf: { lines: "312-430", trigger: "manual" }
-  tier5_unit_testing: { lines: "432-780", trigger: "auto:push" }
-  tier6_risk_monitoring: { lines: "782-840", trigger: "manual" }
-  appendix_debugging: { lines: "842-920", trigger: "on_failure" }
+  tier1_smoke: { anchor: "Tier 1: Smoke Check (auto)", trigger: "auto:files<3 AND low_complexity" }
+  tier2_peer_review: { anchor: "Tier 2: Peer Review — Multi-Agent Cross-Audit (auto)", trigger: "auto:files>=3" }
+  tier3_module_review: { anchor: "Tier 3: Module Review (manual)", trigger: "manual" }
+  tier4_arch_security_perf: { anchor: "Tier 4: Architecture / Security / Performance (manual)", trigger: "manual" }
+  tier5_unit_testing: { anchor: "Tier 5: Unit Testing (auto on push — mandatory)", trigger: "auto:push" }
+  tier6_risk_monitoring: { anchor: "Tier 6: Risk & Monitoring Review (manual)", trigger: "manual" }
+  appendix_debugging: { anchor: "Appendix: Systematic Debugging (cross-tier)", trigger: "on_failure" }
 iron_law: "Once designated as anchor, this file is NEVER replaced. Future external skills are merged incrementally (additive only, no duplicates)."
 ---
 
@@ -78,9 +78,10 @@ mvn compile -q && echo "BUILD PASS"
 ```bash
 # JS/TS
 npx eslint --max-warnings=0 src/
+npx tsc --noEmit          # TypeScript type check
 
 # Python
-ruff check src/ && mypy src/
+ruff check src/ && mypy src/   # pyright . 可作 mypy 替代
 
 # Go
 go vet ./... && golangci-lint run
@@ -772,6 +773,66 @@ For each critical path, document:
 2. **How we detect it** — monitoring, alerts, health checks
 3. **How we respond** — runbook, auto-recovery, manual intervention
 4. **Recovery time target** — RTO for each scenario
+
+---
+
+## Verification Evidence Discipline (cross-tier)
+
+> 由 workflow.md §7 并入（canonical 归此处）。Claiming work is complete without verification is dishonesty, not efficiency.
+
+**Iron Law: NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE.**
+
+If you have not run the verification command in this message, you cannot claim it passes.
+
+### The Gate Function
+
+1. IDENTIFY — what command proves this claim?
+2. RUN — execute the FULL command (fresh, complete)
+3. READ — full output, check exit code, count failures
+4. VERIFY — does output confirm the claim?
+5. ONLY THEN — make the claim
+
+### Verification Requirements
+
+| Claim | Requires | Not Sufficient |
+|-------|----------|----------------|
+| Tests pass | Test command output: 0 failures | Previous run, "should pass" |
+| Linter clean | Linter output: 0 errors | Partial check, extrapolation |
+| Build succeeds | Build command: exit 0 | Linter passing |
+| Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
+| Regression test works | Red-green cycle verified | Test passes once |
+| Agent completed | VCS diff shows changes | Agent reports "success" |
+| Requirements met | Line-by-line checklist | Tests passing |
+
+### Red Flags — STOP Immediately
+
+- Using "should", "probably", "seems to"
+- Expressing satisfaction before verification
+- About to commit/push/PR without verification
+- Trusting agent success reports without checking
+- Relying on partial verification
+- ANY wording implying success without having run verification
+
+### Rationalization Prevention
+
+| Excuse | Reality |
+|--------|---------|
+| "Should work now" | RUN the verification |
+| "I'm confident" | Confidence is not evidence |
+| "Just this once" | No exceptions |
+| "Linter passed" | Linter is not compiler |
+| "Agent said success" | Verify independently |
+| "Partial check is enough" | Partial proves nothing |
+
+### Key Patterns
+
+**Tests:** Run command, see output, then claim. Not "should pass now."
+
+**Regression tests (TDD Red-Green):** Write -> Run (pass) -> Revert fix -> Run (MUST FAIL) -> Restore -> Run (pass).
+
+**Requirements:** Re-read plan -> create checklist -> verify each item -> report gaps or completion.
+
+**Agent delegation:** Agent reports success -> check VCS diff -> verify changes -> report actual state.
 
 ---
 

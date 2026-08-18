@@ -650,3 +650,81 @@ func testReadError() async {
 - Using `#if DEBUG` conditionals instead of proper DI
 - Forgetting `Sendable` conformance with actors
 - Over-engineering: types without external dependencies don't need protocols
+
+---
+
+# Part 6: Apple Liquid Glass (iOS 26+)
+
+> 由 frontend.md §10 整体移入（Swift/UIKit 内容归属 mobile-native 领域）。
+
+## SwiftUI — Basic Glass
+
+```swift
+Text("Hello, World!")
+    .font(.title)
+    .padding()
+    .glassEffect()  // Default: regular variant, capsule shape
+
+// Customized
+Text("Hello")
+    .padding()
+    .glassEffect(.regular.tint(.orange).interactive(), in: .rect(cornerRadius: 16.0))
+```
+
+## GlassEffectContainer for Multiple Elements
+
+```swift
+GlassEffectContainer(spacing: 40.0) {
+    HStack(spacing: 40.0) {
+        Image(systemName: "scribble.variable")
+            .frame(width: 80, height: 80)
+            .glassEffect()
+        Image(systemName: "eraser.fill")
+            .frame(width: 80, height: 80)
+            .glassEffect()
+    }
+}
+```
+
+## Morphing Transitions
+
+```swift
+@State private var isExpanded = false
+@Namespace private var namespace
+
+GlassEffectContainer(spacing: 40.0) {
+    HStack(spacing: 40.0) {
+        Image(systemName: "scribble.variable")
+            .frame(width: 80, height: 80)
+            .glassEffect()
+            .glassEffectID("pencil", in: namespace)
+        if isExpanded {
+            Image(systemName: "eraser.fill")
+                .frame(width: 80, height: 80)
+                .glassEffect()
+                .glassEffectID("eraser", in: namespace)
+        }
+    }
+}
+```
+
+## UIKit Glass
+
+```swift
+let glassEffect = UIGlassEffect()
+glassEffect.tintColor = UIColor.systemBlue.withAlphaComponent(0.3)
+glassEffect.isInteractive = true
+
+let visualEffectView = UIVisualEffectView(effect: glassEffect)
+visualEffectView.layer.cornerRadius = 20
+visualEffectView.clipsToBounds = true
+```
+
+## Liquid Glass Best Practices
+
+- Always use `GlassEffectContainer` when applying glass to multiple sibling views.
+- Apply `.glassEffect()` after other appearance modifiers (frame, font, padding).
+- Use `.interactive()` only on elements that respond to user interaction.
+- Test across light mode, dark mode, and accented/tinted modes.
+- Never use opaque backgrounds behind glass — defeats translucency.
+- Never nest too many glass effects — degrades performance and clarity.

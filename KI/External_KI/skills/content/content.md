@@ -658,17 +658,7 @@ Create zero-dependency, animation-rich HTML presentations that run entirely in t
 
 ## Related Skills
 
-- **copywriting**: For writing individual content pieces
-- **seo-audit**: For technical SEO and on-page optimization
-- **ai-seo**: For optimizing content for AI search engines and getting cited by LLMs
-- **programmatic-seo**: For scaled content generation
-- **site-architecture**: For page hierarchy, navigation design, and URL structure
-- **email-sequence**: For email-based content
-- **launch-strategy**: For coordinating social with launches
-- **marketing-psychology**: For understanding what drives engagement
-- **frontend-patterns**: For component and interaction patterns around decks
-- **liquid-glass-design**: For Apple glass aesthetics in presentations
-- **e2e-testing**: For automated browser verification of decks
+相关知识按 anchor 名检索 `KI/External_KI/master_index.json`。
 
 ---
 

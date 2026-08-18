@@ -77,8 +77,8 @@ aliases:
 13. 浏览器 Preview 的 CORS 报错是环境专有（微信无 CORS）；外部拉取失败要有 null 守卫降级，别当迁移 bug 追。
 14. 引擎废弃适配器占 prototype：先查 descriptor，`configurable===false` 的**跳过**（强行 defineProperty 会抛错中断整个模块→黑屏），可覆盖的才覆盖 + try/catch 兜底。
 
-**红线不变**：全程禁止脚本/程序化修改 `.prefab/.scene/.fire/.anim`（ERR-002/016/017）；folder `.meta` 的 Bundle 标记与 `.fnt` 纯文本配置除外（已验证安全）。
+**红线不变**：全程禁止脚本/程序化修改 `.prefab/.scene/.fire/.anim`（ERR-002）；folder `.meta` 的 Bundle 标记与 `.fnt` 纯文本配置除外（已验证安全）。
 
 ## 关联
 - [[ERR-002__python-modify-cocos-prefab|ERR-002]] — 同域红线：禁止脚本改 prefab/场景，格式转换只走编辑器导入器。
-- [[ERR-016__mcp-prefab-update-corrupts-class-id|ERR-016]] / [[ERR-017__mcp-update-resets-node-layer|ERR-017]] — prefab 程序化改动的破坏，与本条"导入器搬资产、代码 overlay"互补。
+- [[ERR-021__cocos-prefab-create-loses-subchildren-properties|ERR-021]] / [[ERR-004__mcp-prefab-layer-ui2d|ERR-004]] — prefab 程序化改动的破坏（子节点属性丢失 / layer 重置），与本条"导入器搬资产、代码 overlay"互补。

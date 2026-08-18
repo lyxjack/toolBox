@@ -23,7 +23,7 @@ mem_status: "linked"
 在 `PM/pm_workflow.md` 新增 **Step 4.6 — Dynamic Workflow / Ultracode Gate**：每次需求受理时判定该任务要不要用 Claude 的 dynamic workflows（ultracode）。
 
 - **咨询性、不自动触发**：PM/Claude **不** launch workflow（Workflow 工具按设计必须用户显式 opt-in）；gate 只 surface 一个"建议块"，用户用 `ultracode` 关键词或 `/effort ultracode` 自行开启。
-- **两步判定**：先 Qualify（W1 跨库扫荡 / W2 大迁移重构 / W3 多源研究 / W4 大型新项目分析 / W5 多角度难规划），再 Necessity veto（单文件/例行/已被 Serial·Parallel 覆盖/预算紧收益低）。
+- **两步判定**：先 Qualify（W1–W5），再 Necessity veto；场景枚举与判据见 `PM/pm_workflow.md` Step 4.6（唯一权威）。
 - **若建议开 → 产出模型分层 + 预算计划**（替用户预规划）。
 - 权威定义在 Step 4.6（唯一来源），DEC-007 / cto_planning Step 3 路径引用，不复制。
 
@@ -34,7 +34,7 @@ mem_status: "linked"
 4. **模型分层省钱**：官方支持 `agent({model, effort})` 逐阶段路由 → 广度用 **haiku**（low effort）铺面、收敛用 **opus 4.8**（high–max）裁决，中段 **sonnet**。
 
 ## Calibration（用户档位）
-用户 = **Max 5x（中等预算）**：默认中 fan-out **5–10 并发**；重任务**先跑一个目录/窄问题的小切片**探成本；预算指令建议 **`+200k–400k`** + 脚本内 `budget.remaining()` 动态收敛。换档位只需调这几个数值，gate 设计本身 budget-parametric。
+用户 = **Max 5x（中等预算）**；具体 fan-out / 预算档位数字见 `PM/pm_workflow.md` Step 4.6（唯一权威）。换档位只需调 Step 4.6 中的数值，gate 设计本身 budget-parametric。
 
 ## Alternatives Considered
 | 方案 | 否决理由 |

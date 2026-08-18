@@ -286,7 +286,7 @@
     "companionDirs": 0,
     "bulletCount": 175,
     "rawScore": 50,
-    "confidence": 0.50,
+    "confidence": 0.5,
     "breakdown": "frontmatter:4 | name:2 | desc:0 | whenToUse:0 | headings5+:4 | h3depth:4 | code8+:0 | goodBad:5 | multiLang:0 | examples:3 | checklist:5 | bash:0 | tables:4 | bullets20+:4 | antiPatterns:3 | lines300+:8 | companions:0 | companionDirs:0 | references:4",
     "lastAuditUpdate": "2026-03-19",
     "updateNote": "Incremental update via /find-update: +106 lines (headless CMS modules from content-strategy v1.4.0)"
@@ -314,8 +314,50 @@
     "rawScore": 72,
     "confidence": 0.72,
     "breakdown": "frontmatter:4 | name:2 | desc:2 | whenToUse:4 | headings5+:4 | h3depth:4 | code8+:12 | goodBad:5 | multiLang:0 | examples:3 | checklist:5 | bash:0 | tables:4 | bullets20+:4 | antiPatterns:3 | lines300+:8 | companions:0 | companionDirs:0 | references:0",
-    "mergedFrom": ["theone-cocos-standards (0.72)", "game-engine (0.40)"],
+    "mergedFrom": [
+      "theone-cocos-standards (0.72)",
+      "game-engine (0.40)"
+    ],
     "auditDate": "2026-03-21",
     "updateNote": "New category: game_development. Anchor created from theone-cocos-standards (base) + game-engine (incremental: universal game dev fundamentals)"
+  },
+  {
+    "path": "KI/External_KI/skills/cad-hardware/cad-hardware.md",
+    "name": "cad-hardware",
+    "totalLines": 402,
+    "sizeBytes": 34091,
+    "h2Count": 26,
+    "h3Count": 0,
+    "codeBlocks": 5,
+    "codeLanguages": "bash,xml",
+    "hasFrontmatter": true,
+    "hasWhenToUse": true,
+    "hasChecklist": true,
+    "hasGoodBad": true,
+    "hasAntiPatterns": true,
+    "hasTables": true,
+    "hasExamples": true,
+    "isDeprecated": false,
+    "companionFiles": 0,
+    "companionDirs": 0,
+    "bulletCount": 92,
+    "rawScore": 65,
+    "confidence": 0.65,
+    "breakdown": "frontmatter:4 | name:2 | desc:2 | whenToUse:4 | headings5+:4 | h3depth:0 | code8+:7 | goodBad:5 | multiLang:2 | examples:3 | checklist:5 | bash:4 | tables:4 | bullets20+:4 | antiPatterns:3 | lines300+:8 | companions:0 | companionDirs:0 | references:4",
+    "mergedFrom": [
+      "bambu-labs (0.74)",
+      "gcode (0.69)",
+      "dxf (0.6)",
+      "sdf (0.54)",
+      "cad-viewer (0.54)",
+      "implicit-cad (0.54)",
+      "step-parts (0.52)",
+      "cad (0.5)",
+      "sendcutsend (0.46)",
+      "srdf (0.45)",
+      "urdf (0.44)"
+    ],
+    "auditDate": "2026-07-29",
+    "updateNote": "New category: cad_hardware. Anchor built from all 11 skills of earthtojake/text-to-cad (CAD Skills v0.3.10). anchorBase recorded as bambu-labs (highest structural score 0.74) per workflow rule, but the anchor's skeleton follows domain topology with cad (STEP-first) as the core — the 20-signal audit measures documentation form (code fences / line count / tables), not domain centrality, and this upstream deliberately keeps SKILL.md terse while pushing detail into references/ and --help. Runtime deployment facts live in Internal_KI PAT-037, not in the anchor."
   }
 ]

@@ -10,8 +10,8 @@ tags:
   - engine/cocos
   - ki/pattern
 complements:
-  - "[[ERR-002__python-modify-prefab|ERR-002]]"
-  - "[[ERR-006__python-json-dump-prefab-id-shift|ERR-006]]"
+  - "[[ERR-002__python-modify-cocos-prefab|ERR-002]]"
+  - "[[ERR-005__python-json-dump-prefab-id-shift|ERR-005]]"
 aliases:
   - PAT-002
 ---
@@ -84,5 +84,5 @@ aliases:
 
 ## 关联错误
 
-- [[ERR-002__python-modify-prefab|ERR-002]] — 禁止用脚本修改 Cocos 资产文件
-- [[ERR-006__python-json-dump-prefab-id-shift|ERR-006]] — Python json.dump 导致 prefab __id__ 索引偏移
+- [[ERR-002__python-modify-cocos-prefab|ERR-002]] — 禁止用脚本修改 Cocos 资产文件
+- [[ERR-005__python-json-dump-prefab-id-shift|ERR-005]] — Python json.dump 导致 prefab __id__ 索引偏移

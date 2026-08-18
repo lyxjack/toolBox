@@ -1,574 +1,690 @@
 {
-    "_meta": {
-        "description": "全局 Error Book 索引。Agent 错误记录，跨项目共享。用户手动添加，关键词召回。",
-        "version": "3.0",
-        "frozen": true,
-        "frozenNote": "已迁移至 Obsidian MCP 召回。本文件为历史快照，不再更新。",
-        "lastUpdated": "2026-06-10",
-        "entryTemplate": "KI/Templates/error_book_entry.tmpl.md",
-        "detailDir": "KI/Error_Book/entries/",
-        "contract": "KI/Error_Book/contract.md"
+  "_meta": {
+    "description": "全局 Error Book 索引。Agent 错误记录，跨项目共享。用户手动添加，关键词召回。",
+    "version": "3.0",
+    "frozen": true,
+    "frozenNote": "已迁移至 Obsidian MCP 召回。本文件为历史快照，不再更新。",
+    "lastUpdated": "2026-06-10",
+    "entryTemplate": "KI/Templates/error_book_entry.tmpl.md",
+    "detailDir": "KI/Error_Book/entries/",
+    "contract": "KI/Error_Book/contract.md"
+  },
+  "entries": [
+    {
+      "id": "ERR-001",
+      "errorCode": "BHV-001",
+      "pattern": "Agent 在 async 函数中忘记 try-catch 导致 unhandled rejection",
+      "keywords": [
+        "async",
+        "await",
+        "try-catch",
+        "unhandled",
+        "rejection",
+        "promise"
+      ],
+      "prevention": "使用 Result 类型模式包裹所有 async 返回值",
+      "severity": "high",
+      "status": "resolved",
+      "recurrence": 3,
+      "relatedTasks": [],
+      "file": "entries/ERR-001__unhandled-rejection.md",
+      "firstSeen": "2026-03-09"
     },
-    "entries": [
-        {
-            "id": "ERR-001",
-            "errorCode": "BHV-001",
-            "pattern": "Agent 在 async 函数中忘记 try-catch 导致 unhandled rejection",
-            "keywords": [
-                "async",
-                "await",
-                "try-catch",
-                "unhandled",
-                "rejection",
-                "promise"
-            ],
-            "prevention": "使用 Result 类型模式包裹所有 async 返回值",
-            "severity": "high",
-            "status": "resolved",
-            "recurrence": 3,
-            "relatedTasks": [],
-            "file": "entries/ERR-001__unhandled-rejection.md",
-            "firstSeen": "2026-03-09"
-        },
-        {
-            "id": "ERR-002",
-            "errorCode": "ISO-003",
-            "pattern": "用 Python/脚本直接修改 Cocos Creator .prefab/.scene 文件导致格式损坏和游戏崩溃",
-            "keywords": [
-                "prefab",
-                "json.dump",
-                "python",
-                "cocos",
-                ".prefab",
-                ".scene",
-                "序列化",
-                "格式",
-                "modify prefab",
-                "write prefab"
-            ],
-            "prevention": "绝对禁止用脚本写入 Cocos 资产文件（.prefab/.scene/.anim），只能通过编辑器操作",
-            "severity": "critical",
-            "status": "recurring",
-            "recurrence": 2,
-            "relatedTasks": [
-                "REQ-20260406-213536"
-            ],
-            "file": "entries/ERR-002__python-modify-cocos-prefab.md",
-            "firstSeen": "2026-04-06"
-        },
-        {
-            "id": "ERR-003",
-            "errorCode": "BHV-001",
-            "pattern": "Cocos UI 交互 bug 排查时没有先用排除法，直接深入引擎底层分析浪费大量时间",
-            "keywords": [
-                "mask",
-                "isMask",
-                "BlockInputEvents",
-                "弹窗",
-                "点击",
-                "无法交互",
-                "popup",
-                "遮罩"
-            ],
-            "prevention": "遇到 UI 交互 bug 先逐个关闭 BaseViewCmpt 布尔属性排除，不要猜测引擎行为",
-            "severity": "high",
-            "status": "resolved",
-            "recurrence": 0,
-            "relatedTasks": [
-                "REQ-20260406-221209"
-            ],
-            "file": "entries/ERR-003__buyview-mask-debug-failure.md",
-            "firstSeen": "2026-04-06"
-        },
-        {
-            "id": "ERR-004",
-            "errorCode": "BHV-001",
-            "pattern": "MCP 创建的 Cocos 节点 layer 不是 UI_2D（33554432），运行时不可见",
-            "keywords": [
-                "MCP",
-                "prefab",
-                "layer",
-                "UI_2D",
-                "不可见",
-                "invisible",
-                "node_create_node",
-                "33554432",
-                "camera"
-            ],
-            "prevention": "MCP 创建 UI 节点后必须设置 layer=33554432；排查 UI 不可见时第一时间检查 layer",
-            "severity": "critical",
-            "status": "recurring",
-            "recurrence": 2,
-            "relatedTasks": [],
-            "file": "entries/ERR-004__mcp-prefab-layer-ui2d.md",
-            "firstSeen": "2026-04-07"
-        },
-        {
-            "id": "ERR-005",
-            "errorCode": "BHV-001",
-            "pattern": "MCP 修改 prefab 后只调用 prefab_update_prefab 不调用 scene_save_scene，导致静默保存失败",
-            "keywords": [
-                "MCP",
-                "prefab",
-                "save",
-                "scene_save_scene",
-                "prefab_update_prefab",
-                "保存失败",
-                "写入磁盘"
-            ],
-            "prevention": "MCP 修改 prefab 必须先 scene_save_scene 再 prefab_update_prefab，保存后 grep 验证",
-            "severity": "high",
-            "status": "resolved",
-            "recurrence": 5,
-            "relatedTasks": [],
-            "file": "entries/ERR-005__mcp-prefab-save-two-steps.md",
-            "firstSeen": "2026-04-07"
-        },
-        {
-            "id": "ERR-006",
-            "errorCode": "ISO-003",
-            "pattern": "python json.dump 重写 prefab 文件插入新条目导致 __id__ 索引错位，所有节点引用断裂",
-            "keywords": [
-                "python",
-                "json.dump",
-                "prefab",
-                "__id__",
-                "错位",
-                "损坏",
-                "corrupt",
-                "json",
-                "insert"
-            ],
-            "prevention": "ERR-002 铁律：.prefab 结构性修改只能通过编辑器或 MCP，不能用脚本增删条目",
-            "severity": "critical",
-            "status": "resolved",
-            "recurrence": 1,
-            "relatedTasks": [],
-            "file": "entries/ERR-006__python-json-dump-prefab-id-shift.md",
-            "firstSeen": "2026-04-07"
-        },
-        {
-            "id": "ERR-007",
-            "errorCode": "ISO-003",
-            "pattern": "MCP prefab_instantiate_prefab 调试后未清理场景残留节点",
-            "keywords": [
-                "MCP",
-                "scene",
-                "cleanup",
-                "残留",
-                "instantiate",
-                "场景污染"
-            ],
-            "prevention": "每次 MCP prefab 操作后必须 node_delete_node + node_find_nodes 验证无残留",
-            "severity": "high",
-            "status": "resolved",
-            "recurrence": 1,
-            "relatedTasks": [],
-            "file": "entries/ERR-007__mcp-cleanup-scene-nodes.md",
-            "firstSeen": "2026-04-07"
-        },
-        {
-            "id": "ERR-008",
-            "errorCode": "BHV-001",
-            "pattern": "MCP 端口配置在 3000/3001 之间反复切换导致连接混乱",
-            "keywords": [
-                "MCP",
-                "port",
-                "端口",
-                "3000",
-                "3001",
-                "冲突",
-                "EADDRINUSE"
-            ],
-            "prevention": "端口固定分配后不再更改（MCP=3001, 游戏后端=3000）",
-            "severity": "medium",
-            "status": "resolved",
-            "recurrence": 3,
-            "relatedTasks": [],
-            "file": "entries/ERR-008__mcp-port-conflict-not-persisted.md",
-            "firstSeen": "2026-04-07"
-        },
-        {
-            "id": "ERR-011",
-            "errorCode": "BHV-004",
-            "pattern": "30个item用了回收复用ScrollViewCmpt，导致底部启动和滚动全部出错，应该用简单全量创建",
-            "keywords": [
-                "ScrollView",
-                "ScrollViewCmpt",
-                "回收",
-                "复用",
-                "scroll",
-                "列表",
-                "item",
-                "过度工程"
-            ],
-            "prevention": "数据量<100用简单方案（全量创建+Layout+scrollToBottom），不照搬回收组件",
-            "severity": "high",
-            "status": "resolved",
-            "recurrence": 1,
-            "relatedTasks": [],
-            "file": "entries/ERR-011__overengineered-scroll-recycling.md",
-            "firstSeen": "2026-04-09"
-        },
-        {
-            "id": "ERR-012",
-            "errorCode": "BHV-001",
-            "pattern": "被告知参考已有代码时不动脑子照搬，没有比较场景差异导致方案不适用",
-            "keywords": [
-                "参考",
-                "照搬",
-                "copy",
-                "homeView",
-                "差异分析",
-                "独立判断"
-            ],
-            "prevention": "参照已有代码时必须先比较场景差异，独立判断适用性，参考≠照搬",
-            "severity": "high",
-            "status": "resolved",
-            "recurrence": 1,
-            "relatedTasks": [],
-            "file": "entries/ERR-012__blindly-copy-without-analysis.md",
-            "firstSeen": "2026-04-09"
-        },
-        {
-            "id": "ERR-013",
-            "errorCode": "EVD-001",
-            "pattern": "写入错题本时未检查 entries/ 目录已有文件，导致 ID 重复冲突",
-            "keywords": [
-                "错题本",
-                "Error_Book",
-                "ID",
-                "重复",
-                "duplicate",
-                "entries"
-            ],
-            "prevention": "新建条目前必须 ls entries/ 确认最大 ID，新条目 = max+1",
-            "severity": "medium",
-            "status": "resolved",
-            "recurrence": 1,
-            "relatedTasks": [],
-            "file": "entries/ERR-013__error-book-duplicate-id.md",
-            "firstSeen": "2026-04-09"
-        },
-        {
-            "id": "ERR-014",
-            "errorCode": "BHV-001",
-            "pattern": "美工资源使用中文文件名直接导入项目，导致路径和兼容性问题",
-            "keywords": [
-                "资源",
-                "导入",
-                "中文",
-                "文件名",
-                "rename",
-                "png",
-                "美工",
-                "切图",
-                "asset"
-            ],
-            "prevention": "美工资源进入 assets/ 前必须重命名为英文 snake_case",
-            "severity": "high",
-            "status": "resolved",
-            "recurrence": 1,
-            "relatedTasks": [],
-            "file": "entries/ERR-014__chinese-filename-in-assets.md",
-            "firstSeen": "2026-04-10"
-        },
-        {
-            "id": "ERR-015",
-            "errorCode": "BHV-001",
-            "pattern": "png 资源没有 spriteFrame 编译产物就绑定到 Sprite，导致 missing asset",
-            "keywords": [
-                "spriteFrame",
-                "missing",
-                "asset",
-                "library",
-                "f9941",
-                "png",
-                "导入",
-                "Sprite",
-                "meta",
-                "编译"
-            ],
-            "prevention": "绑定 Sprite 前必须验证 library 中有 @f9941.json；不要手写 .meta 文件",
-            "severity": "critical",
-            "status": "resolved",
-            "recurrence": 1,
-            "relatedTasks": [],
-            "file": "entries/ERR-015__sprite-without-spriteframe.md",
-            "firstSeen": "2026-04-10"
-        },
-        {
-            "id": "ERR-016",
-            "errorCode": "BHV-001",
-            "pattern": "MCP prefab_update_prefab 把脚本组件压缩 class ID 替换为字符串类名，导致 MissingScript",
-            "keywords": [
-                "MCP",
-                "prefab_update",
-                "class ID",
-                "MissingScript",
-                "__type__",
-                "脚本",
-                "压缩ID"
-            ],
-            "prevention": "MCP prefab_update 后必须 grep 检查脚本 __type__，字符串出现则在编辑器修复",
-            "severity": "critical",
-            "status": "recurring",
-            "recurrence": 3,
-            "relatedTasks": [],
-            "file": "entries/ERR-016__mcp-prefab-update-corrupts-class-id.md",
-            "firstSeen": "2026-04-07"
-        },
-        {
-            "id": "ERR-017",
-            "errorCode": "BHV-001",
-            "pattern": "MCP prefab_update 后节点 layer 被重置为非 UI_2D，运行时不可见",
-            "keywords": [
-                "MCP",
-                "prefab_update",
-                "layer",
-                "UI_2D",
-                "33554432",
-                "不可见",
-                "重置"
-            ],
-            "prevention": "MCP prefab_update 后必须在编辑器中检查并修正所有节点 layer 为 UI_2D",
-            "severity": "critical",
-            "status": "recurring",
-            "recurrence": 3,
-            "relatedTasks": [],
-            "file": "entries/ERR-017__mcp-update-resets-node-layer.md",
-            "firstSeen": "2026-04-07"
-        },
-        {
-            "id": "ERR-018",
-            "errorCode": "BUILD-001",
-            "pattern": "Cocos 2.x→3.x 迁移 14 坑：tsc≠Babel≠运行期；导入器丢 Bundle/PMA/改坏代码；npm/Node内置不可用；shim 递归/被废弃适配器占位；loadRemote/isValid/getUILocation；fnt 绝对路径；浏览器 CORS 环境差异",
-            "keywords": [
-                "cocos",
-                "迁移",
-                "migration",
-                "升级",
-                "upgrade",
-                "2.x",
-                "2.4",
-                "3.8",
-                "3.8.6",
-                "babel",
-                "namespace",
-                "export let",
-                "tsc",
-                "prototype",
-                "shim",
-                "compat",
-                "recursion",
-                "递归",
-                "mag",
-                "length",
-                "moment",
-                "npm",
-                "node内置",
-                "node builtin",
-                "path",
-                "zlib",
-                "Buffer",
-                "pako",
-                "importer",
-                "导入器",
-                "Compat2x",
-                "isBundle",
-                "bundle",
-                "分包",
-                "loadBundle",
-                "404",
-                "资源加载失败",
-                "cc/env",
-                "CC_BUILD",
-                "CC_DEV",
-                "folder meta",
-                "userData",
-                "priority",
-                "spine",
-                "premultipliedAlpha",
-                "PMA",
-                "白块",
-                "白菱形",
-                "additive",
-                "sp.Skeleton",
-                "光效",
-                "loadRemote",
-                "loadAny",
-                "远程图片",
-                "头像",
-                "getUILocation",
-                "getLocation",
-                "isValid",
-                "_uiProps",
-                "销毁",
-                "触摸",
-                "fnt",
-                "BMFont",
-                "绝对路径",
-                "page file",
-                "美术字",
-                "CORS",
-                "ERR_FAILED",
-                "域名白名单",
-                "deprecated",
-                "defineProperty",
-                "废弃适配器",
-                "Preview",
-                "Cannot redefine property",
-                "non-configurable",
-                "getOwnPropertyDescriptor"
-            ],
-            "prevention": "用 Babel(非仅 tsc)当编译口径；shim 直算不转调引擎废弃别名；npm/Node 内置本地 vendor；官方导入器只搬资产、代码用 overlay",
-            "severity": "high",
-            "status": "recurring",
-            "recurrence": 2,
-            "relatedTasks": [
-                "REQ-20260608-044453"
-            ],
-            "file": "entries/ERR-018__cocos-2x-to-3x-migration-pitfalls.md",
-            "firstSeen": "2026-06-08"
-        },
-        {
-            "id": "ERR-019",
-            "errorCode": "BHV-001",
-            "pattern": "化妆性修改承重模块（入口兼容层/全局shim）且未运行期验证→延迟引爆全工程黑屏；defineProperty 强覆盖 non-configurable 引擎属性抛 TypeError 中断模块；错误方案还写入了错题本",
-            "keywords": [
-                "承重",
-                "load-bearing",
-                "兼容层",
-                "shim",
-                "Compat2x",
-                "defineProperty",
-                "Cannot redefine property",
-                "non-configurable",
-                "getOwnPropertyDescriptor",
-                "prototype",
-                "回归",
-                "regression",
-                "黑屏",
-                "化妆性",
-                "cosmetic",
-                "警告",
-                "deprecated",
-                "运行期验证",
-                "reload",
-                "Chesterton"
-            ],
-            "prevention": "承重文件任何改动=高风险变更，运行期验证通过才算完成（改完立即 reload 验证）；化妆性改动默认不碰承重文件；删防御代码前先考古；prototype 增补先查 descriptor + try/catch；未验证方案不得写入错题本",
-            "severity": "critical",
-            "status": "resolved",
-            "recurrence": 1,
-            "relatedTasks": [
-                "REQ-20260608-044453"
-            ],
-            "file": "entries/ERR-019__cosmetic-change-to-loadbearing-module-unverified.md",
-            "firstSeen": "2026-06-10"
-        }
-    ],
-    "entrySchema": {
-        "required": [
-            "id",
-            "errorCode",
-            "pattern",
-            "keywords",
-            "prevention",
-            "firstSeen",
-            "recurrence",
-            "status"
-        ],
-        "properties": {
-            "id": "ERR-{NNN} 格式唯一编号",
-            "errorCode": "BUILD-001 | REQ-001 | BHV-001 | ISO-001 | EVD-001 等",
-            "pattern": "错误模式描述",
-            "keywords": "触发召回的关键词数组",
-            "prevention": "预防措施",
-            "firstSeen": "YYYY-MM-DD 首次发现日期",
-            "recurrence": "复发次数（整数）",
-            "relatedTasks": "关联的任务编号数组",
-            "severity": "critical | high | medium | low",
-            "status": "open | resolved | recurring",
-            "file": "entries/ERR-{NNN}__{slug}.md 详细分析文件路径"
-        }
+    {
+      "id": "ERR-002",
+      "errorCode": "ISO-003",
+      "pattern": "用 Python/脚本直接修改 Cocos Creator .prefab/.scene 文件导致格式损坏和游戏崩溃",
+      "keywords": [
+        "prefab",
+        "json.dump",
+        "python",
+        "cocos",
+        ".prefab",
+        ".scene",
+        "序列化",
+        "格式",
+        "modify prefab",
+        "write prefab"
+      ],
+      "prevention": "绝对禁止用脚本写入 Cocos 资产文件（.prefab/.scene/.anim），只能通过编辑器操作",
+      "severity": "critical",
+      "status": "recurring",
+      "recurrence": 2,
+      "relatedTasks": [
+        "REQ-20260406-213536"
+      ],
+      "file": "entries/ERR-002__python-modify-cocos-prefab.md",
+      "firstSeen": "2026-04-06"
     },
-    "errorCodeReference": {
-        "BUILD-001": {
-            "label": "CompileFailure",
-            "route": "EXECUTION"
-        },
-        "BUILD-002": {
-            "label": "TestRegression",
-            "route": "EXECUTION"
-        },
-        "BUILD-003": {
-            "label": "TypeCheckFailure",
-            "route": "EXECUTION"
-        },
-        "BUILD-004": {
-            "label": "RuntimeException",
-            "route": "EXECUTION"
-        },
-        "REQ-001": {
-            "label": "ScopeCreep",
-            "route": "PM"
-        },
-        "REQ-002": {
-            "label": "ACNotMet",
-            "route": "PM|EXECUTION"
-        },
-        "REQ-003": {
-            "label": "ScopeMissing",
-            "route": "PM"
-        },
-        "REQ-004": {
-            "label": "ConstraintViolation",
-            "route": "CTO"
-        },
-        "BHV-001": {
-            "label": "FunctionalDefect",
-            "route": "CTO|EXECUTION"
-        },
-        "BHV-002": {
-            "label": "EdgeCaseFailure",
-            "route": "EXECUTION"
-        },
-        "BHV-003": {
-            "label": "IntegrationBreak",
-            "route": "CTO"
-        },
-        "BHV-004": {
-            "label": "PerformanceIssue",
-            "route": "CTO"
-        },
-        "ISO-001": {
-            "label": "UnauthorizedChange",
-            "route": "CTO"
-        },
-        "ISO-002": {
-            "label": "SourceFileViolation",
-            "route": "CTO"
-        },
-        "ISO-003": {
-            "label": "GlobalStateCorruption",
-            "route": "CTO"
-        },
-        "EVD-001": {
-            "label": "ManifestMissing",
-            "route": "EXECUTION"
-        },
-        "EVD-002": {
-            "label": "PlanMissing",
-            "route": "CTO"
-        },
-        "EVD-003": {
-            "label": "TestEvidenceMissing",
-            "route": "EXECUTION"
-        },
-        "EVD-004": {
-            "label": "MinimalChangeNotJustified",
-            "route": "CTO"
-        }
+    {
+      "id": "ERR-003",
+      "errorCode": "BHV-001",
+      "pattern": "Cocos UI 交互 bug 排查时没有先用排除法，直接深入引擎底层分析浪费大量时间",
+      "keywords": [
+        "mask",
+        "isMask",
+        "BlockInputEvents",
+        "弹窗",
+        "点击",
+        "无法交互",
+        "popup",
+        "遮罩"
+      ],
+      "prevention": "遇到 UI 交互 bug 先逐个关闭 BaseViewCmpt 布尔属性排除，不要猜测引擎行为",
+      "severity": "high",
+      "status": "resolved",
+      "recurrence": 0,
+      "relatedTasks": [
+        "REQ-20260406-221209"
+      ],
+      "file": "entries/ERR-003__buyview-mask-debug-failure.md",
+      "firstSeen": "2026-04-06"
+    },
+    {
+      "id": "ERR-004",
+      "errorCode": "BHV-001",
+      "pattern": "MCP 创建的 Cocos 节点 layer 不是 UI_2D（33554432），运行时不可见",
+      "keywords": [
+        "MCP",
+        "prefab",
+        "layer",
+        "UI_2D",
+        "不可见",
+        "invisible",
+        "node_create_node",
+        "33554432",
+        "camera"
+      ],
+      "prevention": "MCP 创建 UI 节点后必须设置 layer=33554432；排查 UI 不可见时第一时间检查 layer",
+      "severity": "critical",
+      "status": "recurring",
+      "recurrence": 2,
+      "relatedTasks": [],
+      "file": "entries/ERR-004__mcp-prefab-layer-ui2d.md",
+      "firstSeen": "2026-04-07"
+    },
+    {
+      "id": "ERR-005",
+      "errorCode": "BHV-001",
+      "pattern": "MCP 修改 prefab 后只调用 prefab_update_prefab 不调用 scene_save_scene，导致静默保存失败",
+      "keywords": [
+        "MCP",
+        "prefab",
+        "save",
+        "scene_save_scene",
+        "prefab_update_prefab",
+        "保存失败",
+        "写入磁盘"
+      ],
+      "prevention": "MCP 修改 prefab 必须先 scene_save_scene 再 prefab_update_prefab，保存后 grep 验证",
+      "severity": "high",
+      "status": "resolved",
+      "recurrence": 5,
+      "relatedTasks": [],
+      "file": "entries/ERR-005__mcp-prefab-save-two-steps.md",
+      "firstSeen": "2026-04-07"
+    },
+    {
+      "id": "ERR-006",
+      "errorCode": "ISO-003",
+      "pattern": "python json.dump 重写 prefab 文件插入新条目导致 __id__ 索引错位，所有节点引用断裂",
+      "keywords": [
+        "python",
+        "json.dump",
+        "prefab",
+        "__id__",
+        "错位",
+        "损坏",
+        "corrupt",
+        "json",
+        "insert"
+      ],
+      "prevention": "ERR-002 铁律：.prefab 结构性修改只能通过编辑器或 MCP，不能用脚本增删条目",
+      "severity": "critical",
+      "status": "resolved",
+      "recurrence": 1,
+      "relatedTasks": [],
+      "file": "entries/ERR-006__python-json-dump-prefab-id-shift.md",
+      "firstSeen": "2026-04-07"
+    },
+    {
+      "id": "ERR-007",
+      "errorCode": "ISO-003",
+      "pattern": "MCP prefab_instantiate_prefab 调试后未清理场景残留节点",
+      "keywords": [
+        "MCP",
+        "scene",
+        "cleanup",
+        "残留",
+        "instantiate",
+        "场景污染"
+      ],
+      "prevention": "每次 MCP prefab 操作后必须 node_delete_node + node_find_nodes 验证无残留",
+      "severity": "high",
+      "status": "resolved",
+      "recurrence": 1,
+      "relatedTasks": [],
+      "file": "entries/ERR-007__mcp-cleanup-scene-nodes.md",
+      "firstSeen": "2026-04-07"
+    },
+    {
+      "id": "ERR-008",
+      "errorCode": "BHV-001",
+      "pattern": "MCP 端口配置在 3000/3001 之间反复切换导致连接混乱",
+      "keywords": [
+        "MCP",
+        "port",
+        "端口",
+        "3000",
+        "3001",
+        "冲突",
+        "EADDRINUSE"
+      ],
+      "prevention": "端口固定分配后不再更改（MCP=3001, 游戏后端=3000）",
+      "severity": "medium",
+      "status": "resolved",
+      "recurrence": 3,
+      "relatedTasks": [],
+      "file": "entries/ERR-008__mcp-port-conflict-not-persisted.md",
+      "firstSeen": "2026-04-07"
+    },
+    {
+      "id": "ERR-011",
+      "errorCode": "BHV-004",
+      "pattern": "30个item用了回收复用ScrollViewCmpt，导致底部启动和滚动全部出错，应该用简单全量创建",
+      "keywords": [
+        "ScrollView",
+        "ScrollViewCmpt",
+        "回收",
+        "复用",
+        "scroll",
+        "列表",
+        "item",
+        "过度工程"
+      ],
+      "prevention": "数据量<100用简单方案（全量创建+Layout+scrollToBottom），不照搬回收组件",
+      "severity": "high",
+      "status": "resolved",
+      "recurrence": 1,
+      "relatedTasks": [],
+      "file": "entries/ERR-011__overengineered-scroll-recycling.md",
+      "firstSeen": "2026-04-09"
+    },
+    {
+      "id": "ERR-012",
+      "errorCode": "BHV-001",
+      "pattern": "被告知参考已有代码时不动脑子照搬，没有比较场景差异导致方案不适用",
+      "keywords": [
+        "参考",
+        "照搬",
+        "copy",
+        "homeView",
+        "差异分析",
+        "独立判断"
+      ],
+      "prevention": "参照已有代码时必须先比较场景差异，独立判断适用性，参考≠照搬",
+      "severity": "high",
+      "status": "resolved",
+      "recurrence": 1,
+      "relatedTasks": [],
+      "file": "entries/ERR-012__blindly-copy-without-analysis.md",
+      "firstSeen": "2026-04-09"
+    },
+    {
+      "id": "ERR-013",
+      "errorCode": "EVD-001",
+      "pattern": "写入错题本时未检查 entries/ 目录已有文件，导致 ID 重复冲突",
+      "keywords": [
+        "错题本",
+        "Error_Book",
+        "ID",
+        "重复",
+        "duplicate",
+        "entries"
+      ],
+      "prevention": "新建条目前必须 ls entries/ 确认最大 ID，新条目 = max+1",
+      "severity": "medium",
+      "status": "resolved",
+      "recurrence": 1,
+      "relatedTasks": [],
+      "file": "entries/ERR-013__error-book-duplicate-id.md",
+      "firstSeen": "2026-04-09"
+    },
+    {
+      "id": "ERR-014",
+      "errorCode": "BHV-001",
+      "pattern": "美工资源使用中文文件名直接导入项目，导致路径和兼容性问题",
+      "keywords": [
+        "资源",
+        "导入",
+        "中文",
+        "文件名",
+        "rename",
+        "png",
+        "美工",
+        "切图",
+        "asset"
+      ],
+      "prevention": "美工资源进入 assets/ 前必须重命名为英文 snake_case",
+      "severity": "high",
+      "status": "resolved",
+      "recurrence": 1,
+      "relatedTasks": [],
+      "file": "entries/ERR-014__chinese-filename-in-assets.md",
+      "firstSeen": "2026-04-10"
+    },
+    {
+      "id": "ERR-015",
+      "errorCode": "BHV-001",
+      "pattern": "png 资源没有 spriteFrame 编译产物就绑定到 Sprite，导致 missing asset",
+      "keywords": [
+        "spriteFrame",
+        "missing",
+        "asset",
+        "library",
+        "f9941",
+        "png",
+        "导入",
+        "Sprite",
+        "meta",
+        "编译"
+      ],
+      "prevention": "绑定 Sprite 前必须验证 library 中有 @f9941.json；不要手写 .meta 文件",
+      "severity": "critical",
+      "status": "resolved",
+      "recurrence": 1,
+      "relatedTasks": [],
+      "file": "entries/ERR-015__sprite-without-spriteframe.md",
+      "firstSeen": "2026-04-10"
+    },
+    {
+      "id": "ERR-016",
+      "errorCode": "BHV-001",
+      "pattern": "MCP prefab_update_prefab 把脚本组件压缩 class ID 替换为字符串类名，导致 MissingScript",
+      "keywords": [
+        "MCP",
+        "prefab_update",
+        "class ID",
+        "MissingScript",
+        "__type__",
+        "脚本",
+        "压缩ID"
+      ],
+      "prevention": "MCP prefab_update 后必须 grep 检查脚本 __type__，字符串出现则在编辑器修复",
+      "severity": "critical",
+      "status": "recurring",
+      "recurrence": 3,
+      "relatedTasks": [],
+      "file": "entries/ERR-016__mcp-prefab-update-corrupts-class-id.md",
+      "firstSeen": "2026-04-07"
+    },
+    {
+      "id": "ERR-017",
+      "errorCode": "BHV-001",
+      "pattern": "MCP prefab_update 后节点 layer 被重置为非 UI_2D，运行时不可见",
+      "keywords": [
+        "MCP",
+        "prefab_update",
+        "layer",
+        "UI_2D",
+        "33554432",
+        "不可见",
+        "重置"
+      ],
+      "prevention": "MCP prefab_update 后必须在编辑器中检查并修正所有节点 layer 为 UI_2D",
+      "severity": "critical",
+      "status": "recurring",
+      "recurrence": 3,
+      "relatedTasks": [],
+      "file": "entries/ERR-017__mcp-update-resets-node-layer.md",
+      "firstSeen": "2026-04-07"
+    },
+    {
+      "id": "ERR-018",
+      "errorCode": "BUILD-001",
+      "pattern": "Cocos 2.x→3.x 迁移 14 坑：tsc≠Babel≠运行期；导入器丢 Bundle/PMA/改坏代码；npm/Node内置不可用；shim 递归/被废弃适配器占位；loadRemote/isValid/getUILocation；fnt 绝对路径；浏览器 CORS 环境差异",
+      "keywords": [
+        "cocos",
+        "迁移",
+        "migration",
+        "升级",
+        "upgrade",
+        "2.x",
+        "2.4",
+        "3.8",
+        "3.8.6",
+        "babel",
+        "namespace",
+        "export let",
+        "tsc",
+        "prototype",
+        "shim",
+        "compat",
+        "recursion",
+        "递归",
+        "mag",
+        "length",
+        "moment",
+        "npm",
+        "node内置",
+        "node builtin",
+        "path",
+        "zlib",
+        "Buffer",
+        "pako",
+        "importer",
+        "导入器",
+        "Compat2x",
+        "isBundle",
+        "bundle",
+        "分包",
+        "loadBundle",
+        "404",
+        "资源加载失败",
+        "cc/env",
+        "CC_BUILD",
+        "CC_DEV",
+        "folder meta",
+        "userData",
+        "priority",
+        "spine",
+        "premultipliedAlpha",
+        "PMA",
+        "白块",
+        "白菱形",
+        "additive",
+        "sp.Skeleton",
+        "光效",
+        "loadRemote",
+        "loadAny",
+        "远程图片",
+        "头像",
+        "getUILocation",
+        "getLocation",
+        "isValid",
+        "_uiProps",
+        "销毁",
+        "触摸",
+        "fnt",
+        "BMFont",
+        "绝对路径",
+        "page file",
+        "美术字",
+        "CORS",
+        "ERR_FAILED",
+        "域名白名单",
+        "deprecated",
+        "defineProperty",
+        "废弃适配器",
+        "Preview",
+        "Cannot redefine property",
+        "non-configurable",
+        "getOwnPropertyDescriptor"
+      ],
+      "prevention": "用 Babel(非仅 tsc)当编译口径；shim 直算不转调引擎废弃别名；npm/Node 内置本地 vendor；官方导入器只搬资产、代码用 overlay",
+      "severity": "high",
+      "status": "recurring",
+      "recurrence": 2,
+      "relatedTasks": [
+        "REQ-20260608-044453"
+      ],
+      "file": "entries/ERR-018__cocos-2x-to-3x-migration-pitfalls.md",
+      "firstSeen": "2026-06-08"
+    },
+    {
+      "id": "ERR-019",
+      "errorCode": "BHV-001",
+      "pattern": "化妆性修改承重模块（入口兼容层/全局shim）且未运行期验证→延迟引爆全工程黑屏；defineProperty 强覆盖 non-configurable 引擎属性抛 TypeError 中断模块；错误方案还写入了错题本",
+      "keywords": [
+        "承重",
+        "load-bearing",
+        "兼容层",
+        "shim",
+        "Compat2x",
+        "defineProperty",
+        "Cannot redefine property",
+        "non-configurable",
+        "getOwnPropertyDescriptor",
+        "prototype",
+        "回归",
+        "regression",
+        "黑屏",
+        "化妆性",
+        "cosmetic",
+        "警告",
+        "deprecated",
+        "运行期验证",
+        "reload",
+        "Chesterton"
+      ],
+      "prevention": "承重文件任何改动=高风险变更，运行期验证通过才算完成（改完立即 reload 验证）；化妆性改动默认不碰承重文件；删防御代码前先考古；prototype 增补先查 descriptor + try/catch；未验证方案不得写入错题本",
+      "severity": "critical",
+      "status": "resolved",
+      "recurrence": 1,
+      "relatedTasks": [
+        "REQ-20260608-044453"
+      ],
+      "file": "entries/ERR-019__cosmetic-change-to-loadbearing-module-unverified.md",
+      "firstSeen": "2026-06-10"
+    },
+    {
+      "id": "ERR-116",
+      "errorCode": "ERR-116",
+      "pattern": "请求负载内嵌的凭证派生身份副本(信封 tctx 镜像 Bearer)与验签凭证跨续期脱节 → 服务端交叉核对 403 identity_mismatch;T7 空间维(双source)与本条时间维(同source跨时间重签)同根因两形态",
+      "keywords": [
+        "tct",
+        "token",
+        "续期",
+        "renewal",
+        "identity_mismatch",
+        "403",
+        "dpop",
+        "采集器",
+        "collector",
+        "task_context_id",
+        "凭证",
+        "credential",
+        "envelope",
+        "信封"
+      ],
+      "prevention": "负载内嵌身份必须与本次请求凭证同一次快照派生(pin-per-request);凭证会续期的客户端要问'TTL 内跑得完吗';回归用'每次取令牌都铸新身份'极限合成端一次覆盖空间/时间两维",
+      "severity": "high",
+      "status": "resolved",
+      "recurrence": 1,
+      "relatedTasks": [
+        "REQ-20260716-032433",
+        "REQ-20260710-032412/T7"
+      ],
+      "file": "entries/ERR-116__payload-embedded-identity-desyncs-from-credential.md",
+      "firstSeen": "2026-07-16"
+    },
+    {
+      "id": "ERR-117",
+      "errorCode": "ERR-117",
+      "pattern": "合成替身按'想象中的服务端语义'建模,漏掉真服务的校验分支(B2(b) session属主) → 替身全绿、真栈必炸;ERR-041 的语义版",
+      "keywords": [
+        "合成",
+        "stub",
+        "fake",
+        "替身",
+        "沙盒",
+        "sandbox",
+        "mock",
+        "ingestion",
+        "session",
+        "属主",
+        "owner",
+        "语义",
+        "真栈",
+        "e2e"
+      ],
+      "prevention": "替身先通读真服务全部校验分支并列差异清单;能进程内起真服务(buildServer/inject)就打真服务;'全绿'必须标注打的是替身还是真栈",
+      "severity": "high",
+      "status": "resolved",
+      "recurrence": 1,
+      "relatedTasks": [
+        "REQ-20260716-040939",
+        "REQ-20260716-032433/T5"
+      ],
+      "file": "entries/ERR-117__synthetic-double-models-imagined-not-actual-semantics.md",
+      "firstSeen": "2026-07-16"
+    },
+    {
+      "id": "ERR-118",
+      "errorCode": "ERR-118",
+      "pattern": "被 btree 索引的文本列(派生签名/键)生成端无字节界 → 真实长中文数据超 2704B 行上限落库炸",
+      "keywords": [
+        "btree",
+        "index",
+        "签名",
+        "signature",
+        "2704",
+        "字节",
+        "上界",
+        "派生",
+        "canonicalize",
+        "postgres"
+      ],
+      "prevention": "被索引文本列生成端必须字节界:截断+全文短哈希后缀;字段上界审计覆盖派生列;用真实体量数据测",
+      "severity": "medium",
+      "status": "resolved",
+      "recurrence": 1,
+      "relatedTasks": [
+        "REQ-20260716-174932"
+      ],
+      "file": "entries/ERR-118__indexed-text-column-needs-generation-side-byte-bound.md",
+      "firstSeen": "2026-07-17"
+    },
+    {
+      "id": "ERR-119",
+      "errorCode": "ERR-119",
+      "pattern": "DLP 高熵启发式(字母+数字即真直判)在结构化/代码 payload 上灾难性误报,把整条内容脱成占位符 → 知识产出被静默掐死;3811事件0干净",
+      "keywords": [
+        "dlp",
+        "脱敏",
+        "redact",
+        "高熵",
+        "entropy",
+        "过度",
+        "guards",
+        "looksLikeHighEntropyToken",
+        "ulid",
+        "json",
+        "知识产出",
+        "蒸馏"
+      ],
+      "prevention": "高熵兜底先豁免结构化ID/摘要/JSON片段;用实测校准判据替直判;上线前真实数据验过度脱敏率;红队双向门禁(真密钥全脱+代码全放行)",
+      "severity": "high",
+      "status": "resolved",
+      "recurrence": 1,
+      "relatedTasks": [
+        "REQ-20260717-181925"
+      ],
+      "file": "entries/ERR-119__dlp-entropy-heuristic-over-redacts-structured-payloads.md",
+      "firstSeen": "2026-07-17"
     }
+  ],
+  "entrySchema": {
+    "required": [
+      "id",
+      "errorCode",
+      "pattern",
+      "keywords",
+      "prevention",
+      "firstSeen",
+      "recurrence",
+      "status"
+    ],
+    "properties": {
+      "id": "ERR-{NNN} 格式唯一编号",
+      "errorCode": "BUILD-001 | REQ-001 | BHV-001 | ISO-001 | EVD-001 等",
+      "pattern": "错误模式描述",
+      "keywords": "触发召回的关键词数组",
+      "prevention": "预防措施",
+      "firstSeen": "YYYY-MM-DD 首次发现日期",
+      "recurrence": "复发次数（整数）",
+      "relatedTasks": "关联的任务编号数组",
+      "severity": "critical | high | medium | low",
+      "status": "open | resolved | recurring",
+      "file": "entries/ERR-{NNN}__{slug}.md 详细分析文件路径"
+    }
+  },
+  "errorCodeReference": {
+    "BUILD-001": {
+      "label": "CompileFailure",
+      "route": "EXECUTION"
+    },
+    "BUILD-002": {
+      "label": "TestRegression",
+      "route": "EXECUTION"
+    },
+    "BUILD-003": {
+      "label": "TypeCheckFailure",
+      "route": "EXECUTION"
+    },
+    "BUILD-004": {
+      "label": "RuntimeException",
+      "route": "EXECUTION"
+    },
+    "REQ-001": {
+      "label": "ScopeCreep",
+      "route": "PM"
+    },
+    "REQ-002": {
+      "label": "ACNotMet",
+      "route": "PM|EXECUTION"
+    },
+    "REQ-003": {
+      "label": "ScopeMissing",
+      "route": "PM"
+    },
+    "REQ-004": {
+      "label": "ConstraintViolation",
+      "route": "CTO"
+    },
+    "BHV-001": {
+      "label": "FunctionalDefect",
+      "route": "CTO|EXECUTION"
+    },
+    "BHV-002": {
+      "label": "EdgeCaseFailure",
+      "route": "EXECUTION"
+    },
+    "BHV-003": {
+      "label": "IntegrationBreak",
+      "route": "CTO"
+    },
+    "BHV-004": {
+      "label": "PerformanceIssue",
+      "route": "CTO"
+    },
+    "ISO-001": {
+      "label": "UnauthorizedChange",
+      "route": "CTO"
+    },
+    "ISO-002": {
+      "label": "SourceFileViolation",
+      "route": "CTO"
+    },
+    "ISO-003": {
+      "label": "GlobalStateCorruption",
+      "route": "CTO"
+    },
+    "EVD-001": {
+      "label": "ManifestMissing",
+      "route": "EXECUTION"
+    },
+    "EVD-002": {
+      "label": "PlanMissing",
+      "route": "CTO"
+    },
+    "EVD-003": {
+      "label": "TestEvidenceMissing",
+      "route": "EXECUTION"
+    },
+    "EVD-004": {
+      "label": "MinimalChangeNotJustified",
+      "route": "CTO"
+    }
+  }
 }

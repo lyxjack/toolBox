@@ -66,7 +66,7 @@ tags:
 
 ### F-3 [MED] 迁移测试跑在**部署真库**上会瞬时打断在线 worker(已在本机确认)
 
-session-ingestion 与 knowledge-compiler 两 worker 各有 ~103/102 条 `relation "outbox" does not exist`(42P01),**时间戳 08:57–09:00**(部署后约 70 分钟,非我的压测)。migrate 容器 07:47 exit 0、worker 07:47 之后才启——启动顺序正常。唯一能让 `outbox` 在运行 70 分钟后"暂时不存在"的是**有人对 live `keep` 库跑了 Alembic 迁移测试(downgrade/upgrade 循环短暂 DROP 表)**,正是 [[china-deployment]] 记录的已知风险("测试打部署真库…生产化后要挑时间窗或换独立 PG")。本次真机复现了该风险的实际后果:在线 worker 报错 3.4 分钟。**结论:迁移/降级测试必须换独立库,绝不打 live 部署库。** 我的压测未产生任何新错(近 5 分钟 0 条)。
+session-ingestion 与 knowledge-compiler 两 worker 各有 ~103/102 条 `relation "outbox" does not exist`(42P01),**时间戳 08:57–09:00**(部署后约 70 分钟,非我的压测)。migrate 容器 07:47 exit 0、worker 07:47 之后才启——启动顺序正常。唯一能让 `outbox` 在运行 70 分钟后"暂时不存在"的是**有人对 live `keep` 库跑了 Alembic 迁移测试(downgrade/upgrade 循环短暂 DROP 表)**,正是 `china-deployment`(KEEP 项目级文档,未入本 vault) 记录的已知风险("测试打部署真库…生产化后要挑时间窗或换独立 PG")。本次真机复现了该风险的实际后果:在线 worker 报错 3.4 分钟。**结论:迁移/降级测试必须换独立库,绝不打 live 部署库。** 我的压测未产生任何新错(近 5 分钟 0 条)。
 
 
 ### F-4 [HIGH · 最严重] 部署的 knowledge-compiler 未接 raw-archive store → 知识蒸馏静默全废
@@ -139,6 +139,23 @@ memory 记载曾有一轮审计把"session-ingestion 二道防线 DLP 死代码"
 
 ---
 
+
+---
+
+## 真实员工 session 端到端(第五轮:非合成,模拟真实编码场景)
+
+模拟员工 jackliu 造 3 段**真实**编码 session(后端支付幂等 / Cocos 预制体 uuid / 集成测试并发,报错→修复),POST 进部署真实管线走完全程。
+
+**全流程跑通**:采集(21 事件全 202,**session 自供给** = F-1 修复起效,未手工建 session)→ 编译/抽取(3 incident→3 knowledge)→ SEC-3 门 → vault 提交(3 changeset)→ 切片(18 chunk)→ 检索(3 自然语言查询 **3/3 命中**,capsule 带最小披露 + `<<<UNTRUSTED_RETRIEVED_CONTEXT>>>` 注入围栏)。**顺带端到端复验了本 session 所有修复**:F-1/F-4/F-5/F-6 + SEC-1 全程。
+
+**中途关键发现 —— SEC-3 evidence gating 正确工作**:第一次**不走 AI 网关**(只发 session 事件、无 `ai_request` 证据)→ 知识全卡在 `candidate` 不转 active。因为 SEC-3 要求"可信区证据"(gateway_log/ci_result,员工不可伪造),光凭员工自己 session 的 `test.completed` 不够。补上网关 `ai_request` 证据后立刻放行到 active。**这是安全模型(Evidence-over-Assertion)正确把关,非缺陷。**
+
+**知识蒸馏是"薄的" signature→fix 模型(产品定位刻画)**:vault canonical markdown 6 节里**只有 2 节是真内容**——`## Symptoms`=真实报错(canonicalizeSignature 后的签名)、`## Resolution`=真实修复方案;其余 4 节全模板(`## Root Cause`=占位符 "Derived deterministically…(no LLM inference)"、Trigger/Verification/Prevention 是套 subject/签名的模板)。这是 **DG-01"不抄原文"安全铁律 + 无 LLM 根因推断**的必然结果。**结论:KEEP 本质是"报错签名 → 修复方案"的精准召回系统(agent 再撞同错即得当初修法),不是富文档知识库;不会复现 Obsidian 那种根因分析/表格/推理深度。安全+确定性 换 丰富度。**
+
+**纠正前一轮 Obsidian 切片实验的取巧**:那个实验**绕过了编译器**、直接把原文写进 vault 再切片,测的是"切片器是不是通用文档索引器"(不是),但那**不是真实入口路径**。真实路径下内容先经编译器规范化成 canonical 6 节,切片/检索都正常(本轮 3/3 已证)。KEEP 没有"文档摄入"入口,只有"事件蒸馏"——想纳入手写 KI 需另建一条文档规范化摄入路径。
+
+**测后**:DB 已清零(0 event),sim 客户端已删。
+
 ## 运维遏制:SEC-0 出口 + Kill Switch 实拉演练(真机)
 
 **Kill-Switch 演练(5 个有强制点的 scope 全过):**
@@ -158,7 +175,7 @@ memory 记载曾有一轮审计把"session-ingestion 二道防线 DLP 死代码"
 - **knowledge-net 后端开放出网**:ingestion-mcp 直达 npmmirror **REACHABLE**、baidu REACHABLE、DNS 正常。因 knowledge-net 是普通 bridge(非 internal)。
 - **SEC-0 出口 allowlist 层未部署**:egress-proxy(squid)/litellm/employee-sim **均未运行**(profile 门控);nftables VM 级规则是 Linux-VM 专属,**未在 Mac Mini(Docker Desktop)施加**。
 
-后果:knowledge-net 上的后端服务(ingestion/retrieval/task-context/gateway/pg/otel)**可直连任意外网**——正常运行不出网,但一旦某后端被供应链/依赖攻陷即可无约束外泄。**符合 [[keep-project]] 既定"SE守护/nftables 推到正式 Linux 服务器、试点软件降级"的取舍**,本次真机坐实。缓解不属简单代码修复:①试点若要收紧→激活 egress-proxy profile + 宿主/VM 防火墙约束 knowledge-net(注意别掐断 Mini 自身构建用的 npmmirror 出网);②正式 Linux 机必须启 nftables+egress-proxy(SEC-0 原设计);③或**显式接受并文档化**试点降级出口姿态(内网隔离仍护住 worker/员工侧)。
+后果:knowledge-net 上的后端服务(ingestion/retrieval/task-context/gateway/pg/otel)**可直连任意外网**——正常运行不出网,但一旦某后端被供应链/依赖攻陷即可无约束外泄。**符合 `keep-project`(KEEP 项目级文档,未入本 vault) 既定"SE守护/nftables 推到正式 Linux 服务器、试点软件降级"的取舍**,本次真机坐实。缓解不属简单代码修复:①试点若要收紧→激活 egress-proxy profile + 宿主/VM 防火墙约束 knowledge-net(注意别掐断 Mini 自身构建用的 npmmirror 出网);②正式 Linux 机必须启 nftables+egress-proxy(SEC-0 原设计);③或**显式接受并文档化**试点降级出口姿态(内网隔离仍护住 worker/员工侧)。
 
 ## 韧性 / 混沌测试(真机部署,SIGKILL 级故障注入)—— 全过,零发现
 

@@ -687,14 +687,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 #### Production Settings
 
-```python
-# production.py
-DEBUG = False
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 31536000
-```
+Django 生产 settings 完整清单唯一权威见 `security.md` Part 3 (Django Security → Production Settings)。
 
 ### 6.2 Spring Boot
 

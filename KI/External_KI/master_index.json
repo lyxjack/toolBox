@@ -2,10 +2,10 @@
     "_meta": {
         "version": "2.0.2",
         "generated": "2026-03-21",
-        "lastUpdated": "2026-06-24",
+        "lastUpdated": "2026-07-29",
         "architecture": "anchor-based",
-        "totalSkills": 13,
-        "totalCategories": 13,
+        "totalSkills": 14,
+        "totalCategories": 14,
         "description": "Each category has exactly ONE anchor md file. Anchors are immutable — only incremental additions allowed.",
         "loadStrategy": "Load master_index.json first (~1500 tokens), then load specific anchor on demand",
         "maxSingleLoadTokens": 7500
@@ -19,7 +19,7 @@
             "anchor": "frontend",
             "anchorFile": "KI/External_KI/skills/frontend/frontend.md",
             "anchorBase": "ui-ux-pro-max",
-            "confidence": 0.70,
+            "confidence": 0.7,
             "mergedCount": 7
         },
         {
@@ -97,7 +97,7 @@
             "anchor": "language-specific",
             "anchorFile": "KI/External_KI/skills/language-specific/language-specific.md",
             "anchorBase": "golang-patterns",
-            "confidence": 0.70,
+            "confidence": 0.7,
             "mergedCount": 5
         },
         {
@@ -154,6 +154,17 @@
             "anchorBase": "theone-cocos-standards",
             "confidence": 0.72,
             "mergedCount": 2
+        },
+        {
+            "id": "cad_hardware",
+            "label": "CAD / 硬件设计 / CAD & Hardware",
+            "description": "STEP-first parametric CAD, robot description files (URDF/SRDF/SDF), 2D DXF cut layouts, FDM slicing and G-code, off-the-shelf STEP part sourcing, fabrication preflight (SendCutSend), Bambu Lab LAN printing, local 3D review, implicit GLSL/SDF modeling",
+            "indexFile": "KI/External_KI/categories/cad_hardware.json",
+            "anchor": "cad-hardware",
+            "anchorFile": "KI/External_KI/skills/cad-hardware/cad-hardware.md",
+            "anchorBase": "bambu-labs",
+            "confidence": 0.65,
+            "mergedCount": 11
         }
     ],
     "quickLookup": {
@@ -169,7 +180,8 @@
         "workflow": "workflow",
         "meta-tooling": "meta_tooling",
         "business": "business",
-        "game-development": "game_development"
+        "game-development": "game_development",
+        "cad-hardware": "cad_hardware"
     },
     "externalPlugins": [
         {
@@ -189,7 +201,10 @@
             "role": "代码结构记忆层（第三类记忆；claude-mem=会话记忆，Obsidian KI=知识记忆）。源码结构知识图谱(tree-sitter+SQLite+Cypher)，分析/重构/陌生项目 onboarding 用结构化查询替代逐文件 grep。",
             "registryRef": "Agent/index/skill_registry.json#externalPlugins",
             "trigger": "Agent/workflow/cto_planning.md Step 2.5（A 级项目画像 P1-P3 决定是否索引）",
-            "governanceRefs": ["KI/Internal_KI/decisions/DEC-006__codebase-memory-conditional-code-structure-memory.md", "Agent/mcp/deploy_guide.md#codebase-memory"],
+            "governanceRefs": [
+                "KI/Internal_KI/decisions/DEC-006__codebase-memory-conditional-code-structure-memory.md",
+                "Agent/mcp/deploy_guide.md#codebase-memory"
+            ],
             "registeredAt": "2026-06-24"
         }
     ]

@@ -2,7 +2,7 @@
 id: DEC-002
 type: decision
 title: "Confidence Scoring Method"
-status: active
+status: superseded
 created: 2026-03-07
 tags:
   - ki/decision
@@ -26,3 +26,4 @@ Initial intuition-based scoring was systematically biased +0.28 avg. Automated a
 
 ## Outcome
 All 92 scores corrected downward. 0 Excellent, 10 Good, 39 Fair.
+实况（2026-08-03）：PowerShell 审计脚本已不存在，审计执行体已迁移到 node 测试链（`Agent/tests/*.mjs`）与 `KI/External_KI/quality_audit.json`。

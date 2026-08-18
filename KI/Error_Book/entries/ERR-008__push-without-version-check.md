@@ -48,4 +48,4 @@ Agent 将 "commit and push" 理解为单纯的 git 操作，忽略了 toolBox �
 
 ## 关联
 - 版本管理规范：`Agent/migrations/README.md`
-- [[ERR-009__obsidian-mcp-wrong-config-path|ERR-009]] — 同属 Agent 行为类错误（BHV-001）
+- [[ERR-007__obsidian-mcp-wrong-config-path|ERR-007]] — 同属 Agent 行为类错误（BHV-001）

@@ -11,8 +11,6 @@ tags:
   - ki/pattern
 complements:
   - "[[ERR-004__mcp-prefab-layer-ui2d|ERR-004]]"
-  - "[[ERR-005__mcp-prefab-save-two-steps|ERR-005]]"
-  - "[[ERR-007__mcp-cleanup-scene-nodes|ERR-007]]"
 aliases:
   - PAT-001
 ---
@@ -105,11 +103,11 @@ grep 目标属性 xxx.prefab
 | 错误做法 | 后果 | 对应错误 |
 |----------|------|---------|
 | 跳过 layer 设置 | 节点不可见，误以为操作失败 | ERR-004 |
-| 只调用一次 save | 修改未写入 prefab 文件 | ERR-005 |
-| 不删除临时节点 | 场景污染，节点累积 | ERR-007 |
+| 只调用一次 save | 修改未写入 prefab 文件 | 本模式步骤（两步保存） |
+| 不删除临时节点 | 场景污染，节点累积 | 本模式步骤（清理临时节点） |
 
 ## 关联错误
 
 - [[ERR-004__mcp-prefab-layer-ui2d|ERR-004]] — MCP 实例化节点 layer 默认为 0，必须手动设为 UI_2D
-- [[ERR-005__mcp-prefab-save-two-steps|ERR-005]] — Prefab 修改需要 scene_save + prefab_update 两步保存
-- [[ERR-007__mcp-cleanup-scene-nodes|ERR-007]] — 操作完成后必须清理场景中的临时节点
+- Prefab 修改需要 scene_save + prefab_update 两步保存（规则已内化于本模式步骤，独立错题条目已随 Error_Book 重编号移除）
+- 操作完成后必须清理场景中的临时节点（规则已内化于本模式步骤，独立错题条目已随 Error_Book 重编号移除）

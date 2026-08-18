@@ -22,6 +22,8 @@ mem_status: "linked"
 
 # cocos-mcp-server 1.6.1 实测:component 属性白名单拒设 + 多个工具失效
 
+> **版本封存(2026-08-03)**: 本条全部工具名属 cocos-mcp-server **1.6.1** 命名空间(`component_set_component_property` / `node_create_node` 等),现行工具面已整套改名(`cocos_component` / `cocos_node` / `cocos_asset`),旧名在库内已无对应物。现行怪癖活台账见 [[ERR-069__cocos-mcp-tool-quirks-collection|ERR-069]]。
+
 ## 错误现象
 
 `cocos-mcp-server` v1.6.1(编辑器内进程,HTTP `127.0.0.1:3000/mcp`,端口配于 `settings/mcp-server.json`)实测出一批"调用 success 但拿不到/设不上"的坑:
@@ -30,7 +32,7 @@ mem_status: "linked"
 2. **siblingIndex 静默不生效** — `node_create_node` 的 `siblingIndex` 与 `node_lifecycle(move)` 的 `siblingIndex` 设了无效果。
 3. **prefab_validate_prefab 自身坏** — 调用即报 `读取预制体文件失败: Message does not exist: asset-db - read-asset`(IO_ERROR),且错误提示反诬"文件被外部脚本污染(ERR-002/005)"(误导)。
 4. **debug_execute_script 失效** — 报 `Scenario scripts do not exist: console`,无法注入场景脚本。
-5. **project_import_asset 导入 png 默认 `texture` 类型** — userData.type=texture,不能直接当 UI Sprite 用(需改 sprite-frame)。
+5. **project_import_asset 导入 png 默认 `texture` 类型** — userData.type=texture,不能直接当 UI Sprite 用。(此坑后续复犯并推翻本条旧解法,现行结论见 [[ERR-079__png-import-texture-type-spriteframe-missing|ERR-079]]。)
 
 ## 根因分析
 
@@ -44,7 +46,7 @@ MCP wrapper 只暴露序列化属性的**子集**(多为运行期可写/事件�
 | siblingIndex 失效 | 用 `sceneAdvanced_move_array_element(path="children", target, offset)` 重排 |
 | prefab_validate 坏 | 用磁盘 JSON **只读审计**(python 解析 `__id__` 自洽 + spriteFrame uuid 比对)+ `prefab_open_edit_mode`/`save_edit` 往返代替校验 |
 | debug_execute_script 坏 | 放弃场景脚本注入路径,改 MCP 原子工具组合 |
-| png 默认 texture | 导入后 `assetAdvanced_save_asset_meta` 把 `userData.type` 改 `sprite-frame`(编辑器 API,安全);spriteFrame 子资产 uuid 形如 `<uuid>@f9941` |
+| png 默认 texture | ~~导入后 `assetAdvanced_save_asset_meta` 改 `userData.type`~~ **此解法已被 [[ERR-079__png-import-texture-type-spriteframe-missing\|ERR-079]] 推翻**:现行工具面无改导入类型能力,必须编辑器手工步(铁律禁手写 .meta),详见彼条 |
 
 > 另注:本工程(2.x 迁移)所有 lobby UI 节点 `layer=1`(非 3.x 原生 UI_2D=33554432),MCP 新建节点跟随同级即可——与 [[ERR-004__mcp-prefab-layer-ui2d\|ERR-004]] 的"默认 layer=0 不可见"在本工程不冲突(工程惯例覆盖)。
 

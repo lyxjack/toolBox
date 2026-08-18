@@ -373,6 +373,18 @@ npx ecc-agentshield init
 - Missing deny lists in permissions
 - Agents with unnecessary Bash access
 
+### Python / Django Project Scanners
+
+> 由 devops.md Django Verification Loop Phase 5 并入（扫描工具清单 canonical 归此处）。
+
+```bash
+pip-audit                                    # 依赖 CVE 审计
+safety check --full-report                   # 依赖漏洞库比对
+python manage.py check --deploy              # Django 部署安全检查
+bandit -r . -f json -o bandit-report.json    # Python 代码静态安全扫描
+gitleaks detect --source . --verbose         # 泄漏 secrets 扫描
+```
+
 ---
 
 ## Part 3: Django Security
@@ -413,6 +425,18 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
+```
+
+**运行期校验**（由 devops.md Django Verification Loop Phase 8 并入）— 在 Django shell 断言生产配置生效:
+
+```python
+checks = {
+    'DEBUG is False': not settings.DEBUG,
+    'SECRET_KEY set': bool(settings.SECRET_KEY and len(settings.SECRET_KEY) > 30),
+    'ALLOWED_HOSTS set': len(settings.ALLOWED_HOSTS) > 0,
+    'HTTPS enabled': getattr(settings, 'SECURE_SSL_REDIRECT', False),
+    'HSTS enabled': getattr(settings, 'SECURE_HSTS_SECONDS', 0) > 0,
+}
 ```
 
 ### Django ORM SQL Injection Prevention

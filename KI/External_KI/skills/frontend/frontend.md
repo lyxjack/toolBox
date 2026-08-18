@@ -582,18 +582,9 @@ function isValidEmail(email: string): boolean { }
 
 ### Error Handling
 
-```typescript
-async function fetchData(url: string) {
-  try {
-    const response = await fetch(url)
-    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-    return await response.json()
-  } catch (error) {
-    console.error('Fetch failed:', error)
-    throw new Error('Failed to fetch data')
-  }
-}
-```
+- async fetch 必须 try/catch 包裹，检查 `response.ok`，非 2xx 抛 `HTTP ${status}` 错误
+- catch 中先 `console.error` 保留原始上下文，再抛规整化业务错误（不吞错、不裸透传）
+- 完整异步错误处理范式与范例代码见 [[PAT-005__async-error-handling|PAT-005]]
 
 ### Async Best Practices
 
@@ -655,77 +646,7 @@ test('returns empty array when no markets match query', () => {
 
 ## 10. Apple Liquid Glass (iOS 26+)
 
-### SwiftUI — Basic Glass
-
-```swift
-Text("Hello, World!")
-    .font(.title)
-    .padding()
-    .glassEffect()  // Default: regular variant, capsule shape
-
-// Customized
-Text("Hello")
-    .padding()
-    .glassEffect(.regular.tint(.orange).interactive(), in: .rect(cornerRadius: 16.0))
-```
-
-### GlassEffectContainer for Multiple Elements
-
-```swift
-GlassEffectContainer(spacing: 40.0) {
-    HStack(spacing: 40.0) {
-        Image(systemName: "scribble.variable")
-            .frame(width: 80, height: 80)
-            .glassEffect()
-        Image(systemName: "eraser.fill")
-            .frame(width: 80, height: 80)
-            .glassEffect()
-    }
-}
-```
-
-### Morphing Transitions
-
-```swift
-@State private var isExpanded = false
-@Namespace private var namespace
-
-GlassEffectContainer(spacing: 40.0) {
-    HStack(spacing: 40.0) {
-        Image(systemName: "scribble.variable")
-            .frame(width: 80, height: 80)
-            .glassEffect()
-            .glassEffectID("pencil", in: namespace)
-        if isExpanded {
-            Image(systemName: "eraser.fill")
-                .frame(width: 80, height: 80)
-                .glassEffect()
-                .glassEffectID("eraser", in: namespace)
-        }
-    }
-}
-```
-
-### UIKit Glass
-
-```swift
-let glassEffect = UIGlassEffect()
-glassEffect.tintColor = UIColor.systemBlue.withAlphaComponent(0.3)
-glassEffect.isInteractive = true
-
-let visualEffectView = UIVisualEffectView(effect: glassEffect)
-visualEffectView.layer.cornerRadius = 20
-visualEffectView.clipsToBounds = true
-```
-
-### Liquid Glass Best Practices
-
-- Always use `GlassEffectContainer` when applying glass to multiple sibling views.
-- Apply `.glassEffect()` after other appearance modifiers (frame, font, padding).
-- Use `.interactive()` only on elements that respond to user interaction.
-- Test across light mode, dark mode, and accented/tinted modes.
-- Never use opaque backgrounds behind glass — defeats translucency.
-- Never nest too many glass effects — degrades performance and clarity.
+本节（Swift/UIKit 内容）已整体移至 `mobile-native.md` Part 6 (Apple Liquid Glass, iOS 26+)，见彼处。
 
 ---
 
@@ -801,28 +722,7 @@ export function CreateForm() {
 
 ## 13. API Design Standards
 
-### REST Conventions
-
-```
-GET    /api/items              # List
-GET    /api/items/:id          # Get one
-POST   /api/items              # Create
-PUT    /api/items/:id          # Full update
-PATCH  /api/items/:id          # Partial update
-DELETE /api/items/:id          # Delete
-GET    /api/items?status=active&limit=10&offset=0  # Filtered
-```
-
-### Consistent Response Structure
-
-```typescript
-interface ApiResponse<T> {
-  success: boolean
-  data?: T
-  error?: string
-  meta?: { total: number; page: number; limit: number }
-}
-```
+API 响应信封唯一权威见 `backend.md` §1 (API Design)；前端按该契约消费（`data`/`meta`/`links`/`error` 结构，REST 路由、状态码、分页、过滤规范同见彼处）。
 
 ---
 

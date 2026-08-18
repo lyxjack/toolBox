@@ -25,3 +25,4 @@ v1 serial-only was a known limitation.
 
 ## Outcome
 execution.md and strategy.md updated.
+v2 三模式已扩展：hybrid 混合模式（见 execution logs 实践）与 dynamic workflow（见 [[DEC-007__pm-dynamic-workflow-ultracode-gate|DEC-007]] / `PM/pm_workflow.md` Step 4.6）。

@@ -500,8 +500,4 @@ Default structure:
 
 ## Related Skills
 
-- **frontend-slides**: For web-native pitch decks and presentations
-- **content-strategy**: For content planning that supports business goals
-- **copywriting**: For writing marketing and sales copy
-- **email-sequence**: For nurturing investor and customer relationships
-- **seo-audit**: For technical SEO on business content
+相关知识按 anchor 名检索 `KI/External_KI/master_index.json`。

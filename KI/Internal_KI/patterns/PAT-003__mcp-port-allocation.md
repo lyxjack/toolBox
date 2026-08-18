@@ -10,7 +10,7 @@ tags:
   - pattern/port
   - ki/pattern
 complements:
-  - "[[ERR-008__mcp-port-conflict-not-persisted|ERR-008]]"
+  - "[[ERR-006__mcp-port-conflict-not-persisted|ERR-006]]"
 aliases:
   - PAT-003
 ---
@@ -76,4 +76,4 @@ lsof -i :端口号
 
 ## 关联错误
 
-- [[ERR-008__mcp-port-conflict-not-persisted|ERR-008]] — 端口冲突修复未持久化到配置文件，重启后复发
+- [[ERR-006__mcp-port-conflict-not-persisted|ERR-006]] — 端口冲突修复未持久化到配置文件，重启后复发

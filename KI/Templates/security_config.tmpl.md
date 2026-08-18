@@ -15,8 +15,8 @@ tags:
 related: []  # wiki link 数组，可空；冷启动时允许 0 引用（加 bootstrap: true）
 aliases:
   - "SEC-{NNN}"
-mem_ref: "{content_session_id | null}"  # claude-mem 双向关联：产出本条的 session（sdk_sessions.content_session_id）；降级时 null
-mem_status: "{linked | unavailable}"    # linked=写入时已验证存在；unavailable=claude-mem 不可用（降级，不阻塞）
+mem_ref: "{content_session_id | null}"  # claude-mem 双向关联,规则见 Internal_KI contract §3.8
+mem_status: "{linked | unavailable}"    # 同上 §3.8(不可用→降级,不阻塞)
 ---
 
 # {安全配置标题：覆盖哪类敏感配置}

@@ -124,7 +124,7 @@ for o in d:
 
 ## 关联
 
-- ERR-019: MCP prefab_open_edit_mode rootNodeUuid 不可信（重 open 补属性时要走 node_find_node_by_name）
+- [[ERR-043__mcp-prefab-edit-root-uuid-mismatch|ERR-043]]: MCP prefab_open_edit_mode rootNodeUuid 不可信（重 open 补属性时要走 node_find_node_by_name）
 - ERR-005: Python json.dump prefab id 错位（不同坑，但同属 "prefab 序列化失真" 家族）
 - ERR-013: partial-prefab-copy 断 layout（同属 prefab 改造的踩坑序列）
 - 实例 session: `.in-process/active/20260514-123313_tutorial/` 创建 tutorialView.prefab 期间踩到

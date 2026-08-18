@@ -4,7 +4,7 @@ type: error
 errorCode: ERR-066
 severity: high
 status: resolved
-recurrence: 0
+recurrence: 3
 firstSeen: 2026-07-25
 tags:
   - ki/error-book
@@ -114,7 +114,87 @@ Chrome 对长期隐藏的标签施加 intensive timer throttling(定时器降到
 
 以上全部是**浏览器运行期注入**, 不落盘、刷新即失效, 不改动被测产物。它是**观测手段**, 不是修复 —— 真正的解仍是**让窗口可见**。图片解码与纹理上传在真隐藏态下无法用 JS 绕开, 所以视觉类验收(布局/位置/配色亲验)必须窗口置前后重跑, 不能拿泵出来的帧当证据。
 
+### ⑤ 补遗二(2026-07-28, REQ-20260727-234602 实测)：泵的驱动源改用 **Web Worker 定时器**，别用 MessageChannel 忙轮询
+
+④ 给的解法是 `MessageChannel` 自投递驱动 `_pacer._onTick()`。本轮再用时发现它有**反效果**：
+
+```
+ticks = 4029630 / 10s ≈ 400k tick/s   →   _inited 仍为 false, boot 反而跑不完
+```
+
+`port2.postMessage(0)` 在 `onmessage` 末尾自投递 = **无节流紧循环**，把主线程吃满，
+boot 链上真正要干活的任务抢不到时间片 —— **泵活着，引擎饵死**。
+
+**换成 Web Worker 里的 `setInterval`**：Worker 不受隐藏页节流，60Hz 稳定投递且不占主线程。
+
+```js
+const w = new Worker(URL.createObjectURL(new Blob(
+  ['setInterval(function(){ postMessage(0); }, 16);'], {type:'text/javascript'})));
+w.onmessage = function(){ /* 到期定时器队列 → rAF 队列 → g._pacer._onTick() */ };
+try { g.resume(); } catch(e) {}
+```
+
+实测 `ticks=625/10s`(≈62Hz)、`inited:true`、`paused:false`、帧数正常增长，
+登录→大厅→场次→整局全链走通，FPS 60~83。
+
+另一处易漏：**`g.pause = function(){}` 只挡住后续暂停**；装泵前若已被 visibilitychange
+置为 `_paused = true`，必须**显式调一次 `g.resume()`** 才活过来 —— ④ 的清单只写了
+「resume 不可置空」，没写「要主动调」，本轮第一次装泵就卡在 `paused:true` 上。
+
+navigate 与装泵仍必须同一个 `browser_batch`(④ 已述，复验仍成立)。
+
 ### 补遗关联
+### ⑥ 补遗三(2026-07-28, 美工切图接线实测)：**暂停积压型**指纹 + tab 级激活
+
+本轮第三次撞上本条。现象与前两版**指纹不同**, 补记以便日后识别:
+
+| 项 | 前两版 | 本轮 |
+|---|---|---|
+| `cc.game.isPaused()` | 未记录 | **`true`** —— 引擎已被 visibilitychange 主动暂停 |
+| 下载队列 | **恒空**(请求从未入队) | **恒 17**(请求已入队, 但不推进) |
+| 网络请求 | 零 | 已有 200(png/json 都下来了), 只是回调不触发 |
+
+即本轮是"**队列积压型**"而非"饿死型": 任务已排进 `downloader._queue`, 但驱动它推进的帧/定时器被节流, 于是**队列长度恒定不减**。见到 `isPaused()===true` + 队列非空不减, 直接判本条, 不必再逐层探针。
+
+**两个新教训**:
+
+1. **`cc.game.resume()` 救不回积压队列**。实测 resume 后 `paused:false` 但 `queue` 仍恒 17、`loadScene` 回调仍不触发 —— 暂停期间形成的死锁不随 resume 解开, **必须重新加载页面**(且加载全程 tab 可见)。
+2. **抬窗要抬到 tab 级, 不是应用级**。`osascript -e 'tell application "Google Chrome" to activate'` 只把应用置前; 若目标页不是当前窗口的**活动标签**, `document.visibilityState` 依旧 `hidden`。正确姿势(本案实测生效):
+
+```applescript
+tell application "Google Chrome"
+  activate
+  repeat with w in windows
+    set n to count of tabs of w
+    repeat with i from 1 to n
+      try
+        if URL of tab i of w contains "7456" then
+          set active tab index of w to i
+          set index of w to 1
+          return "activated"
+        end if
+      end try
+    end repeat
+  end repeat
+end tell
+```
+
+> 用 `repeat with i from 1 to n` 索引遍历 + `try` 包裹; 直接 `repeat with t in tabs of w` 在标签数变动时会报 `Invalid index (-1719)`。
+
+抬完必须复验 `document.visibilityState === 'visible' && document.hasFocus()`, 再**重新加载**页面, 才有资格开始运行期取证。
+
+**误判代价**: 本轮黑屏排查逾半小时, 期间误试重开场景、重导入资源、换 URL 参数、清缓存、换 origin(localhost→127.0.0.1) —— 全部无效, 唯一变量是 tab 不可见。与首版"误重启编辑器"是同一种误诊, 说明**本条的召回时机没建立**(见 [[ERR-080__error-book-recall-keyword-mismatch|ERR-080]]: 排查阶段必须召回, 不只动手前)。
+
 
 - [[ERR-065__external-file-edit-no-recompile-stale-preview-chunk|ERR-065]] — 同为 preview 验收的前置门禁: 一个管「跑的是不是新码」, 一个管「页面是不是真的在跑」。两道门都过了, 运行期结论才算数
 - [[ERR-069__cocos-mcp-tool-quirks-collection|ERR-069]] — 同 REQ 蒸馏; 同属「表面指标正常(success / FPS 正常)掩盖真实状态」家族
+
+## 复犯记录 #3（2026-08-02，REQ-20260801-205151 回放全链验证夜）
+
+同一 rAF 冻结母题在一夜里以**三副面孔**连环出场，合计烧掉约一小时排查：
+
+1. **boot 假死链**：preview 黑屏 → 依次排除三层才见底——①编辑器打包 worker 楔死（`waiting the ready of builder worker` 33 分钟，重启编辑器解）；②编辑器没开任何场景时 `/scene/current_scene.json` 永挂 pending，且 preview 引导脚本的 XHR helper **只在 200 时 resolve、无 error/timeout 分支**——boot 静默卡死零报错（`cc.game` 存在但 `inited=false`、`totalFrames=0`、console 空）；③窗口被全屏 Space 遮挡 → rAF 不跳 → `game.init` 都走不完。
+2. **播放键"坏了"假象**：回放查看器点播放不走、点关闭没反应——`playing_=true` 而 tick 不走、label 不刷。真相=`cc.game.isPaused()` / 主循环因 tab 后台冻结；前台化后位置立即 103→137 推进。**组件级排查（scheduler/enabled/组件实例）全是弯路，第一探针应是 `document.visibilityState` + frameDelta**。
+3. **AppleScript 前台化的极限**：`activate + set index of w to 1` 在用户开着全屏视频（独立 Space）时**不生效**，`visibilityState` 仍 hidden——window z 序 ≠ Space 可见性。用户在用机时不要连环抢屏；改请用户亲手把标签页带到前台（本案哨兵盯壳日志的登录流量作为"屏亮了"的信号，用户切过来即自动接续）。
+
+新增预防细则：**判断"引擎类页面活着没有"的标准探针 = `document.visibilityState` + `director.getTotalFrames()` 两次采样差**；frameDelta=0 时一切"组件不响应"的排查都缓行。CDP 截图/点击不依赖可见性，会制造"看得见画面所以页面活着"的错觉。

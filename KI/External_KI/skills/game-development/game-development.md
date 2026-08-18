@@ -195,6 +195,7 @@ function isPlayer(node: Node): node is PlayerNode {
 - Initialize in `onLoad()`, reference other components in `start()`
 - Register events in `onEnable()`, unregister in `onDisable()`
 - Always cleanup listeners in `onDestroy()`
+- 事件解绑遗漏的真实事故与预防规则见 [[ERR-033__destroyob-oncompdestroy-dead-hook-listener-leak|ERR-033]]
 - Avoid heavy logic in `update()` (performance critical)
 - Use `readonly` for `@property` fields that shouldn't be reassigned
 - Throw exceptions for missing required references
@@ -384,20 +385,10 @@ export class OptimizedSpriteManager extends Component {
 | Skip access modifiers | Use `public`/`private`/`protected` |
 | Use `any` type | Define proper types and interfaces |
 | Add inline comments | Use descriptive names |
-| Skip event cleanup | Always unregister in `onDisable`/`onDestroy` |
+| Skip event cleanup | Always unregister in `onDisable`/`onDestroy`（见 [[ERR-033__destroyob-oncompdestroy-dead-hook-listener-leak|ERR-033]]） |
 | Allocate in `update()` | Preallocate and reuse objects |
 | Forget sprite atlas | Use atlas for DrawCall batching |
 | Heavy logic in `update()` | Throttle expensive operations |
 | Skip null checks | Validate required references in `onLoad` |
 | Manual loops over arrays | Use `map`/`filter`/`reduce` |
 | Ignore bundle size | Monitor and optimize (< 5MB target) |
-
----
-
-## Future Engine Sections
-
-> The following sections will be added as skills are ingested:
-> - **Unity** (C#) — VContainer/SignalBus, MonoBehaviour lifecycle, ECS, performance
-> - **Godot** (GDScript) — Signal system, scene tree, GDScript patterns
-> - **Unreal Engine** (C++/Blueprint) — Actor/Component, Gameplay Framework
-> - **Web Games** (JavaScript) — Phaser, Three.js, Babylon.js, A-Frame

@@ -1,0 +1,30 @@
+{
+    "_meta": {
+        "category": "cad_hardware",
+        "label": "CAD / 硬件设计 / CAD & Hardware",
+        "skillCount": 1,
+        "architecture": "anchor-based"
+    },
+    "skills": [
+        {
+            "name": "cad-hardware",
+            "description": "Unified CAD & hardware anchor: STEP-first parametric CAD (build123d), selector-ref geometry validation, mandatory snapshot review, assemblies; robot description (URDF structure / SRDF MoveIt2 semantics / SDFormat simulation) with generator contracts and frame semantics; 2D DXF cut layouts; step.parts sourcing; FDM slicing and static G-code validation; Bambu Lab LAN print safety gates; SendCutSend preflight evidence discipline; CAD Viewer link brokering; experimental implicit GLSL/SDF modeling.",
+            "anchorBase": "bambu-labs",
+            "confidence": 0.65,
+            "mergedCount": 11,
+            "mergedFrom": [
+                "bambu-labs",
+                "gcode",
+                "dxf",
+                "sdf",
+                "cad-viewer",
+                "implicit-cad",
+                "step-parts",
+                "cad",
+                "sendcutsend",
+                "srdf",
+                "urdf"
+            ]
+        }
+    ]
+}

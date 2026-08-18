@@ -20,8 +20,8 @@ aliases:
 公有级=做饭的能力定义，项目级=具体菜谱。数据跟项目走，接口跟公有走。
 
 ## Alternatives Considered
-- 所有数据集中在 D:/toolBox/KI/
+- 所有数据集中在 {TOOLBOX}/KI/
 - projectScope 字段区分
 
 ## Outcome
-Pending
+Completed — 五层架构文件治理已落地（CLAUDE.md Hard Constraint + `Agent/rules/file_governance.md`），项目级数据在各项目 `.claude/` / `.in-process/` 中。

@@ -53,11 +53,7 @@ aliases:
    ```
    boot 时一次性解析白名单条目（CIDR 转 `{network, prefix}`），运行时只做 O(N) 匹配。**boot 阶段抛错 = fail-closed**。
 
-3. **第一层 IP 白名单**：
-   - `req.ip` 取值依赖 `app.set('trust proxy', true)`（Nginx 后端必须配，否则全是 loopback）—— 见 [[SEC-001__trust-proxy-and-ipv4-whitelist-combo|SEC-001]]
-   - 支持 `1.2.3.4` 单 IP 和 `1.2.3.0/24` CIDR 两种写法
-   - 用 `'::ffff:1.2.3.4'` 形式的 IPv4-mapped IPv6 要先 normalize 去前缀，再做 32-bit int 比较
-   - 纯 IPv6（如 `::1`）→ fail-closed 403 `AUTH_IP_FORBIDDEN`
+3. **第一层 IP 白名单**：IP 层取值（trust proxy）与 Nginx 配套规则、CIDR/v4-mapped/纯 IPv6 处理见 [[SEC-001__trust-proxy-and-ipv4-whitelist-combo|SEC-001]]；本实现 normalize 后做 32-bit int 比较。
 
 4. **第二层 sk 用 `crypto.timingSafeEqual`**：
    ```ts

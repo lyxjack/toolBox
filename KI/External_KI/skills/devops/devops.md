@@ -435,37 +435,15 @@ jobs:
 
 Run after completing a feature, before PRs, and when ensuring quality gates pass.
 
-#### Phase 1: Build Verification
-```bash
-npm run build 2>&1 | tail -20   # Node.js
-# If build fails, STOP and fix before continuing.
-```
+**部署前按 `testing.md` Tier 1 (Smoke Check) 跑全量 build → type check → lint → test 门禁**（命令清单唯一权威见彼处；coverage 目标见 testing.md §5.8）。以下仅保留部署/PR 特有增量：
 
-#### Phase 2: Type Check
-```bash
-npx tsc --noEmit 2>&1 | head -30      # TypeScript
-pyright . 2>&1 | head -30              # Python
-```
-
-#### Phase 3: Lint Check
-```bash
-npm run lint 2>&1 | head -30           # JS/TS
-ruff check . 2>&1 | head -30           # Python
-```
-
-#### Phase 4: Test Suite
-```bash
-npm run test -- --coverage 2>&1 | tail -50
-# Target: 80% minimum coverage
-```
-
-#### Phase 5: Security Scan
+#### 部署特有 Phase A: Secret / Debug 残留扫描
 ```bash
 grep -rn "sk-" --include="*.ts" --include="*.js" . 2>/dev/null | head -10
 grep -rn "console.log" --include="*.ts" --include="*.tsx" src/ 2>/dev/null | head -10
 ```
 
-#### Phase 6: Diff Review
+#### 部署特有 Phase B: Diff Review
 ```bash
 git diff --stat
 git diff HEAD~1 --name-only
@@ -514,7 +492,7 @@ python manage.py migrate --plan
 pytest --cov=apps --cov-report=html --cov-report=term-missing --reuse-db
 ```
 
-Coverage targets:
+Coverage targets — Django 分层细化（基于 testing.md §5.8 Coverage Requirements，通用目标以彼处为准）:
 
 | Component | Target |
 |-----------|--------|
@@ -525,13 +503,8 @@ Coverage targets:
 | Overall | 80%+ |
 
 #### Phase 5: Security Scan
-```bash
-pip-audit
-safety check --full-report
-python manage.py check --deploy
-bandit -r . -f json -o bandit-report.json
-gitleaks detect --source . --verbose
-```
+
+时机：测试通过后、上线前必跑。工具清单唯一权威见 `security.md` Part 2 (Security Scanning Tools → Python / Django Project Scanners)。
 
 #### Phase 6: Django Management Commands
 ```bash
@@ -546,16 +519,8 @@ python manage.py check --database default
 - Target < 50 queries per typical page
 
 #### Phase 8: Configuration Review
-```python
-# Verify in shell:
-checks = {
-    'DEBUG is False': not settings.DEBUG,
-    'SECRET_KEY set': bool(settings.SECRET_KEY and len(settings.SECRET_KEY) > 30),
-    'ALLOWED_HOSTS set': len(settings.ALLOWED_HOSTS) > 0,
-    'HTTPS enabled': getattr(settings, 'SECURE_SSL_REDIRECT', False),
-    'HSTS enabled': getattr(settings, 'SECURE_HSTS_SECONDS', 0) > 0,
-}
-```
+
+时机：部署前最后一道检查。生产 settings 清单与运行期 shell 校验片段唯一权威见 `security.md` Part 3 (Django Security → Production Settings)。
 
 ### Spring Boot Verification Loop
 

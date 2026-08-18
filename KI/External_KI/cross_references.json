@@ -2,59 +2,98 @@
     "_meta": {
         "description": "Cross-reference mapping for anchor-based architecture. Intra-category overlaps eliminated by merge. Only inter-category references remain.",
         "architecture": "anchor-based",
-        "totalAnchors": 13,
-        "lastUpdated": "2026-05-17"
+        "totalAnchors": 14,
+        "lastUpdated": "2026-07-29"
     },
     "interCategoryReferences": [
         {
             "anchor": "testing",
-            "relatedAnchors": ["security", "devops"],
+            "relatedAnchors": [
+                "security",
+                "devops"
+            ],
             "note": "Testing Tier 4 covers security scanning (sanitizers, CVE checks). DevOps covers CI/CD pipeline verification."
         },
         {
             "anchor": "security",
-            "relatedAnchors": ["testing", "backend"],
+            "relatedAnchors": [
+                "testing",
+                "backend"
+            ],
             "note": "Security review overlaps with testing Tier 4 (arch/security) and backend (auth, input validation)."
         },
         {
             "anchor": "devops",
-            "relatedAnchors": ["testing", "backend"],
+            "relatedAnchors": [
+                "testing",
+                "backend"
+            ],
             "note": "DevOps verification loops related to testing CI/CD. Docker patterns related to backend deployment."
         },
         {
             "anchor": "frontend",
-            "relatedAnchors": ["language-specific", "mobile-native"],
+            "relatedAnchors": [
+                "language-specific",
+                "mobile-native"
+            ],
             "note": "Frontend coding standards overlap with language-specific TypeScript. Liquid Glass design relates to mobile-native SwiftUI."
         },
         {
             "anchor": "backend",
-            "relatedAnchors": ["language-specific", "devops"],
+            "relatedAnchors": [
+                "language-specific",
+                "devops"
+            ],
             "note": "Backend framework patterns (Django, Spring) reference language-specific Python/Java. Deployment in devops."
         },
         {
             "anchor": "ai-agent",
-            "relatedAnchors": ["workflow", "meta-tooling"],
+            "relatedAnchors": [
+                "workflow",
+                "meta-tooling"
+            ],
             "note": "Agent loops relate to workflow parallel agents. Eval harness relates to meta-tooling skill auditing."
         },
         {
             "anchor": "workflow",
-            "relatedAnchors": ["ai-agent", "testing"],
+            "relatedAnchors": [
+                "ai-agent",
+                "testing"
+            ],
             "note": "Parallel agent dispatch relates to ai-agent. Verification before completion relates to testing."
         },
         {
             "anchor": "meta-tooling",
-            "relatedAnchors": ["ai-agent", "workflow"],
+            "relatedAnchors": [
+                "ai-agent",
+                "workflow"
+            ],
             "note": "Skill creation/auditing relates to ai-agent evaluation. Configuration relates to workflow setup."
         },
         {
             "anchor": "content",
-            "relatedAnchors": ["frontend", "backend"],
+            "relatedAnchors": [
+                "frontend",
+                "backend"
+            ],
             "note": "Content CMS modules (Sanity/Contentful/Strapi) relate to frontend framework integration (Next.js, Astro) and backend API delivery patterns."
         },
         {
             "anchor": "game-development",
-            "relatedAnchors": ["frontend", "language-specific", "mobile-native"],
+            "relatedAnchors": [
+                "frontend",
+                "language-specific",
+                "mobile-native"
+            ],
             "note": "Web game rendering relates to frontend Canvas/WebGL. Cocos Creator TypeScript patterns relate to language-specific TS standards. Mobile game distribution relates to mobile-native."
+        },
+        {
+            "anchor": "cad-hardware",
+            "relatedAnchors": [
+                "testing",
+                "language-specific"
+            ],
+            "note": "CAD generation-time validation and the simulator/joint-motion smoke-test ladder mirror testing's tiered verification discipline. language-specific covers the Python (build123d/ezdxf) and JS/GLSL runtime practices these skills are authored in."
         }
     ],
     "superseded": [

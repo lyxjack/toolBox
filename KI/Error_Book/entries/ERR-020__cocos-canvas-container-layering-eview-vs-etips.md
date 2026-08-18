@@ -118,7 +118,7 @@ start() {
 
 ## 关联
 
-- ERR-019: MCP prefab_open_edit_mode 返回 root 不对（本错题同样无法用 MCP 改 viewType）
+- [[ERR-043__mcp-prefab-edit-root-uuid-mismatch|ERR-043]]: MCP prefab_open_edit_mode 返回 root 不对（本错题同样无法用 MCP 改 viewType）
 - ERR-002: 禁脚本写 .prefab（如果硬要改 viewType 需 MCP 受限 / 编辑器手动 / runtime reparent）
 - `assets/script/core/viewManager.ts` getRootView() 实现就是按 viewType switch container
 - `assets/script/const/enumConst.ts` WindowType 枚举定义

@@ -97,7 +97,7 @@ if (r.heart != null) boosters.heart = +r.heart;
 
 **写代码前必须执行 4 步同步清单**：
 
-1. **client 端** 3 处（已有 [[project_bug_tracker]] 提醒，再次强调）：
+1. **client 端** 3 处（已有项目内 `project_bug_tracker` 提醒，再次强调）：
    - `assets/script/persistence/storageHelper.ts` — 加 StorageHelperKey 枚举
    - `assets/script/persistence/playerSchema.ts` — 加 PlayerDocument 字段
    - `assets/script/persistence/storage.md` — 文档同步
@@ -128,7 +128,8 @@ if (r.heart != null) boosters.heart = +r.heart;
 
 ## 关联
 
-- [[project_revision_cas_lessons]] — REQ-20260516-215448 项目级教训
+- `project_revision_cas_lessons` — REQ-20260516-215448 项目级教训（项目级 KI，未入本 vault）
+- [[ERR-026__client-fire-and-forget-checkpoint-loses-level|ERR-026]] — 同一项目存档链路的 client 侧错题
 - `assets/script/persistence/storage.md` — client storage key 注册表（项目内）
 - `server/src/__tests__/unit/puzzleSchemaRevision.test.ts` — server schema contract test 范本
 - `server/src/__tests__/integration/puzzleSaveRevision.test.ts` — AC-1 实战还原（mongo 外部 update 不被覆盖）

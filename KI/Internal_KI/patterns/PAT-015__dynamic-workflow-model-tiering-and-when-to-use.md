@@ -29,8 +29,8 @@ mem_status: "linked"
 ## 步骤
 
 ### 1. 先判该不该用（官方 when-to-use）
-- **该用**：跨库扫荡（bug/安全/死代码审计）、大迁移/广重构、多源交叉验证研究（`/deep-research`）、大型新项目分析 onboarding、多角度难规划 —— 本质"agent 数超出单会话可协调"或要"可复跑脚本 + 对抗式互检"。
-- **不该用**（否决）：单文件/局部/例行/对话类、已被 Serial·Parallel 低成本覆盖、预算紧收益低 → 先 conversation 或先跑小切片。workflow ≈ 机械化 Swarm，不是所有 Swarm 都值得上。
+- Qualify 场景枚举（W1–W5）与 Necessity 否决清单见 `PM/pm_workflow.md` Step 4.6（唯一权威）。
+- 判定本质：**该用** = "agent 数超出单会话可协调"或要"可复跑脚本 + 对抗式互检"；**不该用** = 例行/局部/对话类、已被 Serial·Parallel 低成本覆盖 → 先 conversation 或先跑小切片。workflow ≈ 机械化 Swarm，不是所有 Swarm 都值得上。
 
 ### 2. 开启方式（按场景三选一）
 - 单个合格任务一次性 → prompt 写 `ultracode` 关键词（不改 session effort，最省）
@@ -50,7 +50,7 @@ mem_status: "linked"
 - `+Nk` 预算指令 + 脚本内 `budget.total`/`budget.remaining()` 动态收敛（`while (budget.remaining() > 50_000)`）
 - 重任务**先跑一个目录/窄问题的小切片**探成本再全量
 - 并发上限 16 / 单 run 上限 1000 agent（成本天花板）
-- 档位校准示例（Max 5x 中等）：fan-out 5–10、中型审计 `+200k–400k`
+- 档位校准数字（fan-out / 预算指令建议值）见 `PM/pm_workflow.md` Step 4.6（唯一权威）
 
 ## 反模式
 | 错误做法 | 正确做法 | 关联 |

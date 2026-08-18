@@ -29,9 +29,7 @@ mem_status: "linked"
 ## 步骤
 
 1. **召回**：mem-search skill（claude-mem 内置）；worker 不可用降级 `sqlite3 "file:$HOME/.claude-mem/claude-mem.db?mode=ro"` 只读查询；都不可用 → 跳过，不阻塞。
-2. **写入新 KI entry 时建立双向关联**（contract § 3.8）：写入前查询本 project 最近 session id（`sdk_sessions.content_session_id`），frontmatter 填 `mem_ref: <id>` + `mem_status: linked`。
-3. **降级**：DB 不存在 / 查询失败 / 结果为空 → `mem_ref: null` + `mem_status: unavailable`，照常写入并在报告提示，禁止中断或重试。
-4. **关联目标选 session id 而非 observation/summary id**：session 记录由 UserPromptSubmit hook 同步创建（写入时刻必然存在），摘要由 Stop hook 异步生成（写入时刻可能未落库）。
+2. **写入双向关联**：写入新 KI entry 前按 `KI/Internal_KI/contract.md` §3.8 取 `content_session_id` 填 `mem_ref`/`mem_status`，并按其降级规则处理。
 
 ## 反模式
 

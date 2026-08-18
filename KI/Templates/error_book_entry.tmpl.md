@@ -13,11 +13,12 @@ tags:
   - "{asset/prefab | asset/scene | ...}"
   - "errorCode/{errorCode}"
   - ki/error-book
-prevention: "{一句话预防措施}"
+prevention: "{一句话预防措施,须含 leading_word}"
+leading_word: "{单个预训练概念词,如 tight/red/blast-radius;规范见 Error_Book contract §7.2.1}"
 aliases:
   - "ERR-{NNN}"
-mem_ref: "{content_session_id | null}"  # claude-mem 双向关联：产出本条的 session（sdk_sessions.content_session_id）；降级时 null
-mem_status: "{linked | unavailable}"    # linked=写入时已验证存在；unavailable=claude-mem 不可用（降级，不阻塞）
+mem_ref: "{content_session_id | null}"  # claude-mem 双向关联,规则见 Internal_KI contract §3.8
+mem_status: "{linked | unavailable}"    # 同上 §3.8(不可用→降级,不阻塞)
 # ci_rules:                          # 可选 — 可被 CI 自动拦截的静态规则
 #   - type: "file-pattern-ban"       # 类型: file-pattern-ban | code-pattern-ban | code-pattern-require
 #     pattern: "{regex}"             # 匹配模式 (正则表达式)

@@ -4,7 +4,7 @@ type: error
 errorCode: ERR-065
 severity: high
 status: resolved
-recurrence: 0
+recurrence: 1
 firstSeen: 2026-07-25
 tags:
   - ki/error-book
@@ -89,3 +89,21 @@ Cocos Creator 只侦测编辑器内触发的资产变动。臣用 Edit 工具外
 首版只写「验证修复前」。实测表明凡是**运行期取证**都要过这道门: 冒烟矩阵、缺陷复现、位置/视觉审查截图、性能观测 —— 只要结论要落进 QA 报告, 就先对表产物新鲜度。
 
 与 [[ERR-066__hidden-tab-raf-freeze-engine-boot-blackscreen|ERR-066]] 构成 preview 验收的**两道门**: ERR-065 管「跑的是不是新码」, ERR-066 管「页面是不是真的在跑」。
+
+---
+
+### 补遗二(2026-07-28, 美工切图接线实测)：`refresh` 不够时用 `reimport <该 .ts>`
+
+本轮第二次撞上本条。新增量：**`cocos_asset refresh` 有时触发不了重编译**。
+
+实测过程：Edit 改 `gdCardSkin.ts` 落盘 → 等 20s，`grep -rl <新符号> temp/programming/` = **0 命中**(未编译) → `cocos_asset refresh(db://assets/scripts/WM_GD)` → 再等 20s，仍 **0 命中** → `cocos_asset reimport(db://assets/scripts/WM_GD/UI/gdCardSkin.ts)` → 20s 后 **4 命中** ✅，`assembly-record.json` mtime 同步更新。
+
+**升级后的三步门禁**：
+
+1. `cocos_asset refresh` —— 先试目录级刷新
+2. **验产物**：`grep -rl <本轮新增的类名/函数名> temp/programming/`，命中数 > 0 才算编译过
+3. 仍 0 命中 → `cocos_asset reimport <改动的那个 .ts 的 db:// 路径>`，再回第 2 步复验
+
+第 2 步的 grep 比对表时间戳更直接（不必去 import-map 里定位 chunk），日常用它即可；`temp/programming/packer-driver/targets/preview/assembly-record.json` 的 mtime 可作旁证。
+
+与 [[ERR-066__hidden-tab-raf-freeze-engine-boot-blackscreen|ERR-066]] 的两道门在本轮**同时踩中** —— 先卡在"跑的不是新码"，修好后又卡在"页面根本没在跑"，合计吞掉大半排查时间。两道门要连着过，别只过一道就开测（复犯原因见 [[ERR-080__error-book-recall-keyword-mismatch|ERR-080]]）。

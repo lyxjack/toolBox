@@ -45,5 +45,5 @@ claude mcp add obsidian-ki --scope user \
 **所有全局 MCP server 必须通过 `claude mcp add --scope user` 注册。不要手动创建或编辑 `~/.claude/.mcp.json`。** 项目级 MCP 可以用 `.mcp.json`，但全局级不行。
 
 ## 关联
-- [[ERR-008__mcp-port-conflict-not-persisted|ERR-008]] — MCP 端口配置问题
+- [[ERR-006__mcp-port-conflict-not-persisted|ERR-006]] — MCP 端口配置问题
 - Memory: reference_mcp_port.md

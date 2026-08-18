@@ -136,6 +136,8 @@ Use words Claude would search for: error messages, symptoms, synonyms, tool name
 
 ## The Iron Law
 
+> 本节是 testing.md §5.1 TDD 铁律（Red-Green-Refactor）在文档/skill 域的类比，权威定义见彼处。
+
 ```
 NO SKILL WITHOUT A FAILING TEST FIRST
 ```

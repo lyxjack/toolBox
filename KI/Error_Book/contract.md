@@ -68,41 +68,12 @@ ERR-{NNN}__{slug}.md
 ```
 
 ### 错题详情 .md 格式
-```markdown
-# {错误标题}
 
-## Metadata
-- **ID**: ERR-{NNN}
-- **Error Code**: {错误码}
-- **Severity**: {级别}
-- **Keywords**: [{触发关键词}]
-- **First Seen**: YYYY-MM-DD
-- **Recurrence**: {次数}
-- **Status**: open | resolved | recurring
-
-## 错误现象
-{Agent 做错了什么}
-
-## 根因分析
-{为什么会犯这个错}
-
-## 解决方案
-{正确的做法}
-
-## 预防规则
-{Agent 在什么情况下应该回忆起这条记录}
-
-## 关联
-- {关联的 KI 条目或其他 Error Book 条目}
-```
+条目结构以 `KI/Templates/error_book_entry.tmpl.md` 为准（YAML frontmatter，字段规范见 §7.2；旧 `## Metadata` 段落格式已废止）。
 
 ## 5. 关键词召回机制
 
-当用户指令包含 index.json 中某条 entry 的 `keywords` 字段中的关键词(精确匹配或高相似度)时:
-1. Agent 读取 `KI/Error_Book/index.json`
-2. 匹配 keywords 字段
-3. 加载对应的详情文件
-4. 将解决方案和预防规则纳入当前任务的决策依据
+召回走 **Obsidian MCP**（全文 / 标签 / `leading_word` 检索，scope `Error_Book/entries/`；两路径定义见 `KI/README.md`。index.json 已冻结不参与召回，见 §7.5）。命中条目的解决方案与预防规则纳入当前任务的决策依据。
 
 **优先级**: Error_Book 召回优先于 Internal_KI 查询。先看"不该怎么做",再看"应该怎么做"。
 
@@ -122,7 +93,10 @@ Error_Book 是 Obsidian Vault（root: `KI/`）的一部分。Obsidian + Local RE
 
 ### 7.2 YAML Frontmatter 规范
 所有条目使用 YAML frontmatter 替代原 `## Metadata` 段落。必需字段：
-- `id`, `type`, `errorCode`, `severity`, `status`, `recurrence`, `firstSeen`, `tags`, `prevention`, `aliases`
+- `id`, `type`, `errorCode`, `severity`, `status`, `recurrence`, `firstSeen`, `tags`, `prevention`, `aliases`, `leading_word`（新建条目必填；存量触碰即补）
+
+#### 7.2.1 leading_word 字段
+一个模型预训练语料中已有的紧凑概念词（如 `tight`、`red`、`blast-radius`），承载条目的核心行为模式：召回时作检索锚点，执行时以最少 token 召回整片先验行为。要求：单词或短词组；在标题与 `prevention` 句中复现；选已有概念词——生造词无先验，付出定义成本换不来行为。Pattern Book 条目同规，但复现位置为标题与「适用场景」首句（Pattern 无 `prevention` 字段）。来源：`Tool/mattpocock-skills` writing-great-skills（Leading Word / Leitwort）。
 
 ### 7.3 标签体系
 使用 Obsidian 层级标签：`error/{severity}`, `engine/{name}`, `tool/{name}`, `asset/{type}`, `errorCode/{code}`, `ki/error-book`
@@ -177,12 +151,11 @@ ci_rules:                              # 可选，数组
 
 **违反此规则等同于创建了一条没有防护的错误记录 — 错题本的价值在于防止复犯，不加 ci_rules 就是留了一个没锁的门。**
 
-## 9. 索引同步规则
+## 9. 索引同步规则（已废止 2026-08-03）
 
-**强制约束**:任何错题的增加或状态变更,必须同步更新 `index.json`。
+~~任何错题的增加或状态变更,必须同步更新 `index.json`。~~ index.json 已冻结（§7.5），条目元数据由 YAML frontmatter 承载，Obsidian 召回无需索引同步。
 
-## 9. Token 优化策略
+## 10. Token 优化策略
 
-1. **index.json 轻量化**:keywords 字段用于快速匹配,避免加载所有详情文件
-2. **只加载命中条目**:关键词未命中时不读取任何详情文件
-3. **severity 排序**:多条命中时,critical > high > medium > low 优先展示
+1. **只加载命中条目**:Obsidian 搜索未命中时不读取任何详情文件
+2. **severity 排序**:多条命中时,critical > high > medium > low 优先展示

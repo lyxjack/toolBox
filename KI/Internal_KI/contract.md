@@ -40,7 +40,7 @@ Internal_KI 是项目级的精华知识库,存放经过验证的、对项目开�
 
 | # | 类别 | 目标位置 | 性质 |
 |---|---|---|---|
-| 1 | 技术栈类 | `KI/External_KI/categories/` (13 anchors) | 跨项目通用 skill 索引(External) |
+| 1 | 技术栈类 | `KI/External_KI/categories/` (anchor 数以 master_index.json 为准) | 跨项目通用 skill 索引(External) |
 | 2 | Prompt 需求拆解 | `KI/Internal_KI/execution_logs/` | 项目级 PM→QA 闭环日志(Internal,新) |
 | 3 | 逻辑流程类 | `KI/Internal_KI/patterns/` (trigger_condition=user_explicit) | 业务硬逻辑(Internal,复用 patterns/) |
 | 4 | 安全权限类 | `KI/Internal_KI/security/` | 项目级 ENV/SSH/YML 配置语义(Internal,新) |
@@ -98,6 +98,16 @@ Plan-driven 模式额外要求填 `plan_ref` 字段,指向 plan file 绝对/相�
 **模板**: `KI/Templates/data_analysis.tmpl.md`
 **与其他目录边界**: 与 Cat 1 backend skill 区分(skill 通用 vs 项目级 pipeline);与 Cat 4 security 区分(数据生命周期 vs 配置语义)。
 **toolBox 内填充策略**: toolBox 内不强填。
+
+### 3.6.4 runs/(类别外补充目录,2026-08-03 收编)
+
+**对应类别**: 无——7 大类之外的补充目录,与 decisions/lessons(§10.3)同级性质。
+**用途**: 真机压测 / 大规模采集等一次性 run 的流水记录。**非 REQ/PLAN 闭环过程日志**(那属 `execution_logs/`,见 §3.6.1)。
+**文件命名**: `{YYYY-MM-DD}_{run-slug}.md`
+**必填 frontmatter 字段**: `id`, `type`(一律 `run_log`,下划线), `status`, `created`, `tags`, `related`, `aliases`, `mem_ref`, `mem_status`(枚举仅 `linked | unavailable`,同 §3.8)
+**模板**: 无(流水自由体,frontmatter 按上列字段)。
+**与其他目录边界**: 可复用结论一旦提炼 → `patterns/` 或 `lessons/`;runs/ 只存流水与原始数据指针,不承载规则。
+**存量整改**: 现有 3 篇(2026-07-06 批次)schema 不一(`run-log`/`session_active` 等非法值),触碰即改,不批量回填。
 
 ## 3.7 Cross-Reference 强制规则
 
@@ -185,25 +195,8 @@ Plan-driven 模式额外要求填 `plan_ref` 字段,指向 plan file 绝对/相�
 ```
 
 ### KI 条目 .md 格式
-```markdown
-# {标题}
 
-## Metadata
-- **ID**: KI-{NNN}
-- **Category**: {category}
-- **Tags**: [{tag1}, {tag2}]
-- **Created**: YYYY-MM-DD
-- **Last Verified**: YYYY-MM-DD
-
-## 适用场景
-{何时使用}
-
-## 规则/模式
-{具体内容,含代码示例}
-
-## 关联
-- {关联的其他 KI 条目或 Error Book 条目}
-```
+条目结构以 `KI/Templates/` 对应模板为准（pattern → `pattern_entry.tmpl.md`，decision/lesson → `ki_entry.tmpl.md`，其余见 §3.6；均为 YAML frontmatter，旧 `## Metadata` 段落格式已废止）。
 
 ## 6. 生命周期
 
@@ -214,13 +207,9 @@ Plan-driven 模式额外要求填 `plan_ref` 字段,指向 plan file 绝对/相�
 | **废弃** | 规则不再适用 | status 改为 deprecated,不删除文件 |
 | **删除** | 项目关闭时随项目整体归档 | 不单独删除条目 |
 
-## 7. 索引同步规则
+## 7. 索引同步规则（已废止 2026-08-03）
 
-**强制约束**:任何 KI 条目的增删改,必须同步更新 `index.json`。
-
-- 新增条目 → index.json 追加 entry
-- 修改条目 → index.json 更新对应 entry 的 lastVerified
-- 废弃条目 → index.json 标记 status: deprecated
+~~任何 KI 条目的增删改,必须同步更新 `index.json`。~~ index.json 已冻结（§10.4），条目元数据由 YAML frontmatter 承载，Obsidian 召回无需索引同步。
 
 ## 8. 全局 Skill 链接方式
 
@@ -236,9 +225,8 @@ Plan-driven 模式额外要求填 `plan_ref` 字段,指向 plan file 绝对/相�
 
 ## 9. Token 优化策略
 
-1. **优先 Glob**:按 category 目录定位,避免加载全量 index.json
-2. **index.json 只做路由**:summary 字段用于判断是否需要读取详情,避免全量加载
-3. **按需加载**:只读取与当前任务相关的 category 目录下的文件
+1. **Obsidian 搜索只做路由**:用搜索命中摘要判断是否读详情,避免全量加载(index.json 已冻结,见 §10.4)
+2. **按需加载**:只读取与当前任务相关的 category 目录下的文件
 
 ## 10. Obsidian 集成
 
@@ -249,7 +237,7 @@ Internal_KI 是 Obsidian Vault（root: `KI/`）的一部分。Obsidian + Local R
 Pattern Book 存放在 `patterns/` 目录中,记录经过验证的正确做法和可复用模式。
 
 条目使用 YAML frontmatter 格式,必需字段：
-- `id`, `type`, `title`, `status`, `created`, `tags`, `complements`, `aliases`
+- `id`, `type`, `title`, `status`, `created`, `tags`, `complements`, `aliases`, `leading_word`（新建条目必填,存量触碰即补;定义与复现规则见 `KI/Error_Book/contract.md` §7.2.1）
 
 Pattern Book 通过 Obsidian MCP 进行召回,与 Error Book 形成互补：
 - Error Book = 不应该怎么做（防错）
@@ -258,6 +246,19 @@ Pattern Book 通过 Obsidian MCP 进行召回,与 Error Book 形成互补：
 ### 10.3 Decisions 与 Lessons
 重大技术决策提取为独立 `.md` 文件,存放在 `decisions/` 目录。
 经验教训提取为独立 `.md` 文件,存放在 `lessons/` 目录。
+
+#### 10.3.1 decision_type 字段与 Rejection 知识库（决定不做的）
+
+decisions/ 条目 frontmatter 增加 `decision_type: adoption | rejection`（存量条目默认 adoption,免回填）。
+
+`rejection` 条目记录**被否决的需求或方案**——同类提议再次出现时,呈出既往否决与理由,免于重新争论（机制参照 `Tool/mattpocock-skills` 的 `.out-of-scope/` 知识库）：
+
+- **粒度**: 一个概念一个文件。同类提议命中已有条目 → 在其 `## Prior requests` 追加一行,不建新条目。
+- **正文结构**: 概念名 + 为什么不做（实质理由,引用架构/哲学/约束,可带代码示例）+ `## Prior requests` 列表。
+- **理由必须耐久**: 「现在没空」是延期不是否决,不入库。
+- **已实现的功能不入此库**——关闭时指向实现处即可。只记"拒绝的",防止污染查重。
+- **命中后由用户裁决**: 维持 → 追加 Prior requests;推翻 → 条目 `status: superseded`,提议走正常流程。
+- **召回挂载点**: PM Step 4（`PM/pm_workflow.md`）与 `/matt` 入口 grill 前,Obsidian 检索 scope `Internal_KI/decisions/`,匹配 `decision_type: rejection`。
 
 ### 10.4 index.json 状态
 index.json 已冻结（`_meta.frozen: true`），不再参与召回流程。仅作为历史快照保留。

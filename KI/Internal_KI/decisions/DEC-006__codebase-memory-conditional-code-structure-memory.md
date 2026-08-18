@@ -14,8 +14,8 @@ related:
   - "Error_Book/entries/ERR-032__bulk-data-through-llm-context-token-bomb.md"
 aliases:
   - DEC-006
-mem_ref: ""
-mem_status: "pending"
+mem_ref: null
+mem_status: "unavailable"  # 沉淀时 claude-mem 无可靠 session 归属(contract § 3.8 降级形态；原误标 pending，2026-07-06 审计修正)
 ---
 
 # codebase-memory-mcp 作为按需触发的第三类记忆(代码结构记忆)
