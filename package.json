@@ -5,6 +5,7 @@
   "scripts": {
     "lint": "node Agent/lint/error-book-linter.mjs",
     "lint:ci": "node Agent/lint/error-book-linter.mjs --mode=ci",
-    "lint:validate": "node Agent/lint/error-book-linter.mjs --validate"
+    "lint:validate": "node Agent/lint/error-book-linter.mjs --validate",
+    "lint:ki": "node Agent/lint/ki-integrity-linter.mjs"
   }
 }

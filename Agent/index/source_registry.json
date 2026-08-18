@@ -3,9 +3,9 @@
         "description": "Tool/ 外部库溯源与更新追踪。/find-update 工作流的核心数据源。",
         "version": "1.0",
         "lastFullScan": "2026-03-19",
-        "lastIncrementalAdd": "2026-06-24",
-        "totalDirs": 17,
-        "totalUpstreams": 10
+        "lastIncrementalAdd": "2026-07-29",
+        "totalDirs": 18,
+        "totalUpstreams": 11
     },
     "upstreams": [
         {
@@ -14,7 +14,11 @@
             "type": "monorepo",
             "extractPattern": "skills/{skillDir}/",
             "trackMethod": "commits",
-            "dirs": ["canvas-design", "find-skills", "skill-creator"]
+            "dirs": [
+                "canvas-design",
+                "find-skills",
+                "skill-creator"
+            ]
         },
         {
             "id": "anthropics-claude-code",
@@ -22,7 +26,9 @@
             "type": "monorepo",
             "extractPattern": "plugins/frontend-design/skills/frontend-design/",
             "trackMethod": "commits",
-            "dirs": ["frontend-design"]
+            "dirs": [
+                "frontend-design"
+            ]
         },
         {
             "id": "obra-superpowers",
@@ -31,7 +37,12 @@
             "extractPattern": "skills/{skillDir}/",
             "rootSkill": "superpowers",
             "trackMethod": "releases+commits",
-            "dirs": ["superpowers", "subagent-driven-development", "systematic-debugging", "test-driven-development"]
+            "dirs": [
+                "superpowers",
+                "subagent-driven-development",
+                "systematic-debugging",
+                "test-driven-development"
+            ]
         },
         {
             "id": "vercel-agent-skills",
@@ -39,7 +50,10 @@
             "type": "monorepo",
             "extractPattern": "skills/{skillDir}/",
             "trackMethod": "commits",
-            "dirs": ["composition-patterns", "react-native-skills"]
+            "dirs": [
+                "composition-patterns",
+                "react-native-skills"
+            ]
         },
         {
             "id": "coreyhaines-marketingskills",
@@ -47,7 +61,10 @@
             "type": "monorepo",
             "extractPattern": "skills/{skillDir}/",
             "trackMethod": "releases+commits",
-            "dirs": ["content-strategy", "social-content"]
+            "dirs": [
+                "content-strategy",
+                "social-content"
+            ]
         },
         {
             "id": "affaan-ecc",
@@ -55,7 +72,9 @@
             "type": "standalone",
             "extractPattern": "/",
             "trackMethod": "releases+commits",
-            "dirs": ["everything-claude-code"]
+            "dirs": [
+                "everything-claude-code"
+            ]
         },
         {
             "id": "yusuf-skill-seekers",
@@ -63,7 +82,9 @@
             "type": "standalone",
             "extractPattern": "/",
             "trackMethod": "releases+commits",
-            "dirs": ["Skill_Seekers"]
+            "dirs": [
+                "Skill_Seekers"
+            ]
         },
         {
             "id": "nextlevel-ui-ux",
@@ -71,7 +92,9 @@
             "type": "standalone",
             "extractPattern": "/",
             "trackMethod": "releases+commits",
-            "dirs": ["ui-ux-pro-max-skill"]
+            "dirs": [
+                "ui-ux-pro-max-skill"
+            ]
         },
         {
             "id": "multica-karpathy-skills",
@@ -79,7 +102,9 @@
             "type": "standalone",
             "extractPattern": "skills/{skillDir}/",
             "trackMethod": "commits",
-            "dirs": ["andrej-karpathy-skills"]
+            "dirs": [
+                "andrej-karpathy-skills"
+            ]
         },
         {
             "id": "win4r-codebase-memory-pro",
@@ -87,7 +112,20 @@
             "type": "standalone",
             "extractPattern": "/",
             "trackMethod": "releases+commits",
-            "dirs": ["codebase-memory-mcp-pro"]
+            "dirs": [
+                "codebase-memory-mcp-pro"
+            ]
+        },
+        {
+            "id": "earthtojake-text-to-cad",
+            "github": "https://github.com/earthtojake/text-to-cad",
+            "type": "monorepo",
+            "extractPattern": "skills/{skillDir}/",
+            "trackMethod": "releases",
+            "note": "main = publish-only branch carrying generated skill/plugin outputs; develop = dev branch with symlink layout. Clone main to consume. assets/** and benchmarks/** are Git LFS and excluded from default pulls — git-lfs must be installed or checkout aborts.",
+            "dirs": [
+                "text-to-cad"
+            ]
         }
     ],
     "repos": [
@@ -243,6 +281,15 @@
             "lastCommitHash": "3ff76d2",
             "lastChecked": "2026-06-24",
             "notes": "Initial /find ingest (REQ-20260624-212600). MCP server(代码结构记忆/第三类记忆),注册为 externalPlugin 不走 anchor 合并(同 claude-mem 先例)。Shallow clone;internal/+vendored/(~1.1G 生成 grammar)已 .gitignore。运行体走 npx codebase-memory-mcp(上游 0.8.1)或 fork 本地构建。Trigger: cto_planning Step 2.5。"
+        },
+        {
+            "dir": "text-to-cad",
+            "upstream": "earthtojake-text-to-cad",
+            "subpath": "skills/",
+            "currentVersion": "0.3.10",
+            "lastCommitHash": "64badd1",
+            "lastChecked": "2026-07-29",
+            "notes": "CAD Skills: 11 executable skills (cad, cad-viewer, dxf, step-parts, urdf, srdf, sdf, sendcutsend, gcode, bambu-labs, implicit-cad). Unlike doc-only skill libs, these carry a Python/Node runtime — repo-local .venv (Python 3.12) + prebuilt viewer dist. Symlinked into ~/.claude/skills and ~/.codex/skills."
         }
     ]
 }

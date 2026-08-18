@@ -40,6 +40,7 @@ const PATHS = {
   // Contract + CLAUDE.md
   contract: resolve(ROOT, 'KI/Internal_KI/contract.md'),
   toolboxClaude: resolve(ROOT, 'CLAUDE.md'),
+  kiReadme: resolve(ROOT, 'KI/README.md'),
   // Regression — frozen index files
   internalKIIndex: resolve(ROOT, 'KI/Internal_KI/index.json'),
   errorBookIndex: resolve(ROOT, 'KI/Error_Book/index.json'),
@@ -221,24 +222,22 @@ describe('AC-8: contract.md § 10.5 Obsidian Tag 层级', () => {
 // ──────────────────────────────────────────────────────────
 // AC-9: toolBox/CLAUDE.md ### KI Layer 加 7 大类小节
 // ──────────────────────────────────────────────────────────
-describe('AC-9: toolBox/CLAUDE.md ### KI Layer 7 大类', () => {
+// 2026-08-03 REQ-20260803-184500: Layer Details 下放 — CLAUDE.md 只留指针,细节断言移到 KI/README.md
+describe('AC-9: KI 层细则 — CLAUDE.md 指针 + KI/README.md 7 大类', () => {
   const c = read('toolboxClaude');
+  const ki = read('kiReadme');
 
-  it('含 "7 大类" 关键词', () => {
-    assert.match(c, /7 大类/);
+  it('CLAUDE.md 指向 KI/README.md', () => {
+    assert.match(c, /KI\/README\.md/);
   });
-  it('含 Cross-Reference 说明', () => {
-    assert.match(c, /Cross-Reference/);
+  it('KI/README.md 含 "7 大类" 关键词', () => {
+    assert.match(ki, /7 大类/);
   });
-  it('### KI Layer 段含 7 大类小节(grep 命中位置 > Tool Layer 之前)', () => {
-    const kiStart = c.indexOf('### KI Layer');
-    const toolStart = c.indexOf('### Tool Layer');
-    const sevenCat = c.indexOf('7 大类');
-    assert.ok(kiStart > -1 && toolStart > -1 && sevenCat > -1, '三处都应存在');
-    assert.ok(sevenCat > kiStart && sevenCat < toolStart, '7 大类应在 KI Layer 内,Tool Layer 之前');
+  it('KI/README.md 含 Cross-Reference 说明', () => {
+    assert.match(ki, /Cross-Reference/);
   });
-  it('引用 KI/Internal_KI/contract.md', () => {
-    assert.match(c, /KI\/Internal_KI\/contract\.md/);
+  it('KI/README.md 引用 KI/Internal_KI/contract.md', () => {
+    assert.match(ki, /KI\/Internal_KI\/contract\.md/);
   });
 });
 
@@ -282,7 +281,8 @@ describe('AC-11: 冻结索引文件状态未变', () => {
 describe('AC-12: 7 大类 grep 元一致性', () => {
   const contract = read('contract');
   const readme = read('templatesReadme');
-  const claude = read('toolboxClaude');
+  // 2026-08-03: 常驻文档一侧由 CLAUDE.md 改为 KI/README.md(Layer Details 下放)
+  const claude = read('kiReadme');
 
   it('三处文档均引用 "execution_logs"', () => {
     assert.match(contract, /execution_logs/);

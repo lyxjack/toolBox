@@ -18,12 +18,8 @@ description: /distill 提纯链路工作流。把当前 session 对话提纯到 
 ## 数据流总览
 
 ```
-Phase 1     Phase 2        Phase 3           Phase 4         Phase 5      Phase 6           Phase 7        Phase 8
-触发    →   Inputs    →    7 类决策树    →   切片        →   去重    →   Cross-Ref    →   Write     →   Memory
-            收集           (Cat 2/3/4/6)    (复用            (复用       Gate              (Obsidian      Cleanup
-                                            skill_         skill_                          MCP +
-                                            ingestion      ingestion                       Fallback)
-                                            Phase 2.3)     Phase 3)
+1 触发 → 2 Inputs 收集(2.1 claude-mem 召回) → 3 7 类决策树(Cat 2/3/4/6) → 4 切片 → 5 去重
+      → 6 Cross-Ref Gate → 6.5 Schema 自检 → 6.6 精炼关 → 7 Write(MCP + Fallback) → 8 Memory Cleanup
 ```
 
 ---
@@ -56,9 +52,27 @@ Phase 1     Phase 2        Phase 3           Phase 4         Phase 5      Phase 
 | `state.json`(若有) | 当前 session 走过 `/pm` 的 active run 目录 | REQ id 锚定 Cat 2 execution_log |
 | 最新 commit message | `git log -1 --pretty=%B` | 锁定本次工作的语义边界 |
 | 当前分支 / 仓库 | `git rev-parse --abbrev-ref HEAD` + `git config --get remote.origin.url` | 判断写入位置(toolBox vs 项目级) |
-| claude-mem session 记录 | `sqlite3 ~/.claude-mem/claude-mem.db` 只读查询本 project 最近 session | 提纯素材的补充来源 + mem_ref 关联目标(不可用 → 跳过并在 Phase 7 标记 mem_status: unavailable) |
+| claude-mem 跨 session 记忆 | **MCP 语义召回优先**(见 Phase 2.1),sqlite3 降级 | 提纯素材的**权威补充来源**(跨 session) + mem_ref 关联目标(不可用 → 跳过并在 Phase 7 标记 mem_status: unavailable) |
 
 **收集策略**: 全部 read-only。不修改任何 input 文件。
+
+### Phase 2.1: claude-mem 语义召回(蒸馏素材增强,强制)
+
+> 目的:当前 session 对话只是"近景";claude-mem 沉淀了**跨 session** 的 observation 与决策,是蒸馏素材的权威补充。必须召回,避免有用知识因不在当前上下文窗口而漏蒸。对齐 CLAUDE.md「双层记忆体系」召回入口规则(mem-search skill 优先 → sqlite3 降级 → 跳过)。
+
+**召回三级降级**:
+
+1. **首选 — claude-mem MCP 语义召回**(worker 运行时)
+   - `search(query=<本次工作关键字串>, project=<当前 project>, limit=30)` → 拿 observation ID 索引
+   - 对高相关条目 `get_observations(ids=[...])` 取全文,作为蒸馏候选素材
+   - `timeline(anchor=<关键 obs id>)` 补足前后文(可选)
+   - ⚠️ **运行时差异**:`observation_search` / `memory_search` 仅 `CLAUDE_MEM_RUNTIME=server-beta` 可用;worker 运行时**必须用 `search` / `timeline` / `get_observations`**(误用 observation_search 会报 `requires CLAUDE_MEM_RUNTIME=server-beta` transport error)。先试 search,报错即确认 worker 模式
+   - **project 名**:取 `git rev-parse --show-toplevel` 末段或 SessionStart 上下文标识;同一仓库可能存在多个 project 名(如总目录名 `kingDian` 与子工程名),必要时分别召回再合并
+2. **降级 — sqlite3 只读直查**(MCP worker 也不可用时)
+   - `sqlite3 "file:$HOME/.claude-mem/claude-mem.db?mode=ro" "SELECT ... WHERE project=... ORDER BY started_at_epoch DESC LIMIT N"`
+3. **跳过 — 两者都不可用**:不阻塞,Phase 7 标 `mem_status: unavailable` + `mem_ref: null`,报告中提示
+
+**素材合并**:把 claude-mem 召回的跨 session observation 与「当前 session 对话」**合并去重**,统一进 Phase 3 的 7 类决策树。**claude-mem 命中但当前对话上下文未覆盖的有用知识同样要蒸馏** —— 这是本 Phase 的核心价值(防止长会话被 compact、或跨 session 的有用沉淀漏蒸)。
 
 ---
 
@@ -221,9 +235,31 @@ Phase 1     Phase 2        Phase 3           Phase 4         Phase 5      Phase 
 
 ---
 
+## Phase 6.6: 精炼关(写入前最后一道,正文剪枝)
+
+> **必读**:`Tool/mattpocock-skills/skills/productivity/writing-great-skills/SKILL.md`(用 Read 加载 —— 该 skill 是 user-invoked,Skill 工具唤不起);术语存疑再读同目录 `GLOSSARY.md`。只读源仓库(IL 04)。
+> **作用域 = 正文草稿**。frontmatter 字段、≥1 wiki link、模板必需 section、ERR 的 prevention/ci_rules、可复现的命令/路径/ID/数字 —— 保留原样,不参与剪枝。
+
+**逐句六查**(以句为单位,命中即整句删或收敛,不做词级润色):
+
+| 查 | 判据 | 动作 |
+|---|---|---|
+| No-op | 这句相对模型默认行为有无增量? | 删整句 |
+| Duplication | 同一含义在本条目 / vault 已有条目出现两次? | 收敛到单一出处;跨条目改 `[[wiki link]]` 指过去 |
+| Relevance / Sediment | 还承载本条目主题吗?是否已过期? | 删 |
+| Sprawl | 每句都活但条目仍冗长? | 按 Phase 4 切片粒度拆条目,或降级为外部链接 |
+| Negation | 以"不要 X"作 steering? | 改写为正向目标句(硬护栏保留时补"改做什么") |
+| Leading word | 3 句以上绕同一概念? | 收成一个模型已有先验的词,全条目复用 |
+
+**完成判据**(可核 + 穷尽): 正文**每一句**都能回答"删掉它这条笔记损失什么",答不上即删;报告输出每条的「删除句数 / 精炼前后行数」。
+
+---
+
 ## Phase 7: Write via Obsidian MCP
 
 ### 写入前: mem 关联获取(contract § 3.8)
+
+> 与 Phase 2.1 分工:Phase 2.1 用 MCP 语义召回**蒸馏素材**;此处仅取 `mem_ref` **外键**(content_session_id),sqlite3 直查最稳(worker 模式 MCP `search` 返回 observation 不直接给 session 外键)。
 
 ```bash
 sqlite3 "file:$HOME/.claude-mem/claude-mem.db?mode=ro" \

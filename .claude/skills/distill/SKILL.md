@@ -1,19 +1,21 @@
 ---
 name: distill
-description: 把当前 session 的对话提纯到 Obsidian KI Vault,按 7 大类自动归档。通常在 git commit + push 后由 post-push-ci 柔提示触发。
+description: 把当前 session 对话 + claude-mem 跨 session 记忆提纯到 Obsidian KI Vault,按 7 大类自动归档。通常在 git commit + push 后由 post-push-ci 柔提示触发。
 ---
 
-You are now acting as the Distillation Agent. Your job is to提纯当前 session 对话 → 按 7 大类写入 Obsidian KI Vault,完成知识沉淀闭环。
+You are now acting as the Distillation Agent. Your job is to提纯**当前 session 对话 + claude-mem 跨 session 记忆** → 按 7 大类写入 Obsidian KI Vault,完成知识沉淀闭环。
+
+> **双源蒸馏**:当前对话只是近景;claude-mem 沉淀了跨 session 的 observation,是素材的权威补充。两源合并去重后统一走 7 类决策树。召回方式见详细工作流 Phase 2.1(worker 运行时用 `search`/`get_observations`/`timeline`,非 `observation_search`)。
 
 ## 触发
 
 - **被动触发**: 用户 `git commit && git push` 后,`post-push-ci.mjs` 输出柔提示,Claude 主动调 `/distill`
 - **主动触发**: 用户显式输入 `/distill` 要求提纯当前 session
-- **前置**: Obsidian MCP 必须可用(`obsidian_*` 工具就绪),KI Vault 已挂载
+- **前置**: Obsidian MCP 必须可用(`obsidian_*` 工具就绪),KI Vault 已挂载;claude-mem 召回为强制步骤(不可用则降级 sqlite3 → 跳过,不阻塞)
 
 ## 7 类决策树(简述)
 
-扫描本次 session 的对话与产物,按 KI 7 大类决策(详见 `KI/Internal_KI/contract.md` § 3.5):
+扫描本次 session 的对话与产物 + claude-mem 召回的跨 session observation,按 KI 7 大类决策(详见 `KI/Internal_KI/contract.md` § 3.5):
 
 | Cat | 类别 | 动作 |
 |-----|------|------|

@@ -75,14 +75,16 @@ describe('AC-1: Constitution P9/P10/P11 + P1-P8 保留', () => {
 });
 
 // ──────────────────────────────────────────────────────────
-// AC-2: Iron Laws = 11 不变 + Related Principles footnote
+// AC-2: Iron Laws = 13 不变 + Related Principles footnote
+// (P9-P11 交付时为 11；IL-12 ROYAL SALUTATION 后续入法；
+//  IL-13 PREFAB EDITOR-FIRST 于 2026-07-25 用户钦定入法(REQ-20260725-151422 UD-9), 基线随之更新)
 // ──────────────────────────────────────────────────────────
 describe('AC-2: Iron Laws 数量不变 + Related Principles cross-ref', () => {
   const il = read('ironLaws');
 
-  it('Iron Law 数量 = 11 (未新增)', () => {
+  it('Iron Law 数量 = 13 (未新增)', () => {
     const count = countMatches(il, /^(### |#### )IRON LAW \d+/gm);
-    assert.equal(count, 11, `IL 数应保持 11,实际 ${count}`);
+    assert.equal(count, 13, `IL 数应保持 13,实际 ${count}`);
   });
   it('末尾 Related Principles 章节存在', () => {
     assert.match(il, /^## Related Principles/m);

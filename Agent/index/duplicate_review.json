@@ -3,9 +3,9 @@
         "description": "Duplicate skill governance for toolBox. Anchor-based architecture — all intra-category duplicates resolved by merge into anchors.",
         "version": "2.0",
         "architecture": "anchor-based",
-        "lastUpdated": "2026-05-17",
-        "totalAnchors": 13,
-        "totalOriginalSkills": 87,
+        "lastUpdated": "2026-07-29",
+        "totalAnchors": 14,
+        "totalOriginalSkills": 98,
         "migrationDate": "2026-03-11",
         "migrationNote": "All 84 individual skills merged into 12 category anchors. Intra-category dedup is now inherent in the anchor structure."
     },
@@ -78,8 +78,14 @@
                 {
                     "date": "2026-05-17",
                     "source": "andrej-karpathy-skills (multica-ai)",
-                    "modulesAdded": ["think-before-coding", "simplicity-first", "surgical-changes"],
-                    "modulesSkipped": ["goal-driven-execution (anchor §2 Planning TDD task structure already covers verifiable success criteria with red-green loop)"],
+                    "modulesAdded": [
+                        "think-before-coding",
+                        "simplicity-first",
+                        "surgical-changes"
+                    ],
+                    "modulesSkipped": [
+                        "goal-driven-execution (anchor §2 Planning TDD task structure already covers verifiable success criteria with red-green loop)"
+                    ],
                     "linesAdded": 60
                 }
             ]
@@ -179,8 +185,16 @@
                 {
                     "date": "2026-03-19",
                     "source": "content-strategy v1.4.0 via /find-update",
-                    "modulesAdded": ["headless-cms-decision", "content-modeling", "editorial-workflows", "platform-comparison", "cms-implementation-checklist"],
-                    "modulesSkipped": ["cross-skill-references (no substance)"],
+                    "modulesAdded": [
+                        "headless-cms-decision",
+                        "content-modeling",
+                        "editorial-workflows",
+                        "platform-comparison",
+                        "cms-implementation-checklist"
+                    ],
+                    "modulesSkipped": [
+                        "cross-skill-references (no substance)"
+                    ],
                     "linesAdded": 106
                 }
             ]
@@ -219,6 +233,26 @@
             ],
             "preMergeDedup": {},
             "notes": "New category created 2026-03-21. theone-cocos-standards as anchor base (higher confidence). game-engine incremental merge: universal game fundamentals (loops, physics, collision, rendering, controls). No content overlap between the two sources."
+        },
+        {
+            "anchor": "cad-hardware",
+            "mergedCount": 11,
+            "anchorBase": "bambu-labs",
+            "mergedSkills": [
+                "bambu-labs (0.74)",
+                "gcode (0.69)",
+                "dxf (0.6)",
+                "sdf (0.54)",
+                "cad-viewer (0.54)",
+                "implicit-cad (0.54)",
+                "step-parts (0.52)",
+                "cad (0.5)",
+                "sendcutsend (0.46)",
+                "srdf (0.45)",
+                "urdf (0.44)"
+            ],
+            "preMergeDedup": {},
+            "notes": "New category created 2026-07-29 from earthtojake/text-to-cad v0.3.10. All 11 skills are same-origin and non-overlapping by design — the upstream enforces runtime self-containment (no cross-skill imports), so there were no intra-category duplicates to resolve. Each skill contributed a distinct module: cad (STEP-first core), cad-viewer (review broker), urdf/srdf/sdf (three-way format ownership split), dxf (2D), step-parts (sourcing), gcode/bambu-labs (additive chain), sendcutsend (subtractive preflight), implicit-cad (experimental SDF). No modules skipped; no pre-existing anchor covered this domain (Obsidian search for 'cad' returned only false positives on 'cascade')."
         }
     ]
 }

@@ -38,7 +38,6 @@
 | **层间不越界** | 每层只存放属于该层职责的文件。PM 层不存代码,Agent 层不存原始 skill,Tool 层不存治理文档,KI 层不存过程文件,In-Process 层不存永久知识。 |
 | **写入路径白名单** | Skill 源仓库 → `Tool/`;索引与知识 → `KI/`;治理规则/模板/编排 → `Agent/`;需求入口 → `PM/`;接口契约 → `In-Process/contract.md`;运行期工件 → 各项目的 `.in-process/`。不在白名单内的路径禁止写入。 |
 | **无冗余副本** | 同一文件不得在多个层中存在副本。如需引用,使用路径引用而非复制。 |
-| **遗留目录禁止创建** | `AI/` 和 `external_KI/` 为已废弃的遗留目录名。禁止创建。 |
 
 ## 双层记忆体系 — claude-mem × Obsidian KI
 
@@ -68,6 +67,8 @@
 9. **TEMP FILES ARE MANAGED** — 临时文件纳入项目 `.in-process/scratch/` 管理
 10. **PLAN-DRIVEN MODE FOR LARGE CHANGES** — 大变更必须先有 plan 工件
 11. **SKILL FILE GOVERNANCE** — Skill 增删必须同步更新索引、注册、去重审查
+12. **ROYAL SALUTATION (CONTEXT CANARY)** — 会话回复开头必称「陛下」,结尾以「臣告退 陛下万岁万岁万万岁」收束;缺失即上下文丢失警报。适用判定=消费者是谁:仅用户亲读的会话回复正文;程序/agent/格式契约消费一律豁免,契约优先。禁止用 hook 注入本规则(注入使金丝雀失效);本律只存在于启动加载的全局指令中
+13. **PREFAB NODES ARE BUILT IN EDITOR, NOT IN CODE** — prefab 一律编辑器内可见可拖的实体节点;运行期代码只填数据不造结构;仅数据驱动集合允许克隆且模板须为 prefab 内可见节点;拿不准按静态处理
 
 ## Workflow Entry Points
 

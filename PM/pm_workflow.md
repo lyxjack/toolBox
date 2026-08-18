@@ -46,6 +46,7 @@ description: 唯一入口。用户提交需求后,PM 分析需求、召回上下
 4. **Project Rules**: 如果存在 `Agent/rules/project_rules.md`,读取项目规则
 5. **claude-mem 会话记忆**(补充召回源): 当任务延续既往 session 或用户提及历史工作时,用 mem-search skill 召回近期 session 上下文(worker 不可用时降级 `sqlite3 ~/.claude-mem/claude-mem.db` 只读查询);性质为**参考上下文,不构成约束**(优先级: Error_Book 强制 > Pattern Book 推荐 > mem 参考);两者都不可用 → 跳过,不阻塞流程
 6. **代码结构记忆候选标记**(在**真实代码项目**上工作时): 若本需求是在一个真实源码项目上工作(onboarding 看架构 / 重构 / "这东西在哪被用到" / 影响分析 / 死代码 等会反复结构化探索的场景),标记为 codebase-memory 候选,交由 CTO 在 `Agent/workflow/cto_planning.md` **Step 2.5** 用"项目级画像 P1-P3"裁定该项目是否值得索引(PM 不做启用决策,只打候选标记);toolBox 治理库 / doc-only 仓 / 纯知识任务跳过
+7. **Rejection Decisions(决定不做的)**: Obsidian 检索 `Internal_KI/decisions/` 中 `decision_type: rejection` 条目;命中 → 向用户呈报既往否决与理由,由用户裁决维持或推翻(规范见 `KI/Internal_KI/contract.md` §10.3.1)
 
 ### Step 4.5: Complexity Classification（强制 Gate，输出 `complexity` 字段）
 
@@ -274,6 +275,7 @@ micro 是"狭窄通道"，不是"默认路径"。
 ### Step 5: 分析与厘清
 - 理解用户真正的意图(而非字面请求)
 - 如果需求不清晰,**停下来向用户提问**,不要猜测
+- 提问遵守 **P12 Facts vs Decisions**(`Agent/rules/constitution.md#p12--facts-vs-decisions`): 事实自查环境后附结论,用户拥有的决策才呈给用户(附推荐答案)
 - 识别隐含的约束条件
 - 确定明确的 scope 边界和 out of scope
 

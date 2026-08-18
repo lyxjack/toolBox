@@ -40,6 +40,10 @@ In-Process 是项目级的运行期过程文件层,存放任务执行过程中�
     │   └── {date}__{project}__audit__{id}__{slug}.md
     ├── index/                     ← 归档索引(永久)
     │   └── archive_manifest.json
+    ├── tickets/                   ← /matt 流本地 tracker(spec + 工单,跨 run 持久)
+    │   └── {feature-slug}/
+    │       ├── spec.md
+    │       └── issues/{NN}-{slug}.md
     └── scratch/                   ← 临时文件(session 结束清理)
         └── _*.{ext}
 ```
@@ -52,6 +56,7 @@ In-Process 是项目级的运行期过程文件层,存放任务执行过程中�
 | `archive/{run_id}/` | 已完成 run 的全套工件 | **90 天** | 90 天后可清理 |
 | `audit/` | 永久审计记录(合规要求) | **永久** | 永不删除 |
 | `index/` | archive_manifest.json 索引 | **永久** | 永不删除 |
+| `tickets/` | `/matt` 流本地 tracker:spec 与 tracer-bullet 工单(由 `/setup-matt-pocock-skills` 的项目配置指向此处;入口正文见 `Agent/workflow/matt_entry.md`) | feature 交付后归档到 archive/ 或删除 | feature 完成后 |
 | `scratch/` | session 范围的临时文件 | **session** | session 结束即清理 |
 
 ## 4. Run 工件说明

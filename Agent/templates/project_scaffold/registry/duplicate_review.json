@@ -2,7 +2,7 @@
     "_meta": {
         "description": "Duplicate skill governance registry. Records cross-references, primary/alternate selections, and rejection reasons.",
         "version": "1.0",
-        "dataSource": "AI/_rag_index/cross_references.json + AI/_quality_audit_corrected.json"
+        "dataSource": "KI/External_KI/cross_references.json + KI/External_KI/quality_audit.json"
     },
     "reviews": [],
     "reviewSchema": {

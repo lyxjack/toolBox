@@ -176,3 +176,45 @@ describe('AC-7: pre-commit-hook.mjs 串入', () => {
     assert.match(pc(), /existsSync\(DISTILL_TEST_PATH\)/);
   });
 });
+
+// ──────────────────────────────────────────────────────────
+// AC-8: Phase 6.6 精炼关(writing-great-skills 剪枝纪律)
+// ──────────────────────────────────────────────────────────
+describe('AC-8: Phase 6.6 精炼关', () => {
+  const wf = () => read('workflow');
+
+  it('含 Phase 6.6 章节且排在 Phase 7 Write 之前', () => {
+    const c = wf();
+    const gate = c.indexOf('## Phase 6.6');
+    const write = c.indexOf('## Phase 7');
+    assert.ok(gate !== -1, 'workflow.md 应含 "## Phase 6.6" 精炼关章节');
+    assert.ok(gate < write, '精炼关必须在 Phase 7 Write 之前(脏数据不进 vault)');
+  });
+  it('挂载 writing-great-skills 外部 reference 路径', () => {
+    assert.match(
+      wf(),
+      /Tool\/mattpocock-skills\/skills\/productivity\/writing-great-skills\/SKILL\.md/,
+      '精炼关应显式给出 writing-great-skills 的 Read 路径'
+    );
+  });
+  it('reference 源文件确实存在(路径不腐)', () => {
+    const src = resolve(
+      ROOT,
+      'Tool/mattpocock-skills/skills/productivity/writing-great-skills/SKILL.md'
+    );
+    assert.ok(existsSync(src), `writing-great-skills 源文件缺失: ${src}`);
+  });
+  it('六查关键字全命中', () => {
+    const c = wf();
+    for (const k of ['No-op', 'Duplication', 'Sediment', 'Sprawl', 'Negation', 'Leading word']) {
+      assert.ok(c.includes(k), `精炼关应含检查项 "${k}"`);
+    }
+  });
+  it('保底不动清单覆盖 frontmatter / wiki link / prevention', () => {
+    const c = wf();
+    const scope = c.slice(c.indexOf('## Phase 6.6'), c.indexOf('## Phase 7'));
+    assert.match(scope, /frontmatter/, '作用域声明应豁免 frontmatter');
+    assert.match(scope, /wiki link/, '作用域声明应豁免 wiki link');
+    assert.match(scope, /prevention/, '作用域声明应豁免 ERR prevention/ci_rules');
+  });
+});

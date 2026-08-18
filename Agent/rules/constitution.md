@@ -61,6 +61,12 @@ PM/CTO/QA 在每个 Step 输出工件时,必须显式列出本次决策的隐含
 **违反后果**: QA Layer 4 扫 git diff 时发现未在 change_manifest 显式声明的行 → REJECT with ISO-004 (DRIVE-BY)。允许例外:本 task 创造的孤儿 import / 变量必须清理。
 **知识源**: `KI/External_KI/skills/workflow/workflow.md` §10 (K-M3 Surgical Changes)。
 
+### P12 — Facts vs Decisions
+凡环境可查得的**事实**(文件系统 / 代码 / 日志 / 工具输出),agent 自行查证后附结论;凡**用户拥有的决策**(产品意图 / 范围 / 方案取舍,出现在澄清与 grilling 语境),逐条呈给用户并等待答复——附上推荐答案,但选择权在用户。技术执行内的决策仍按角色授权处理(执行层发现需扩展 → 上报 CTO,走 P4,不升级到用户)。AFK / subagent 场景无人可问时,把用户决策记为显式假设上报(走 P9)。
+**何时生效**: 任何角色向用户澄清提问时(PM Step 5、CTO 回退澄清、QA 疑议)、grilling 类交互全程。
+**违反后果**: 把可查的事实抛给用户 → 澄清质量缺陷,返工重查;替用户拍板其拥有的决策 → 等同 P9 隐藏假设填补,Gate 自检失败。
+**知识源**: `Tool/mattpocock-skills/skills/productivity/grilling/SKILL.md`(facts vs decisions split)。
+
 ## 3. 文件分层
 
 | 层 | 位置 | Owner | 生命周期 |
@@ -92,7 +98,7 @@ INTAKE → PM_ANALYSIS → CTO_PLANNING → EXECUTION → QA_VERIFICATION
 完整铁律见 `iron_laws.md`。铁律不可被任何角色的任何理由绕过。
 
 铁律分为两级门禁:
-- **总门禁** (IL 08, 09, 10): 进入系统时即刻生效
+- **总门禁** (IL 08, 09, 10, 12, 13): 进入系统时即刻生效
 - **子门禁** (IL 01-07, 11): 进入对应工作流时生效
 两级门禁优先级相同,均不可被任何角色绕过。
 

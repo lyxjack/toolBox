@@ -30,6 +30,7 @@ const PATHS = {
   pmWorkflow: resolve(ROOT, 'PM/pm_workflow.md'),
   ctoPlanning: resolve(ROOT, 'Agent/workflow/cto_planning.md'),
   claudeMd: resolve(ROOT, 'CLAUDE.md'),
+  kiReadme: resolve(ROOT, 'KI/README.md'),
 };
 
 const TEMPLATE_FILES = [
@@ -226,13 +227,15 @@ describe('AC-4: 召回规则 (参考,不构成约束)', () => {
   it('cto_planning.md 含 claude-mem', () => {
     assert.match(read('ctoPlanning'), /claude-mem/);
   });
-  it('CLAUDE.md 含 双层记忆体系 + mem_ref', () => {
-    const c = read('claudeMd');
-    assert.match(c, /双层记忆体系/, 'CLAUDE.md 必须含 "双层记忆体系"');
-    assert.match(c, /mem_ref/, 'CLAUDE.md 必须含 mem_ref 字段引用');
+  // 2026-08-03 REQ-20260803-184500: 双层记忆体系细节由 CLAUDE.md 下放到 KI/README.md,CLAUDE.md 只留指针
+  it('CLAUDE.md 指向 KI/README.md;KI/README.md 含 双层记忆体系 + mem_ref', () => {
+    assert.match(read('claudeMd'), /KI\/README\.md/, 'CLAUDE.md 必须指向 KI/README.md');
+    const ki = read('kiReadme');
+    assert.match(ki, /双层记忆体系/, 'KI/README.md 必须含 "双层记忆体系"');
+    assert.match(ki, /mem_ref/, 'KI/README.md 必须含 mem_ref 字段引用');
   });
   it('三处召回规则均含 "不构成约束" (语义一致性)', () => {
-    for (const key of ['pmWorkflow', 'ctoPlanning', 'claudeMd']) {
+    for (const key of ['pmWorkflow', 'ctoPlanning', 'kiReadme']) {
       assert.ok(read(key).includes('不构成约束'), `${PATHS[key]} 必须含 "不构成约束"`);
     }
   });

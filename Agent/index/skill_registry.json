@@ -3,8 +3,8 @@
         "description": "toolBox skill registry. Anchor-based architecture — 13 anchors, one per category.",
         "version": "2.0",
         "architecture": "anchor-based",
-        "lastUpdated": "2026-06-24",
-        "totalAnchors": 13,
+        "lastUpdated": "2026-07-29",
+        "totalAnchors": 14,
         "externalPluginsCount": 2
     },
     "anchors": [
@@ -48,7 +48,7 @@
             "name": "frontend",
             "category": "frontend",
             "anchorBase": "ui-ux-pro-max",
-            "confidence": 0.70,
+            "confidence": 0.7,
             "mergedCount": 7,
             "path": "KI/External_KI/skills/frontend/frontend.md",
             "usageNotes": "UI/UX design, React patterns, hooks, state management, animations, accessibility, Liquid Glass."
@@ -57,7 +57,7 @@
             "name": "language-specific",
             "category": "language_specific",
             "anchorBase": "golang-patterns",
-            "confidence": 0.70,
+            "confidence": 0.7,
             "mergedCount": 5,
             "path": "KI/External_KI/skills/language-specific/language-specific.md",
             "usageNotes": "Go, C++, Python, Java, JPA/Hibernate coding standards and patterns."
@@ -126,6 +126,15 @@
             "mergedCount": 2,
             "path": "KI/External_KI/skills/game-development/game-development.md",
             "usageNotes": "Universal game dev fundamentals (loops, physics, collision, ECS, rendering, controls) + Cocos Creator 3.x TypeScript standards. Extensible for Unity/Godot/Unreal."
+        },
+        {
+            "name": "cad-hardware",
+            "category": "cad_hardware",
+            "anchorBase": "bambu-labs",
+            "confidence": 0.65,
+            "mergedCount": 11,
+            "path": "KI/External_KI/skills/cad-hardware/cad-hardware.md",
+            "usageNotes": "STEP-first CAD, robot description (URDF/SRDF/SDF), DXF, part sourcing, slicing, printing, fabrication preflight, 3D review. UNLIKE other anchors the 11 upstream skills ship an executable Python/Node runtime — see Internal_KI PAT-037 for the shared venv and cross-project invocation contract."
         }
     ],
     "externalPlugins": [

@@ -14,7 +14,7 @@
 |------|------|
 | RAG Index | `KI/External_KI/master_index.json` + `categories/*.json` |
 | Cross Refs | `KI/External_KI/cross_references.json` |
-| Audit Data | `AI/_quality_audit_corrected.json`(置信度审计)|
+| Audit Data | `KI/External_KI/quality_audit.json`(置信度审计)|
 | Skill Files | 各仓库的 SKILL.md(只读) |
 
 ## 输出
